@@ -1,0 +1,22 @@
+{
+  "education": [
+    {
+      "title": "Oct 2019 - Oct 2021",
+      "cardTitle": "BSc, Computer Science",
+      "cardSubtitle": "The Federal Polytechnic of Ede",
+      "cardDetailedText": "CGPA - 3.30",
+      "icon": {
+        "src": "images/education/education.png"
+      }
+    },
+    {
+      "title": "Nov 2015 - Nov 2017",
+      "cardTitle": "Associates Degree, Computer Science",
+      "cardSubtitle": "The Federal Polytechnic of Ede",
+      "cardDetailedText": "CGPA 3.30",
+      "icon": {
+        "src": "images/education/education.png"
+      }
+    }
+  ]
+}

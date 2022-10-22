@@ -1,0 +1,196 @@
+{
+  "projects": [
+    {
+      "image": "images/projects/korpeatech.png",
+      "title": "Korpeatech - Tech Solutions",
+      "bodyText": "- a one-stop, digital transformation leader that provides professional consulting, engineering, and managed services for all our specialty areas.\n - Built JavaScript Pages using REACT library and created various asynchronous web applications.\n - Performed Unit Testing, Integration Testing and TDD using Mocha, & Lint.",
+      "links": [
+        {
+          "text": "Live",
+          "href": "https://korpeatech.com"
+        }
+      ],
+      "tags": [
+        "React",
+        "MongoDB",
+        "JavaScript",
+        "aws",
+        "tailwindCSS",
+        "GraphQL"
+      ]
+    },
+    {
+      "image": "images/projects/campushubnew.png",
+      "title": "CampusHub LTD -  EdTech",
+      "bodyText": "- an E commerce platform specifically created for Nigerian **students** across Campuses.\n - Used Bootstrap along with Angular 8.0 for responsive design for the exposed enterprise application.\n - Implemented scrutiny with the aspects of security and authentication using OAUTH 2.0.",
+      "links": [
+        {
+          "text": "Mobile",
+          "href": "https://play.google.com/store/apps/details?id=com.nistoresnaija.campushub&hl=en_US&gl=US"
+        },
+        {
+          "text": "Live",
+          "href": "https://campushub.xyz/"
+        }
+      ],
+      "tags": ["Flutter", "Dart", "Android SDK", "SQL", "GCS", "AWS"]
+    },
+    {
+      "image": "images/projects/billioncodes.png",
+      "title": "Billioncodes Software Inc.",
+      "bodyText": "- **No. 1** Online Errands Code Builder \n - Built Several HTML5 Pages using PHP, JavaScript with other various web technologies.\n - Used GIT for source code management.",
+      "links": [
+        {
+          "text": "Live",
+          "href": "https://billioncodes.org/"
+        },
+        {
+          "text": "Mobile",
+          "href": "https://play.google.com/store/apps/details?id=org.codebrainz.billioncodes&hl=en_US&gl=US"
+        }
+      ],
+      "tags": ["PHP", "Laravel", "MySQL", "GIT"]
+    },
+    {
+      "title": "Nifty's - NFT App",
+      "image": "images/projects/niftys.png",
+      "bodyText": "- An NFT Art curatorial.\n - End to End encryption using **RSA** Algorithm.\n - Uses **Firebase** database to store texts.\n - Secured with **Fingerprint** lock.",
+      "links": [
+        {
+          "text": "Live",
+          "href": "https://niftys.com/"
+        }
+      ],
+      "tags": ["Javascript", "React", "Bootstrap", "Solidity", "AWS"]
+    },
+    {
+      "title": "Billups",
+      "image": "images/projects/billups.png",
+      "bodyText": "- An Out of Home Media Company.\n - End to End encryption using **RSA** Algorithm.\n - Uses **Firebase** database to store texts.\n - Secured with **Fingerprint** lock.",
+      "links": [
+        {
+          "text": "Live",
+          "href": "https://billups.com/"
+        }
+      ],
+      "tags": ["PHP", "JQuery", "Javascript", "Python", "AWS", "React"]
+    },
+    {
+      "title": "LibertyMutual",
+      "image": "images/projects/libertymutual.png",
+      "bodyText": "- A diversified global insurer.\n - Implemented REST API endpoints using Java, Multithreading, Collections, Generics, Exception Handling, Servlets, Custom Tag Libraries, Struts, Spring, Hibernate, Enterprise Java Beans, JDBC.",
+      "links": [
+        {
+          "text": "Live",
+          "href": "https://libertymutual.com/"
+        }
+      ],
+      "tags": ["Java", "Perl", "React", "MongoDB"]
+    },
+    {
+      "title": "Url Shortener",
+      "image": "images/projects/urlshortener.png",
+      "bodyText": "- An app that shortens url.\n - Used **Werkzeug** to instantiate request objects \n - Created neccessary web templates with **Jinja2** templating engine\n - Secured with **Fingerprint** lock.",
+      "links": [
+        {
+          "text": "Live",
+          "href": "https://billioncodes.herokuapp.com/"
+        },
+        {
+          "text": "GitHub",
+          "href": "https://github.com/BillionCodes/url-shortener"
+        }
+      ],
+      "tags": ["Python", "Flask", "Heroku", "Jinja2", "WSGI", "Git"]
+    },
+    {
+      "title": "Vidly App",
+      "image": "images/projects/vidly.png",
+      "bodyText": "- A Movie store app simulation.\n - Built Several UI components and routes with react and react-router-dom library.\n - Uses **Axios** make API calls to backend server.\n - Implemented cloud database  CRUD operations with MongoDB Atlas.",
+      "links": [
+        {
+          "text": "Live",
+          "href": "https://secret-wildwood-56933.herokuapp.com/register"
+        }
+      ],
+      "tags": [
+        "React",
+        "Javascript",
+        "NodeJs",
+        "MongoDB Atlas",
+        "ExpressJS",
+        "Bootstrap",
+        "Git"
+      ]
+    },
+    {
+      "title": "Bulk SMS Client App",
+      "image": "images/projects/smsclient.png",
+      "bodyText": "- An SMS Email Gateway Sender Client.\n - Implemented API calls using curl library.\n - Uses **JQuery** to capture user inputs from form.\n - Impemented **Bootstrap** for responsive design.",
+      "links": [
+        {
+          "text": "Live",
+          "href": "https://sms-email-gateway-sender.herokuapp.com/"
+        },
+        {
+          "text": "GitHub",
+          "href": "https://github.com/BillionCodes/SMS-Email-Gateway-Sender"
+        }
+      ],
+      "tags": ["PHP", "JQuery", "JavaScript", "CURL", "Heroku", "Git", "NodeJS"]
+    },
+    {
+      "title": "Staff Management System",
+      "bodyText": "- A PHP web application used for HRM of staffs.\n - Built Several HTML5 Pages using PHP, JavaScript with other various web technologies..\n - Impemented SwaggerUI for the API documentation",
+      "links": [
+        {
+          "text": "GitHub",
+          "href": "https://github.com/BillionCodes/Staff-management-system"
+        }
+      ],
+      "tags": [
+        "PHP",
+        "Blade",
+        "Laravel",
+        "HTML",
+        "Vuew",
+        "MySQL",
+        "Shell",
+        "SwaggerUI"
+      ]
+    },
+    {
+      "title": "Angular Mini Projects",
+      "bodyText": "- An angular app that comprises of of various mini projects such as **Calculator**, **Ceasar's Cipher**, **Word Formatter** etc.\n - Used Angular-Router for client-side routing.\n - Optimized the performance of application using Angular 4 **Lazy Loading** and ahead of time compilation.",
+      "links": [
+        {
+          "text": "GitHub",
+          "href": "https://github.com/BillionCodes/angular-mini-projects"
+        }
+      ],
+      "tags": ["Angular4", "Typescipt", "Javascript", "Bootstrap"]
+    },
+    {
+      "title": "Task Tracker",
+      "bodyText": "- A simple Task Tracker web app made with **Angular 12**.\n - Uses **mock JSON server** to get, add, delete or update tasks.",
+      "links": [
+        {
+          "text": "GitHub",
+          "href": "https://github.com/BillionCodes/Task-Tracker"
+        }
+      ],
+      "tags": ["TypeScript", "Angular 12", "JavaScript"]
+    },
+    {
+      "title": "Polytechnic Students Record System",
+      "bodyText": "- A Python GUI program for storing, updating and deleting **student records.**\n - Uses **JSON** to keep records of students.\n - Uses **Tkinter** for GUI.",
+      "links": [
+        {
+          "text": "GitHub",
+          "href": "https://github.com/BillionCodes/Polytechnics-Student-Record-System"
+        }
+      ],
+      "tags": ["Python", "Tkinter"]
+    }
+  ]
+}

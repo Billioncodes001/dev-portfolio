@@ -1,0 +1,16 @@
+{
+  "social": [
+    {
+      "network": "linkedin",
+      "href": "https://www.linkedin.com/in/josiah-adeyemo/"
+    },
+    {
+      "network": "github",
+      "href": "https://github.com/BillionCodes"
+    },
+    {
+      "network": "email",
+      "href": "mailto:jhardeyemor@gmail.com"
+    }
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "experiences": [
+    {
+      "title": "Frontend Software Engineer",
+      "subtitle": "Korpeatech International, Chicago, US (Remote)",
+      "workType": "Full-time",
+      "workDescription": [
+        "Built JavaScript Pages using REACT library and created various asynchronous web applications.",
+        "Assigned the responsibilities of troubleshooting problems with REACT and other web technologies."
+      ],
+      "dateText": "Fed 2021 – Aug 2021"
+    },
+    {
+      "title": "Frontend Software Engineer",
+      "subtitle": "CampusHub Ltd, Osun, Nigeria (Remote)",
+      "workType": "Part-time",
+      "workDescription": [
+        "Designed and implemented the Single Page User Interface for client service module using Angular 8.0, HTML-5, CSS/CSS3, SASS & Bootstrap.",
+        "Enhanced Template-Driven and Model Driven forms mechanism.",
+        "Used Angular-Router for client-side routing."
+      ],
+      "dateText": "Nov 2020 – Present"
+    },
+    {
+      "title": "Frontend Developer & CTO",
+      "subtitle": "Billioncodes Inc, Osun, Nigeria",
+      "workType": "Full-time",
+      "workDescription": [
+        "Built Several HTML5 Pages using PHP, JavaScript with other various web technologies.",
+        "Used GIT for source code management."
+      ],
+      "dateText": "March 2020 – Jan 2021"
+    },
+    {
+      "title": "ReactJS Developer (Remote)",
+      "subtitle": "Crown International, Toronto, ON, Canada",
+      "workType": "Full-time",
+      "workDescription": [
+        "Developed new highly-responsive, web-based user interfaces using ReactJS.",
+        "Built reusable components and front-end libraries for future user-facing.",
+        "Worked with data from REST and GraphQL APIs."
+      ],
+      "dateText": "April 2019 – Feb 2020"
+    },
+    {
+      "title": "Full Stack Developer",
+      "subtitle": "Eduvella Inc, Osun, Nigeria",
+      "workType": "Full-time",
+      "workDescription": [
+        "Implemented the Angular routing configuration in the routing module and made sure lazing-loading was achieved for optimized performance of the application.",
+        "Performed test driven development and wrote hundreds of unit tests for Angular components, directives, pipes, reducers, actions, services and effects using Jasmine, Karma, Istanbul and Headless Chrome."
+      ],
+      "dateText": "Jun 2016 – Jan 2018"
+    }
+  ]
+}
