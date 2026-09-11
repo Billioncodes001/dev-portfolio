@@ -33,7 +33,7 @@ Edit `public/profile/gallery.json` and add images under `public/images/`. Each i
 
 Union entries and source links live in `public/profile/leadership.json`. Biography text lives in `public/profile/about.json`. The shared schema validates these fields through the existing portfolio API. `/gallery` is included in navigation, page metadata and the server's route list.
 
-The initial implementation was local. The production update is applied to the live `Billioncodes001/dev-portfolio` repository and uses its existing GitHub Actions → Cloudflare deployment workflow.
+The initial implementation was local. The production update is applied to the live `Billioncodes001/dev-portfolio` repository and uses Cloudflare Workers Builds on pushes to main, with independent GitHub Actions verification. The optional Actions deployment job remains disabled.
 
 ## Validation
 
@@ -46,3 +46,7 @@ The owner confirmed Assistant General Secretary in 2025 and emergence as Zonal C
 ## Production asset verification
 
 All four gallery images are Git-tracked under `public/images`. Vite copies their bytes unchanged to `dist/images`; each built image was fully decoded successfully. The production public-asset audit passed, including checks for missing paths and all skill icon formats. Cloudflare imports gallery and leadership JSON through `worker/content.ts`; the Express loader uses the same records. Production metadata, Worker configuration, and previously repaired assets were preserved.
+
+## Live release verification
+
+Feature commit: `8f8e0986d74c3959af18981d489f5bfa064b7c5a`. GitHub verification run `34642013691` passed both runtime/browser suites. Cloudflare Workers Builds published version `c88f540f-be4f-4597-a004-ed87e44f58c8` at 2026-09-11 20:03 UTC. The live API returned Comr. Josiah Adeyemo, Assistant General Secretary (2025), Zonal Coordinator (2026), and four gallery records.
