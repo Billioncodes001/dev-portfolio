@@ -23,8 +23,7 @@
     {
       "binding": "DB",
       "database_name": "josiah-portfolio-db",
-      // Parent must replace this local-only sentinel with the actual D1 ID.
-      "database_id": "00000000-0000-0000-0000-000000000000",
+      "database_id": "d7d556e8-0e8c-4778-8ce2-db4c0113d6bb",
       "migrations_dir": "migrations",
     },
   ],

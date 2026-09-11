@@ -120,6 +120,8 @@ test("configured preview assets exist and external or traversing paths are rejec
   const previews = await loadRepositoryPreviews(resolve("public"));
   assert.deepEqual(Object.keys(previews).sort(), [
     "billioncodes001/app-launch-inspector",
+    "billioncodes001/billioncodes-academy",
+    "billioncodes001/dev-portfolio",
     "billioncodes001/social-claim-verifier",
     "billioncodes001/x-browser-mcp",
   ]);

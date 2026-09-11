@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { access, readFile, readdir } from "node:fs/promises";
-import { join, resolve, relative } from "node:path";
+import { join, resolve, relative, extname } from "node:path";
+import sharp from "sharp";
 import {
   loadPortfolio,
   loadReleases,
@@ -12,7 +13,59 @@ const errors: string[] = [];
 const sensitive =
   /(?:\/Users\/[^\s"']+|\/private\/(?:tmp|var)\/|file:\/\/|-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----|\bgh[pousr]_[a-zA-Z0-9]{20,}|\bgithub_pat_[a-zA-Z0-9_]{20,}|\bAKIA[A-Z0-9]{16})/;
 let files = 0,
-  images = 0;
+  images = 0,
+  decodedSkillIcons = 0;
+const sourceOnly = process.argv.includes("--source-only");
+async function auditSkillIcons(directory: string) {
+  const profile = JSON.parse(
+    await readFile(join(directory, "profile", "skills.json"), "utf8"),
+  );
+  const icons = new Set<string>(
+    profile.skills.flatMap((group: { items: { icon: string }[] }) =>
+      group.items.map((item) => item.icon),
+    ),
+  );
+  const formats: Record<string, string> = {
+    ".png": "png",
+    ".jpg": "jpeg",
+    ".jpeg": "jpeg",
+    ".svg": "svg",
+    ".webp": "webp",
+  };
+  for (const icon of icons) {
+    const path = resolve(directory, icon.replace(/^\//, ""));
+    if (!path.startsWith(resolve(directory, "images", "skills") + "/")) {
+      errors.push("Skill icon escapes its asset directory: " + icon);
+      continue;
+    }
+    try {
+      const decoder = sharp(path, {
+        failOn: "warning",
+        limitInputPixels: 16_777_216,
+      });
+      const metadata = await decoder.metadata();
+      if (
+        !formats[extname(path).toLowerCase()] ||
+        metadata.format !== formats[extname(path).toLowerCase()]
+      )
+        throw new Error(
+          `extension ${extname(path)} does not match ${metadata.format} bytes`,
+        );
+      // Metadata alone accepts some truncated images; force complete pixel decoding.
+      const { info } = await decoder
+        .raw()
+        .toBuffer({ resolveWithObject: true });
+      if (!info.width || !info.height) throw new Error("empty decoded image");
+      decodedSkillIcons++;
+    } catch (error) {
+      errors.push(
+        relative(root, path) +
+          ": invalid skill image: " +
+          (error instanceof Error ? error.message : "decode failed"),
+      );
+    }
+  }
+}
 async function walk(directory: string) {
   for (const entry of await readdir(directory, { withFileTypes: true })) {
     const path = join(directory, entry.name);
@@ -84,9 +137,13 @@ assert.equal(
 await loadReleases(root);
 await loadRepositoryPreviews(root);
 await walk(root);
+await auditSkillIcons(root);
 try {
-  await access("dist");
-  await walk(resolve("dist"));
+  if (!sourceOnly) {
+    await access("dist");
+    await walk(resolve("dist"));
+    await auditSkillIcons(resolve("dist"));
+  }
 } catch (error) {
   if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
 }
@@ -96,7 +153,7 @@ assert.deepEqual(
   "Public content audit failed (review before publication)",
 );
 console.log(
-  `Public audit passed: ${files} files; ${images} referenced image paths. No matching secrets/local paths or missing local images.`,
+  `Public audit passed${sourceOnly ? " (source only; build assets not checked)" : ""}: ${files} files; ${images} referenced image paths; ${decodedSkillIcons} skill icons fully decoded with matching formats. No matching secrets/local paths or missing local images.`,
 );
 console.log(
   "Unsupported testimonial, award and article arrays are empty. Owner-supplied employment, degree labels and resume destination remain unverified. This technical audit does not certify claims or Git history.",
