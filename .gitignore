@@ -4,13 +4,27 @@
 /node_modules
 /.pnp
 .pnp.js
-package-lock.json
 
 # testing
 /coverage
 
 # production
 /build
+/dist
+/data
+/test-results
+/playwright-report
+.env
+.env.*
+!.env.example
+.dev.vars
+.dev.vars.*
+!.dev.vars.example
+/.wrangler
+/.worker-build
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
 
 # misc
 .DS_Store

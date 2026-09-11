@@ -1,0 +1,31 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "josiah-portfolio",
+  "main": "worker/index.ts",
+  "account_id": "40687c1a299192a1ba3add80961e429f",
+  "compatibility_date": "2026-09-01",
+  "workers_dev": false,
+  "preview_urls": false,
+  "limits": { "cpu_ms": 50 },
+  "routes": [{ "pattern": "josiahadeyemo.me", "custom_domain": true }],
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "not_found_handling": "none",
+    "run_worker_first": ["/api", "/api/*"],
+  },
+  "vars": {
+    "SITE_ORIGIN": "https://josiahadeyemo.me",
+    "GITHUB_USERNAME": "billioncodes001",
+    "GITHUB_SYNC_ENABLED": "true",
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "josiah-portfolio-db",
+      // Parent must replace this local-only sentinel with the actual D1 ID.
+      "database_id": "00000000-0000-0000-0000-000000000000",
+      "migrations_dir": "migrations",
+    },
+  ],
+}

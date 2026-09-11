@@ -30,6 +30,18 @@
       "href": "/projects"
     },
     {
+      "title": "Blog",
+      "href": "/blog"
+    },
+    {
+      "title": "Testimonials",
+      "href": "/testimonials"
+    },
+    {
+      "title": "Achievements",
+      "href": "/achievements"
+    },
+    {
       "title": "Resume",
       "href": "https://drive.google.com/file/d/1AXearkKyjex_1Ied6RTTvbLQUdOMSC4B/view?usp=sharing",
       "type": "link"

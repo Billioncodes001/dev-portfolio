@@ -1,15 +1,16 @@
 {
-  "short_name": "Mayank Agarwal",
-  "name": "Mayank Agarwal - Portfolio",
+  "short_name": "Josiah",
+  "name": "Josiah Adeyemo | Software Engineer",
   "icons": [
     {
-      "src": "images/logo.png",
-      "type": "image/png",
-      "sizes": "425x225"
+      "src": "/favicon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any",
+      "purpose": "any"
     }
   ],
-  "start_url": ".",
+  "start_url": "/",
   "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "theme_color": "#f6f5f0",
+  "background_color": "#f6f5f0"
 }

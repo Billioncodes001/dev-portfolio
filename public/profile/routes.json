@@ -24,6 +24,21 @@
             "component": "Projects",
             "path": "/projects",
             "headerTitle": "Projects"
+        },
+        {
+            "component": "Blog",
+            "path": "/blog",
+            "headerTitle": "Blog"
+        },
+        {
+            "component": "Testimonials",
+            "path": "/testimonials",
+            "headerTitle": "Testimonials"
+        },
+        {
+            "component": "Achievements",
+            "path": "/achievements",
+            "headerTitle": "Achievements"
         }
     ]
 }

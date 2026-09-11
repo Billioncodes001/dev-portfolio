@@ -1,196 +1,173 @@
 {
   "projects": [
     {
-      "image": "images/projects/korpeatech.png",
+      "image": "images/projects/rebuilt-korpeatech-showcase.webp",
       "title": "Korpeatech - Tech Solutions",
-      "bodyText": "- a one-stop, digital transformation leader that provides professional consulting, engineering, and managed services for all our specialty areas.\n - Built JavaScript Pages using REACT library and created various asynchronous web applications.\n - Performed Unit Testing, Integration Testing and TDD using Mocha, & Lint.",
+      "bodyText": "- A private local scope studio with an orange engineering-led identity: define a project's users, success measure, scope boundaries and testable acceptance criteria.\n- Track risks and dependencies, compare immutable revisions, recover earlier scope and export a saved handoff as Markdown, JSON or a printable document.\n- Password-gated, with stale-edit protection and safe retries. Ready means the planning checklist is complete, not that delivery is approved. No external request is sent.",
       "links": [
         {
-          "text": "Live",
-          "href": "https://korpeatech.com"
+          "text": "GitHub",
+          "href": "https://github.com/Billioncodes001/korpeatech-showcase"
         }
       ],
-      "tags": [
-        "React",
-        "MongoDB",
-        "JavaScript",
-        "aws",
-        "tailwindCSS",
-        "GraphQL"
-      ]
+      "tags": ["JavaScript", "Node.js", "SQLite", "HTML", "CSS"],
+      "rebuildNote": "Independently rebuilt in 2026 from the portfolio description and visual references. This is new source, not recovered code or an official company service. The repository includes local setup and tests; no public live deployment is claimed."
     },
     {
-      "image": "images/projects/campushubnew.png",
+      "image": "images/projects/rebuilt-campushub-marketplace.webp",
       "title": "CampusHub LTD -  EdTech",
-      "bodyText": "- an E commerce platform specifically created for Nigerian **students** across Campuses.\n - Used Bootstrap along with Angular 8.0 for responsive design for the exposed enterprise application.\n - Implemented scrutiny with the aspects of security and authentication using OAUTH 2.0.",
+      "bodyText": "- A private campus resale pilot with separate invited accounts, seller-owned listings and validated photo uploads.\n- Buyers can reserve an item for 24 hours; sellers confirm handover and buyers confirm receipt. Version checks and SQLite transactions prevent competing holds and stale edits.\n- Includes private reporting, operator review and desktop/mobile workflow tests. Local pilot only: no public deployment, payments, messaging or university identity verification.",
       "links": [
         {
-          "text": "Mobile",
-          "href": "https://play.google.com/store/apps/details?id=com.nistoresnaija.campushub&hl=en_US&gl=US"
-        },
-        {
-          "text": "Live",
-          "href": "https://campushub.xyz/"
+          "text": "GitHub",
+          "href": "https://github.com/Billioncodes001/campushub-marketplace"
         }
       ],
-      "tags": ["Flutter", "Dart", "Android SDK", "SQL", "GCS", "AWS"]
+      "tags": ["JavaScript", "Node.js", "SQLite", "HTML", "CSS"],
+      "rebuildNote": "Independently rebuilt in 2026 from the portfolio description and visual references. This is new source, not recovered code or an official company service. The repository includes local setup and tests; no public live deployment is claimed."
     },
     {
-      "image": "images/projects/billioncodes.png",
+      "image": "images/projects/rebuilt-billioncodes-studio.webp",
       "title": "Billioncodes Software Inc.",
-      "bodyText": "- **No. 1** Online Errands Code Builder \n - Built Several HTML5 Pages using PHP, JavaScript with other various web technologies.\n - Used GIT for source code management.",
+      "bodyText": "- A private freelancer proposal desk with a cream-and-terracotta editorial identity, original interface studies and operator-entered scope lines, quantities and rates.\n- Uses explicit integer minor-unit rounding for discounts and tax, locks currency after saving, and preserves immutable revisions with price comparisons and restore.\n- Export selected saved proposals as Markdown, JSON or printable documents. Legacy fictional estimates stay read-only. Local tool only: no client submission, signatures, invoicing or payments.",
       "links": [
         {
-          "text": "Live",
-          "href": "https://billioncodes.org/"
-        },
-        {
-          "text": "Mobile",
-          "href": "https://play.google.com/store/apps/details?id=org.codebrainz.billioncodes&hl=en_US&gl=US"
+          "text": "GitHub",
+          "href": "https://github.com/Billioncodes001/billioncodes-studio"
         }
       ],
-      "tags": ["PHP", "Laravel", "MySQL", "GIT"]
+      "tags": ["JavaScript", "Node.js", "SQLite", "HTML", "CSS"],
+      "rebuildNote": "Independently rebuilt in 2026 from the portfolio description and visual references. This is new source, not recovered code or an official company service. The repository includes local setup and tests; no public live deployment is claimed."
     },
     {
-      "title": "Nifty's - NFT App",
-      "image": "images/projects/niftys.png",
-      "bodyText": "- An NFT Art curatorial.\n - End to End encryption using **RSA** Algorithm.\n - Uses **Firebase** database to store texts.\n - Secured with **Fingerprint** lock.",
+      "title": "Nifty's / Editions",
+      "image": "images/projects/rebuilt-niftys-gallery.webp",
+      "bodyText": "- A private artist catalogue and exhibition planner, retaining Editions' crimson-and-charcoal gallery identity.\n- Add owned or licensed artworks with validated images, attribution and provenance notes; organise collections and freeze ordered exhibition revisions for printable sheets and JSON exports.\n- Password-gated local workspace with revision recovery and protected images. Rights are operator-declared, not verified; no wallets, NFT transactions or public deployment.",
       "links": [
         {
-          "text": "Live",
-          "href": "https://niftys.com/"
+          "text": "GitHub",
+          "href": "https://github.com/Billioncodes001/niftys-gallery"
         }
       ],
-      "tags": ["Javascript", "React", "Bootstrap", "Solidity", "AWS"]
+      "tags": ["JavaScript", "Node.js", "SQLite", "HTML", "CSS"],
+      "rebuildNote": "Independently rebuilt in 2026 from the portfolio description and visual references. This is new source, not recovered code or an official company service. The repository includes local setup and tests; no public live deployment is claimed."
     },
     {
-      "title": "Billups",
-      "image": "images/projects/billups.png",
-      "bodyText": "- An Out of Home Media Company.\n - End to End encryption using **RSA** Algorithm.\n - Uses **Firebase** database to store texts.\n - Secured with **Fingerprint** lock.",
+      "title": "Billups / Fieldwork",
+      "image": "images/projects/rebuilt-billups-media-planner.webp",
+      "bodyText": "- A private outdoor-media quote library with operator-entered rates, source dates and reviewed atomic CSV imports.\n- Compare campaign budgets and gross impressions with exact arithmetic, explicit unknowns, frozen source revisions and printable plan exports.\n- Local single-operator workspace with version recovery and retained drafts. Independent recreation, not connected Billups inventory, verified availability or a booking service.",
       "links": [
         {
-          "text": "Live",
-          "href": "https://billups.com/"
+          "text": "GitHub",
+          "href": "https://github.com/Billioncodes001/billups-media-planner"
         }
       ],
-      "tags": ["PHP", "JQuery", "Javascript", "Python", "AWS", "React"]
+      "tags": ["JavaScript", "Node.js", "SQLite", "HTML", "CSS"],
+      "rebuildNote": "Independently rebuilt in 2026 from the portfolio description and visual references. This is new source, not recovered code or an official company service. The repository includes local setup and tests; no public live deployment is claimed."
     },
     {
       "title": "LibertyMutual",
-      "image": "images/projects/libertymutual.png",
-      "bodyText": "- A diversified global insurer.\n - Implemented REST API endpoints using Java, Multithreading, Collections, Generics, Exception Handling, Servlets, Custom Tag Libraries, Struts, Spring, Hibernate, Enterprise Java Beans, JDBC.",
+      "image": "images/projects/rebuilt-insurance-quote-demo.webp",
+      "bodyText": "- Coverline is a private offer evidence desk with the original yellow-and-navy identity.\n- Record user-entered premiums, billing periods and source wording, preserve immutable revisions, and export frozen side-by-side comparisons. Missing details remain unknown.\n- No insurer quote generation, coverage ranking, currency conversion or recommendation. Source text is not independently verified; this is a local single-operator review tool.",
       "links": [
         {
-          "text": "Live",
-          "href": "https://libertymutual.com/"
+          "text": "GitHub",
+          "href": "https://github.com/Billioncodes001/insurance-quote-demo"
         }
       ],
-      "tags": ["Java", "Perl", "React", "MongoDB"]
+      "tags": ["JavaScript", "Node.js", "SQLite", "HTML", "CSS"],
+      "rebuildNote": "Independently rebuilt in 2026 from the portfolio description and visual references. This is new source, not recovered code or an official company service. The repository includes local setup and tests; no public live deployment is claimed."
     },
     {
       "title": "Url Shortener",
-      "image": "images/projects/urlshortener.png",
-      "bodyText": "- An app that shortens url.\n - Used **Werkzeug** to instantiate request objects \n - Created neccessary web templates with **Jinja2** templating engine\n - Secured with **Fingerprint** lock.",
+      "image": "images/projects/rebuilt-url-shortener.webp",
+      "bodyText": "- Littlelink manages campaign links without changing their short addresses: edit destinations, pause or resume redirects, and set UTC expiry.\n- Built with Flask, Jinja2 and SQLite, with authenticated management, public redirects and visit counts.\n- Stale-edit protection and atomic expiry checks are covered by API and desktop/mobile browser tests. A single-operator tool, not a public link-hosting service.",
       "links": [
         {
-          "text": "Live",
-          "href": "https://billioncodes.herokuapp.com/"
-        },
-        {
           "text": "GitHub",
-          "href": "https://github.com/BillionCodes/url-shortener"
+          "href": "https://github.com/Billioncodes001/url-shortener"
         }
       ],
-      "tags": ["Python", "Flask", "Heroku", "Jinja2", "WSGI", "Git"]
+      "tags": ["Python", "Flask", "SQLite", "Jinja2"],
+      "rebuildNote": "Rebuilt in 2026 from the original portfolio description. This is a new, independently tested implementation, not recovered source. See the repository for local setup; no replacement live deployment is claimed."
     },
     {
       "title": "Vidly App",
-      "image": "images/projects/vidly.png",
-      "bodyText": "- A Movie store app simulation.\n - Built Several UI components and routes with react and react-router-dom library.\n - Uses **Axios** make API calls to backend server.\n - Implemented cloud database  CRUD operations with MongoDB Atlas.",
+      "image": "images/projects/rebuilt-vidly.webp",
+      "bodyText": "- Vidly is a cinematic private lending desk with physical-copy inventory, borrower references and overdue tracking.\n- Maintain a real operator catalogue, record checkout and returns atomically, recover safely from retries, and inspect a persistent circulation ledger. Fictional film samples remain separate and read-only.\n- Single-operator local pilot with authenticated exports and version-safe editing. No streaming, payments, automated reminders or delivery is provided.",
       "links": [
         {
-          "text": "Live",
-          "href": "https://secret-wildwood-56933.herokuapp.com/register"
+          "text": "GitHub",
+          "href": "https://github.com/Billioncodes001/vidly"
         }
       ],
-      "tags": [
-        "React",
-        "Javascript",
-        "NodeJs",
-        "MongoDB Atlas",
-        "ExpressJS",
-        "Bootstrap",
-        "Git"
-      ]
+      "tags": ["JavaScript", "Node.js", "SQLite", "HTML", "CSS"],
+      "rebuildNote": "Independently rebuilt in 2026 from the portfolio description and visual references. This is new source, not recovered code or an official company service. The repository includes local setup and tests; no public live deployment is claimed."
     },
     {
       "title": "Bulk SMS Client App",
-      "image": "images/projects/smsclient.png",
-      "bodyText": "- An SMS Email Gateway Sender Client.\n - Implemented API calls using curl library.\n - Uses **JQuery** to capture user inputs from form.\n - Impemented **Bootstrap** for responsive design.",
+      "image": "images/projects/rebuilt-sms-email-gateway.webp",
+      "bodyText": "- Postroom is a private PHP test outbox with explicit channel consent and permanent suppression controls.\n- Save and review single-recipient drafts, process durable attempts, recover after restart and retry deliberately with signed, replay-safe local callbacks.\n- Synthetic recipients and a local test provider only. Simulation is not delivery: no real SMS, email, bulk outreach or external provider is connected.",
       "links": [
         {
-          "text": "Live",
-          "href": "https://sms-email-gateway-sender.herokuapp.com/"
-        },
-        {
           "text": "GitHub",
-          "href": "https://github.com/BillionCodes/SMS-Email-Gateway-Sender"
+          "href": "https://github.com/Billioncodes001/sms-email-gateway"
         }
       ],
-      "tags": ["PHP", "JQuery", "JavaScript", "CURL", "Heroku", "Git", "NodeJS"]
+      "tags": ["PHP", "SQLite", "HTML", "CSS"],
+      "rebuildNote": "Rebuilt in 2026 from the original portfolio description. This is a new, independently tested implementation, not recovered source. See the repository for local setup; no replacement live deployment is claimed."
     },
     {
       "title": "Staff Management System",
-      "bodyText": "- A PHP web application used for HRM of staffs.\n - Built Several HTML5 Pages using PHP, JavaScript with other various web technologies..\n - Impemented SwaggerUI for the API documentation",
+      "bodyText": "- People & Co. is a private staff desk with reviewed CSV intake, lifecycle history and reversible archiving.\n- Preview every row, reject duplicates or stale reviews and confirm the batch atomically. Operator backup and restore preserve a recovery copy and invalidate old sessions.\n- PHP and SQLite retain the original directory, search and export workflows. Shared local management identity; no public HR service, emergency-contact grants or encrypted storage is claimed.",
       "links": [
         {
           "text": "GitHub",
-          "href": "https://github.com/BillionCodes/Staff-management-system"
+          "href": "https://github.com/Billioncodes001/staff-management-system"
         }
       ],
-      "tags": [
-        "PHP",
-        "Blade",
-        "Laravel",
-        "HTML",
-        "Vuew",
-        "MySQL",
-        "Shell",
-        "SwaggerUI"
-      ]
+      "tags": ["PHP", "SQLite", "HTML", "CSS"],
+      "rebuildNote": "Rebuilt in 2026 from the original portfolio description. This is a new, independently tested implementation, not recovered source. See the repository for local setup; no replacement live deployment is claimed.",
+      "image": "images/projects/rebuilt-staff-management-system.webp"
     },
     {
       "title": "Angular Mini Projects",
-      "bodyText": "- An angular app that comprises of of various mini projects such as **Calculator**, **Ceasar's Cipher**, **Word Formatter** etc.\n - Used Angular-Router for client-side routing.\n - Optimized the performance of application using Angular 4 **Lazy Loading** and ahead of time compilation.",
+      "bodyText": "- Smallwork is a private browser-only CSV/JSON workbench alongside its calculator, cipher and word tools.\n- Validate files, preview transformations, review exact changes, undo or reset, compare structured versions and download results with formula-risk warnings. JSON number tokens retain their original precision.\n- No uploads, accounts or saved browser storage. Sessions stay in memory with bounded inputs and 20 undo steps; the Caesar cipher remains educational, not secure encryption.",
       "links": [
         {
           "text": "GitHub",
-          "href": "https://github.com/BillionCodes/angular-mini-projects"
+          "href": "https://github.com/Billioncodes001/angular-mini-projects"
         }
       ],
-      "tags": ["Angular4", "Typescipt", "Javascript", "Bootstrap"]
+      "tags": ["Angular 21", "TypeScript", "RxJS"],
+      "rebuildNote": "Rebuilt in 2026 from the original portfolio description. This is a new, independently tested implementation, not recovered source. See the repository for local setup; no replacement live deployment is claimed.",
+      "image": "images/projects/rebuilt-angular-mini-projects.webp"
     },
     {
       "title": "Task Tracker",
-      "bodyText": "- A simple Task Tracker web app made with **Angular 12**.\n - Uses **mock JSON server** to get, add, delete or update tasks.",
+      "bodyText": "- Daymark is a private task workspace with daily, weekly and monthly recurring work, notes, priorities and due dates.\n- Completing an occurrence atomically creates one successor, preserves month-end schedules and prevents duplicate tasks on retries.\n- Angular, an authenticated Express API and SQLite provide version-safe editing and persistence. Verified with calendar, rollback, concurrency and desktop/mobile browser tests; no background reminders are implied.",
       "links": [
         {
           "text": "GitHub",
-          "href": "https://github.com/BillionCodes/Task-Tracker"
+          "href": "https://github.com/Billioncodes001/task-tracker"
         }
       ],
-      "tags": ["TypeScript", "Angular 12", "JavaScript"]
+      "tags": ["Angular 21", "TypeScript", "Node.js", "Express", "SQLite"],
+      "rebuildNote": "Rebuilt in 2026 from the original portfolio description. This is a new, independently tested implementation, not recovered source. See the repository for local setup; no replacement live deployment is claimed.",
+      "image": "images/projects/rebuilt-task-tracker.webp"
     },
     {
       "title": "Polytechnic Students Record System",
-      "bodyText": "- A Python GUI program for storing, updating and deleting **student records.**\n - Uses **JSON** to keep records of students.\n - Uses **Tkinter** for GUI.",
+      "image": "images/projects/rebuilt-student-record-system.webp",
+      "bodyText": "- Registrar is a local student-record workspace for macOS and Linux, with validated editing, search and spreadsheet-safe CSV export.\n- Preview spreadsheet intake before importing: row-level errors, duplicate/conflict detection and one atomic write prevent partial imports or silent overwrites.\n- File locking and revision checks reject stale edits. Unit tests and an actual Tkinter GUI smoke test cover the workflow; records stay on the operator's computer.",
       "links": [
         {
           "text": "GitHub",
-          "href": "https://github.com/BillionCodes/Polytechnics-Student-Record-System"
+          "href": "https://github.com/Billioncodes001/student-record-system"
         }
       ],
-      "tags": ["Python", "Tkinter"]
+      "tags": ["Python", "Tkinter", "JSON", "CSV"],
+      "rebuildNote": "Rebuilt in 2026 from the original portfolio description. This is a new, independently tested implementation, not recovered source. See the repository for local setup; no replacement live deployment is claimed."
     }
   ]
 }

@@ -1,0 +1,293 @@
+{
+  "billioncodes001/angular-mini-projects": {
+    "stage": "browser-tool",
+    "checkedOn": "2026-09-10",
+    "commit": "48694912d15fa9f95610dfc3aeab915cc60b79f3",
+    "summary": "Private browser-only data cleanup with reversible edits and structured comparisons.",
+    "verification": "22 core tests, 10 desktop/mobile cases and production build passed.",
+    "setupUrl": "https://github.com/Billioncodes001/angular-mini-projects#readme",
+    "ciUrl": "https://github.com/Billioncodes001/angular-mini-projects/actions/runs/34517420219",
+    "notes": [
+      "Preview strict CSV/JSON parsing and each transformation before applying it.",
+      "Undo/reset changes, preserve JSON number tokens and export reviewed results or diffs."
+    ],
+    "limitations": [
+      "Memory-only sessions, 256 KiB inputs and 20 undo steps; download before leaving.",
+      "Positional comparison, not merging. Formula-risk guarding is not a spreadsheet sandbox."
+    ]
+  },
+  "billioncodes001/sms-email-gateway": {
+    "stage": "local-tool",
+    "checkedOn": "2026-09-10",
+    "commit": "f7ed9b95adc8b692cdd48f09264ca39712309cac",
+    "summary": "Private consent-aware test outbox with durable attempts and signed local callbacks.",
+    "verification": "Legacy regression, 18 core groups and 10 desktop/mobile cases passed.",
+    "setupUrl": "https://github.com/Billioncodes001/sms-email-gateway#readme",
+    "ciUrl": "https://github.com/Billioncodes001/sms-email-gateway/actions/runs/34517488449",
+    "notes": [
+      "Record independent channel opt-in and permanent channel/global suppression.",
+      "Review drafts, recheck permission at dispatch and recover or retry without duplicate attempts."
+    ],
+    "limitations": [
+      "Synthetic recipients and a deterministic local provider only; no real SMS or email.",
+      "Single operator; no live adapters, public unsubscribe endpoint or automated backups."
+    ]
+  },
+  "billioncodes001/staff-management-system": {
+    "stage": "private-pilot",
+    "checkedOn": "2026-09-10",
+    "commit": "12b3d24a1319bb140db778c7f280e11d841ebe92",
+    "summary": "Private staff intake, lifecycle history and recoverable operator backups.",
+    "verification": "13 core workflows and 16 desktop/mobile cases passed, including actual CLI backup/restore and rollback.",
+    "setupUrl": "https://github.com/Billioncodes001/staff-management-system#readme",
+    "ciUrl": "https://github.com/Billioncodes001/staff-management-system/actions/runs/34517635056",
+    "notes": [
+      "Preview CSV rows and confirm the batch atomically with stale-review protection.",
+      "Archive/restore staff and preserve before/after history; retain a recovery copy during database restore."
+    ],
+    "limitations": [
+      "Shared management identity and unencrypted local storage; not a public HR platform.",
+      "Emergency-contact access is not implemented. Restore requires a healthy current workspace and stopped writers."
+    ]
+  },
+  "billioncodes001/insurance-quote-demo": {
+    "stage": "private-pilot",
+    "checkedOn": "2026-09-10",
+    "commit": "bac891f5b0956fbc76a9a7bee82ba8be60e783f9",
+    "summary": "Private user-entered offer evidence with frozen side-by-side comparisons.",
+    "verification": "18 core tests and 10 desktop/mobile cases passed, including immutable exports, rollback and retry recovery.",
+    "setupUrl": "https://github.com/Billioncodes001/insurance-quote-demo#readme",
+    "ciUrl": "https://github.com/Billioncodes001/insurance-quote-demo/actions/runs/34518073263",
+    "notes": [
+      "Record premiums, billing periods and original source wording without replacing missing terms with zero.",
+      "Preserve immutable offer revisions and export saved comparison evidence."
+    ],
+    "limitations": [
+      "No insurer quotes, recommendations, coverage ranking, annualization or currency conversion.",
+      "Single operator; source details are unverified. No encrypted storage or automated backups."
+    ]
+  },
+  "billioncodes001/vidly": {
+    "stage": "private-pilot",
+    "checkedOn": "2026-09-10",
+    "commit": "a19a46e87dbad812467d17bdc38abb44aa335399",
+    "summary": "Private physical-copy catalogue and lending circulation desk.",
+    "verification": "24 core tests and 12 desktop/mobile cases passed, including competing checkouts, rollback and return retries.",
+    "setupUrl": "https://github.com/Billioncodes001/vidly#readme",
+    "ciUrl": "https://github.com/Billioncodes001/vidly/actions/runs/34518202876",
+    "notes": [
+      "Manage individually referenced copies, minimal borrower codes and UTC due dates.",
+      "Record stock-safe checkout/return, inspect overdue loans and retain an exportable history."
+    ],
+    "limitations": [
+      "Single local operator; no streaming, payments, reminders or verified borrower identity.",
+      "No loan renewal, lost-item process, encrypted storage or automated backups."
+    ]
+  },
+  "billioncodes001/app-launch-inspector": {
+    "stage": "private-pilot",
+    "checkedOn": "2026-09-10",
+    "commit": "35f2ed856b44748704acb419cab03dc98096c40b",
+    "summary": "Evidence-based release review with configuration-matched run comparisons.",
+    "verification": "31 core tests, 19 browser scenarios and production build passed. Equal-timestamp rejection also passed focused regression tests.",
+    "setupUrl": "https://github.com/Billioncodes001/app-launch-inspector#readme",
+    "ciUrl": "https://github.com/Billioncodes001/app-launch-inspector/actions/runs/34518153099",
+    "notes": [
+      "Compare strictly ordered saved runs from the same project, target and configuration revision.",
+      "Keep skipped/missing/inconclusive checks unverified; export original observations through existing role controls."
+    ],
+    "limitations": [
+      "Matching configuration does not prove identical deployment, browser state or test data.",
+      "Public hosting and external identity-provider setup are not verified by this local release."
+    ]
+  },
+  "billioncodes001/social-claim-verifier": {
+    "stage": "private-pilot",
+    "checkedOn": "2026-09-10",
+    "commit": "d6c83d8d2ec3ad924a8778e706ef614fc1528019",
+    "summary": "Human-reviewed investigations with local evidence freshness and revision warnings.",
+    "verification": "83 core tests, 10 browser scenarios and production build passed with isolated synthetic data.",
+    "setupUrl": "https://github.com/Billioncodes001/social-claim-verifier#readme",
+    "ciUrl": "https://github.com/Billioncodes001/social-claim-verifier/actions/runs/34518070981",
+    "notes": [
+      "Show age, extracted-text hash and exact-URL source-revision warnings without rewriting original evidence.",
+      "Export reproducible review packets preserving citations, human decisions, abstention and access rules."
+    ],
+    "limitations": [
+      "Warnings inspect saved observations, not live source changes or factual truth.",
+      "Checksums are not signatures. No model-accuracy benchmark, live social account or public deployment verified."
+    ]
+  },
+  "billioncodes001/x-browser-mcp": {
+    "stage": "local-tool",
+    "checkedOn": "2026-09-10",
+    "commit": "78adeb3bee1b97aa41613f9d3f06a538fb6300dd",
+    "summary": "Selected research handoffs from saved observations, with provenance and explicit partial-result review.",
+    "verification": "67 core/HTTP tests, the 25-tool protocol check, 10 browser cases and both production builds passed with synthetic offline fixtures.",
+    "setupUrl": "https://github.com/Billioncodes001/x-browser-mcp#readme",
+    "ciUrl": "https://github.com/Billioncodes001/x-browser-mcp/actions/runs/34520131813",
+    "notes": [
+      "Select saved records, account for exact duplicates and export original fields with source fingerprints.",
+      "Reject conflicting or changed sources, excessive nesting and oversized exports without altering earlier evidence."
+    ],
+    "limitations": [
+      "Local review declarations are not fact-checking, authenticated approval or proof of a complete archive.",
+      "Reviewed exports have 8 MiB input, depth-64 and 16 MiB output limits. Raw workflows are unchanged.",
+      "Single-snapshot deduplication only; live X compatibility and public hosting remain unverified."
+    ]
+  },
+  "billioncodes001/korpeatech-showcase": {
+    "stage": "private-pilot",
+    "checkedOn": "2026-09-10",
+    "commit": "ee69e78543f4571760100eaf524357fa01303668",
+    "summary": "Private scope and acceptance planning with recoverable revisions.",
+    "verification": "17 core and 6 desktop/mobile workflow tests passed, including protected exports and recovery.",
+    "setupUrl": "https://github.com/Billioncodes001/korpeatech-showcase#readme",
+    "ciUrl": "https://github.com/Billioncodes001/korpeatech-showcase/actions/runs/34489797744",
+    "notes": [
+      "Define users, success measures, scope and verifiable acceptance criteria.",
+      "Track risks and dependencies; restore revisions and export saved handoffs."
+    ],
+    "limitations": [
+      "Requires a locally configured workspace password.",
+      "No client approval, live delivery or public hosting."
+    ]
+  },
+  "billioncodes001/campushub-marketplace": {
+    "stage": "private-pilot",
+    "checkedOn": "2026-09-10",
+    "commit": "2274d5f257ecfa70119deca1fa0a884d59680537",
+    "summary": "Account-owned campus resale and two-sided handover pilot.",
+    "verification": "16 core and 6 desktop/mobile workflow tests passed with separate synthetic accounts.",
+    "setupUrl": "https://github.com/Billioncodes001/campushub-marketplace#readme",
+    "ciUrl": "https://github.com/Billioncodes001/campushub-marketplace/actions/runs/34483006462",
+    "notes": [
+      "Seller-owned listings with validated photos and version-safe editing.",
+      "Atomic 24-hour buyer holds, seller handover, buyer receipt and private reporting."
+    ],
+    "limitations": [
+      "Requires operator-configured invitations for registration.",
+      "No payments, chat, university verification or public deployment."
+    ]
+  },
+  "billioncodes001/billioncodes-studio": {
+    "stage": "private-pilot",
+    "checkedOn": "2026-09-10",
+    "commit": "22a831eda0c751ae745d8037bbd65c50e926d36e",
+    "summary": "A private proposal desk using operator-entered scope and pricing.",
+    "verification": "21 core and 8 desktop/mobile tests passed, including independent decimal checks and revision recovery.",
+    "setupUrl": "https://github.com/Billioncodes001/billioncodes-studio#readme",
+    "ciUrl": "https://github.com/Billioncodes001/billioncodes-studio/actions/runs/34499269321",
+    "notes": [
+      "Exact quantities, rates, discounts and explicitly entered tax percentages.",
+      "Compare immutable revisions and export saved printable proposals."
+    ],
+    "limitations": [
+      "Requires a local workspace password; not a shared client portal.",
+      "No invoice, payment, signature or tax-advice service."
+    ]
+  },
+  "billioncodes001/niftys-gallery": {
+    "stage": "private-pilot",
+    "checkedOn": "2026-09-10",
+    "commit": "5b53d6238420e33c6ee0e116b8a26781a44d7d4c",
+    "summary": "Owned-artwork catalogue with attribution and saved exhibition sequences.",
+    "verification": "17 core and 10 desktop/mobile tests passed, including validated images, frozen attribution and recovery.",
+    "setupUrl": "https://github.com/Billioncodes001/niftys-gallery#readme",
+    "ciUrl": "https://github.com/Billioncodes001/niftys-gallery/actions/runs/34505525468",
+    "notes": [
+      "Validate and optimize artwork images with creator, source and permission notes.",
+      "Order exhibition snapshots and export saved printable sheets."
+    ],
+    "limitations": [
+      "Rights and provenance are operator declarations, not verified ownership.",
+      "Local password required; no wallets, NFT transactions or public publishing."
+    ]
+  },
+  "billioncodes001/billups-media-planner": {
+    "stage": "private-pilot",
+    "checkedOn": "2026-09-10",
+    "commit": "b2f060866a2a5f7eedc571f5b3c9f6dd4f1210b8",
+    "summary": "Operator quote intake and source-backed outdoor media planning.",
+    "verification": "21 core and 10 desktop/mobile tests passed, covering atomic CSV, exact totals, stale edits and exports.",
+    "setupUrl": "https://github.com/Billioncodes001/billups-media-planner#readme",
+    "ciUrl": "https://github.com/Billioncodes001/billups-media-planner/actions/runs/34512690705",
+    "notes": [
+      "Review CSV intake before one atomic import; preserve source dates and assumptions.",
+      "Compare campaign budgets and gross impressions using frozen quote revisions."
+    ],
+    "limitations": [
+      "Operator rates and impressions are unverified; unknown estimates stay incomplete.",
+      "Local password required. No booking, fees, taxes or unique-reach calculation."
+    ]
+  },
+  "billioncodes001/student-record-system": {
+    "stage": "local-tool",
+    "checkedOn": "2026-09-10",
+    "commit": "9e9e62922abfb2b1386d612681a64deafcfb612f",
+    "summary": "Private desktop student records with validated spreadsheet intake.",
+    "verification": "12 unit tests and actual Tkinter GUI save/edit/search/delete and CSV smoke tests passed.",
+    "setupUrl": "https://github.com/Billioncodes001/student-record-system#readme",
+    "ciUrl": "https://github.com/Billioncodes001/student-record-system/actions/runs/34477772999",
+    "notes": [
+      "Preview row errors and duplicates before atomic CSV import.",
+      "Version checks and file locking preserve records during conflicting edits."
+    ],
+    "limitations": [
+      "Desktop/local use only; not a public admissions system.",
+      "Use protected local storage and backups for personal records."
+    ]
+  },
+  "billioncodes001/url-shortener": {
+    "stage": "local-tool",
+    "checkedOn": "2026-09-10",
+    "commit": "02df278d2786720c6be4606bae00e05cee8b25a3",
+    "summary": "Private management for short campaign links and expiry.",
+    "verification": "8 backend tests and desktop/mobile editing, pause/resume and expiry checks passed.",
+    "setupUrl": "https://github.com/Billioncodes001/url-shortener#readme",
+    "ciUrl": "https://github.com/Billioncodes001/url-shortener/actions/runs/34477774578",
+    "notes": [
+      "Edit destinations without replacing the short address.",
+      "Pause redirects or set UTC expiry without counting inactive visits."
+    ],
+    "limitations": [
+      "Single-operator management; not a public link-hosting platform.",
+      "No public deployment, abuse operations or marketing analytics verified."
+    ]
+  },
+  "billioncodes001/website-to-mobile": {
+    "stage": "developer-tool",
+    "checkedOn": "2026-09-10",
+    "commit": "e077d42dcbab7d49e237fec379c7d515a8e2076a",
+    "summary": "Website-to-native workflow with explicit access boundaries and offline APK evidence review.",
+    "verification": "66 Python helper tests passed, including failed-build preservation; plugin and skill validation passed. Artifact review uses synthetic archives, not a newly compiled or installed native app.",
+    "setupUrl": "https://github.com/Billioncodes001/website-to-mobile#readme",
+    "ciUrl": "https://github.com/Billioncodes001/website-to-mobile/actions/runs/34518851656",
+    "notes": [
+      "Record inspected screens, original assets, access requirements and separate web/native verification.",
+      "Recheck APK and evidence hashes, packaged identity, archive completeness and permissions requiring review.",
+      "Publish each successful APK and its evidence together without overwriting earlier bundles on rebuild failure."
+    ],
+    "limitations": [
+      "Native compilation requires a configured platform toolchain and the app's existing signing configuration.",
+      "No device installation or store approval verified in this release; integrity is not an authenticity or safety certificate."
+    ]
+  },
+  "billioncodes001/task-tracker": {
+    "stage": "local-tool",
+    "checkedOn": "2026-09-10",
+    "commit": "ca409f06bfe67b1080843b5aefa5f0cf9b4fdbdb",
+    "summary": "Private recurring tasks with exact successor creation.",
+    "verification": "Calendar, migration, concurrency and rollback test groups passed; desktop/mobile recurrence and production build verified.",
+    "setupUrl": "https://github.com/Billioncodes001/task-tracker#readme",
+    "ciUrl": "https://github.com/Billioncodes001/task-tracker/actions/runs/34477775915",
+    "notes": [
+      "Complete daily, weekly and monthly tasks and create one successor atomically.",
+      "Preserve notes, priority, due dates and month-end recurrence rules."
+    ],
+    "limitations": [
+      "No background reminders or external calendar synchronization.",
+      "Single-operator local workspace; protect the configured credentials."
+    ]
+  }
+}

@@ -1,23 +1,28 @@
 {
   "experiences": [
     {
-      "title": "Frontend Software Engineer",
+      "title": "React Developer",
       "subtitle": "Korpeatech International, Chicago, US (Remote)",
       "workType": "Full-time",
       "workDescription": [
         "Built JavaScript Pages using REACT library and created various asynchronous web applications.",
-        "Assigned the responsibilities of troubleshooting problems with REACT and other web technologies."
+        "Assigned the responsibilities of troubleshooting problems with REACT and other web technologies.",
+        "Designed and developed the application using react library along with HTML5, CSS3, TypeScript, Java Script, Bootstrap, Node.js, NPM, Mongo DB.",
+        "Created several services using dependency injection to call backend services with the HTTP Client module.",
+        "Used redux for global store management and redux-thunk as middleware for asynchronous actions."
       ],
-      "dateText": "Fed 2021 – Aug 2021"
+      "dateText": "Feb 2021 – Aug 2021"
     },
     {
-      "title": "Frontend Software Engineer",
+      "title": "Frontend Web Developer",
       "subtitle": "CampusHub Ltd, Osun, Nigeria (Remote)",
       "workType": "Part-time",
       "workDescription": [
         "Designed and implemented the Single Page User Interface for client service module using Angular 8.0, HTML-5, CSS/CSS3, SASS & Bootstrap.",
         "Enhanced Template-Driven and Model Driven forms mechanism.",
-        "Used Angular-Router for client-side routing."
+        "Used Angular-Router for client-side routing.",
+        "Used NPM for managing dependencies and dev-tool dependencies.",
+        "Implemented automated tests using jasmine, mocha, and karma frameworks for front-end unit testing."
       ],
       "dateText": "Nov 2020 – Present"
     },
@@ -27,28 +32,46 @@
       "workType": "Full-time",
       "workDescription": [
         "Built Several HTML5 Pages using PHP, JavaScript with other various web technologies.",
-        "Used GIT for source code management."
+        "Designed and developed user interfaces using CSS, HTML5, JavaScript.",
+        "Used GIT for source code management.",
+        "Scripting commands to ensure accurate data is retrieved from database.",
+        "Troubleshoots several problems with PHP and other web technologies."
       ],
       "dateText": "March 2020 – Jan 2021"
     },
     {
-      "title": "ReactJS Developer (Remote)",
-      "subtitle": "Crown International, Toronto, ON, Canada",
+      "title": "ReactJS Developer",
+      "subtitle": "Crown International, Toronto, ON, Canada (Remote)",
       "workType": "Full-time",
       "workDescription": [
         "Developed new highly-responsive, web-based user interfaces using ReactJS.",
         "Built reusable components and front-end libraries for future user-facing.",
-        "Worked with data from REST and GraphQL APIs."
+        "Developed new user-facing features using React, TypeScript, Redux.",
+        "Worked with data from REST and GraphQL APIs.",
+        "Implemented the React routing configuration in the routing module and made sure lazing-loading was achieved for optimized performance of the application."
       ],
       "dateText": "April 2019 – Feb 2020"
+    },
+    {
+      "title": "Python Developer Intern",
+      "subtitle": "Crown International, Toronto, ON, Canada (Remote)",
+      "workType": "Internship",
+      "workDescription": [
+        "Used the Python language to develop 3 web-based data retrieval systems.",
+        "Conducted descriptive and multivariate statistical analysis of data using Matlab, gaining 100% accuracy rate in terms of interpretation and analysis.",
+        "Designed robust, scalable, secure, and globalized web-based applications."
+      ],
+      "dateText": "Feb 2018 – Feb 2019"
     },
     {
       "title": "Full Stack Developer",
       "subtitle": "Eduvella Inc, Osun, Nigeria",
       "workType": "Full-time",
       "workDescription": [
+        "A platform that helps centralize and streamline key compliance, incident and data management processes.",
         "Implemented the Angular routing configuration in the routing module and made sure lazing-loading was achieved for optimized performance of the application.",
-        "Performed test driven development and wrote hundreds of unit tests for Angular components, directives, pipes, reducers, actions, services and effects using Jasmine, Karma, Istanbul and Headless Chrome."
+        "Performed test driven development and wrote hundreds of unit tests for Angular components, directives, pipes, reducers, actions, services and effects using Jasmine, Karma, Istanbul and Headless Chrome.",
+        "Documented the Angular application using the Compodoc module."
       ],
       "dateText": "Jun 2016 – Jan 2018"
     }

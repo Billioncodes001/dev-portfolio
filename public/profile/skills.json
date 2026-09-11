@@ -6,11 +6,11 @@
       "items": [
         {
           "icon": "images/skills/html.png",
-          "title": "HTML"
+          "title": "HTML5"
         },
         {
           "icon": "images/skills/css.png",
-          "title": "CSS"
+          "title": "CSS3"
         },
         {
           "icon": "images/skills/js.png",
@@ -18,7 +18,7 @@
         },
         {
           "icon": "images/skills/typescript.png",
-          "title": "Typescript"
+          "title": "TypeScript"
         },
         {
           "icon": "images/skills/java.png",
@@ -39,31 +39,51 @@
         {
           "icon": "images/skills/mysql.png",
           "title": "MySQL"
+        },
+        {
+          "icon": "images/skills/firebase.png",
+          "title": "Firebase"
         }
       ]
     },
     {
-      "title": "Frameworks & Technologies",
+      "title": "Frameworks & Libraries",
       "items": [
+        {
+          "icon": "images/skills/react.png",
+          "title": "ReactJS"
+        },
+        {
+          "icon": "images/skills/nextjs.png",
+          "title": "NextJS"
+        },
         {
           "icon": "images/skills/angular.png",
           "title": "Angular"
         },
         {
-          "icon": "images/skills/react.png",
-          "title": "React"
+          "icon": "images/skills/nodejs.png",
+          "title": "NodeJS"
+        },
+        {
+          "icon": "images/skills/ex.png",
+          "title": "ExpressJS"
         },
         {
           "icon": "images/skills/bootstrap.png",
           "title": "Bootstrap"
         },
         {
-          "icon": "images/skills/nodejs.png",
-          "title": "Nodejs"
+          "icon": "images/skills/tailwindcss.png",
+          "title": "TailwindCSS"
         },
         {
-          "icon": "images/skills/ex.png",
-          "title": "ExpressJs"
+          "icon": "images/skills/react.png",
+          "title": "ReactStrap"
+        },
+        {
+          "icon": "images/skills/materialui.png",
+          "title": "Material Design"
         },
         {
           "icon": "images/skills/flask.png",
@@ -76,23 +96,76 @@
       ]
     },
     {
-      "title": "Tools & Platforms",
+      "title": "Tools & Technologies",
       "items": [
         {
-          "icon": "images/skills/aws.png",
-          "title": "Aws"
-        },
-        {
           "icon": "images/skills/git.png",
-          "title": "Git"
+          "title": "Git & GitHub"
         },
         {
           "icon": "images/skills/docker.png",
           "title": "Docker"
         },
         {
+          "icon": "images/skills/aws.png",
+          "title": "AWS (S3, EC2)"
+        },
+        {
           "icon": "images/skills/heroku.png",
           "title": "Heroku"
+        },
+        {
+          "icon": "images/skills/android-studio.png",
+          "title": "Android Studio"
+        },
+        {
+          "icon": "images/skills/google-play.png",
+          "title": "Chrome DevTools"
+        },
+        {
+          "icon": "images/skills/postman.png",
+          "title": "Postman"
+        },
+        {
+          "icon": "images/skills/php.png",
+          "title": "XAMPP"
+        }
+      ]
+    },
+    {
+      "title": "Testing & Development",
+      "items": [
+        {
+          "icon": "images/skills/js.png",
+          "title": "Jasmine"
+        },
+        {
+          "icon": "images/skills/js.png",
+          "title": "Karma"
+        },
+        {
+          "icon": "images/skills/js.png",
+          "title": "Mocha"
+        },
+        {
+          "icon": "images/skills/redux.png",
+          "title": "Redux"
+        },
+        {
+          "icon": "images/skills/js.png",
+          "title": "AJAX"
+        },
+        {
+          "icon": "images/skills/nodejs.png",
+          "title": "NPM"
+        },
+        {
+          "icon": "images/skills/sass.png",
+          "title": "SASS"
+        },
+        {
+          "icon": "images/skills/wordpress.png",
+          "title": "WordPress"
         }
       ]
     }
