@@ -70,7 +70,7 @@ export default function Home() {
               fetchPriority="high"
             />
             <div className="portrait-caption">
-              <span>Josiah Adeyemo</span>
+              <span>Comr. Josiah Adeyemo</span>
               <span>THE HUMAN BEHIND THE CODE</span>
             </div>
           </div>

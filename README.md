@@ -114,3 +114,9 @@ See [the review notes](docs/REVIEW.md) for the baseline findings and content lim
 ## Attribution
 
 Originally based on [Mayank Agarwal's Dev Portfolio](https://github.com/mayankagarwal09/dev-portfolio). The original MIT copyright and license are preserved in [LICENSE.md](LICENSE.md).
+
+## Biography and gallery
+
+The biography uses Comr. Josiah Adeyemo and the owner-confirmed union roles: Assistant General Secretary (2025), Zonal Coordinator (2026). Edit `public/profile/leadership.json` for roles and source links, `public/profile/about.json` for the bio, and `public/profile/gallery.json` for images, alt text and captions. Both Express and the Cloudflare Worker load these records.
+
+Gallery files are versioned under `public/images/` and copied by Vite into `dist/images/`; Cloudflare serves the built `dist` directory through its ASSETS binding. All current gallery files are already in the repository. New event photos can be added here after the owner supplies the cloud source. Remote image URLs are not currently supported by the schema/CSP; import approved images locally or deliberately configure the chosen image host. Do not put private files or original cloud credentials in `public`.

@@ -1,6 +1,7 @@
 import { ArrowUpRight } from "lucide-react";
 import { usePortfolio } from "../hooks/usePortfolio";
 import { ContactBanner, Markdown, PageIntro } from "./UI";
+import Leadership from "./Leadership";
 
 export default function ExperiencePage() {
   const data = usePortfolio();
@@ -54,6 +55,7 @@ export default function ExperiencePage() {
           </article>
         ))}
       </section>
+      <Leadership />
       <ContactBanner />
     </>
   );

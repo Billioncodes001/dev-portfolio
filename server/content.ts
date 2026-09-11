@@ -27,6 +27,8 @@ export async function loadPortfolio(publicDir: string) {
   const names = [
     "home",
     "about",
+    "leadership",
+    "gallery",
     "projects",
     "experiences",
     "skills",
@@ -50,6 +52,8 @@ export async function loadPortfolio(publicDir: string) {
   return portfolioSchema.parse({
     home: content.home,
     about: content.about,
+    leadership: content.leadership.entries,
+    gallery: content.gallery.items,
     projects: attachReleases(
       content.projects.projects,
       await loadReleases(publicDir),

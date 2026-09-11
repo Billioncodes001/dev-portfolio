@@ -46,9 +46,8 @@ export default function AboutPage() {
           </h2>
           <Markdown>{data.about.about}</Markdown>
           <p>
-            Beyond software, I'm interested in cybersecurity and student
-            advocacy. These perspectives keep me asking better questions about
-            the systems we build and the people they serve.
+            My interest in cybersecurity keeps me thinking about trust: how we
+            protect people, handle information, and build responsibly.
           </p>
           <div className="about-actions">
             {data.resume && (
@@ -64,6 +63,46 @@ export default function AboutPage() {
             <SocialLinks />
           </div>
         </div>
+      </section>
+      <section
+        className="container biography-context"
+        aria-label="More of my story"
+      >
+        <article>
+          <p className="eyebrow">Beyond engineering</p>
+          <h2>
+            Showing up <em>for students.</em>
+          </h2>
+          <p>
+            From student representation to advocacy for reliable campus
+            electricity, unionism is part of my story. My experience page brings
+            together the roles and public coverage.
+          </p>
+          <Link className="text-link" to="/experience#leadership">
+            Explore my union work <ArrowRight size={17} />
+          </Link>
+        </article>
+        <article>
+          <p className="eyebrow">Ideas & perspective</p>
+          <h2>
+            Technology <em>as opportunity.</em>
+          </h2>
+          <p>
+            In January 2023, I wrote about connecting African tech talent with
+            international companies through Billioncodes and online education.
+          </p>
+          <a
+            className="text-link"
+            href="https://medium.com/@jhardeyemor/unlocking-the-potential-of-connecting-african-tech-talent-with-international-companies-3ec008a0577d"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Read the article on Medium <ArrowUpRight size={17} />
+          </a>
+        </article>
+        <Link className="text-link" to="/gallery">
+          Visit the gallery <ArrowRight size={17} />
+        </Link>
       </section>
       <section className="container principles">
         <div className="section-heading">

@@ -1,0 +1,44 @@
+{
+  "entries": [
+    {
+      "title": "Zonal Coordinator — Southwest Zone D",
+      "organization": "National Association of Nigerian Students (NANS)",
+      "period": "2026",
+      "description": "Emerged as Zonal Coordinator in 2026, representing students across Southwest Nigeria and coordinating advocacy for student welfare.",
+      "sources": [
+        {
+          "text": "NANS executive directory",
+          "href": "https://nanssouthwest.org.ng/executives"
+        },
+        {
+          "text": "The Sun · April 2026",
+          "href": "https://thesun.ng/adeleke-urges-responsible-leadership-as-nans-south-west-inaugurates-mew-leadership/"
+        }
+      ]
+    },
+    {
+      "title": "Advocacy for reliable campus electricity",
+      "organization": "NANS Southwest · Osogbo",
+      "period": "March 2026",
+      "description": "Led a public demonstration calling attention to unreliable electricity across campuses and student communities, and its effect on academic life.",
+      "sources": [
+        {
+          "text": "Osun Defender · March 2026",
+          "href": "https://osundefender.com/nans-occupies-osogbo-protests-epileptic-power-supply/"
+        }
+      ]
+    },
+    {
+      "title": "Assistant General Secretary",
+      "organization": "NANS Southwest (Zone D)",
+      "period": "2025",
+      "description": "Served as Assistant General Secretary in 2025, advocating for student welfare and transparent communication between students and the executive council.",
+      "sources": [
+        {
+          "text": "Tribune · March 2025",
+          "href": "https://tribuneonlineng.com/nans-petitions-tinubu-seeks-justice-for-five-uniosun-students-killed-in-auto-crash/"
+        }
+      ]
+    }
+  ]
+}

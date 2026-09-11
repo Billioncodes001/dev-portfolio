@@ -225,6 +225,7 @@ export function Footer() {
           <span>Always a work in progress.</span>
         </p>
         <div className="footer-links">
+          <Link to="/gallery">Gallery</Link>
           <Link to="/skills">Toolkit</Link>
           <Link to="/education">Education</Link>
           <Link to="/blog">Writing</Link>
@@ -236,7 +237,7 @@ export function Footer() {
         </a>
       </div>
       <div className="footer-bottom">
-        <span>© {new Date().getFullYear()} Josiah Adeyemo</span>
+        <span>© {new Date().getFullYear()} Comr. Josiah Adeyemo</span>
         <span>Thoughtfully built, from interface to infrastructure.</span>
       </div>
     </footer>

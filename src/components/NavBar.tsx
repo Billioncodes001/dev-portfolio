@@ -7,6 +7,7 @@ const links = [
   { to: "/projects", label: "Work" },
   { to: "/about", label: "About" },
   { to: "/experience", label: "Experience" },
+  { to: "/gallery", label: "Gallery" },
 ];
 function initialTheme() {
   try {
@@ -47,12 +48,12 @@ export default function NavBar() {
   return (
     <header className="site-header">
       <div className="container nav-inner">
-        <Link className="brand" to="/" aria-label="Josiah Adeyemo home">
+        <Link className="brand" to="/" aria-label="Comr. Josiah Adeyemo home">
           <span className="brand-mark">
             ja<span>.</span>
           </span>
           <span className="brand-name">
-            Josiah Adeyemo<span>Software Engineer</span>
+            Comr. Josiah Adeyemo<span>Software Engineer</span>
           </span>
         </Link>
         <nav

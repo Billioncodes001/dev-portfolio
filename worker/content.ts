@@ -1,3 +1,5 @@
+import gallery from "../public/profile/gallery.json";
+import leadership from "../public/profile/leadership.json";
 import home from "../public/profile/home.json";
 import about from "../public/profile/about.json";
 import projects from "../public/profile/projects.json";
@@ -24,6 +26,8 @@ export const previews = repositoryPreviewsSchema.parse(previewData);
 export const portfolio = portfolioSchema.parse({
   home,
   about,
+  gallery: gallery.items,
+  leadership: leadership.entries,
   projects: attachReleases(
     projects.projects.map((project) => projectSchema.parse(project)),
     releases,

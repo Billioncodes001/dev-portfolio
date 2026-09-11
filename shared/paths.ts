@@ -2,6 +2,7 @@ export const pageTitles: Record<string, string> = {
   "/": "Software Engineer",
   "/projects": "Selected Work",
   "/about": "About",
+  "/gallery": "Gallery",
   "/experience": "Experience",
   "/skills": "Toolkit",
   "/education": "Education",

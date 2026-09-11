@@ -100,6 +100,29 @@ export const projectSchema = z.object({
 export const portfolioSchema = z.object({
   home: z.object({ name: text, roles: z.array(text).min(1) }),
   about: z.object({ about: text, imageSource: asset }),
+  leadership: z
+    .array(
+      z.object({
+        title: text,
+        organization: text,
+        period: text,
+        description: text,
+        sources: z.array(link).min(1),
+      }),
+    )
+    .default([]),
+  gallery: z
+    .array(
+      z.object({
+        id: text,
+        title: text,
+        category: text,
+        image: asset,
+        alt: text,
+        caption: text,
+      }),
+    )
+    .default([]),
   projects: z.array(projectSchema),
   github: z
     .object({

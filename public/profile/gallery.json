@@ -1,0 +1,36 @@
+{
+  "items": [
+    {
+      "id": "portrait",
+      "title": "The person behind the code",
+      "category": "Portrait",
+      "image": "images/about/profile.jpeg",
+      "alt": "Josiah Adeyemo wearing a gold suit and tie",
+      "caption": "A portrait from my personal portfolio."
+    },
+    {
+      "id": "billioncodes",
+      "title": "Billioncodes proposal desk",
+      "category": "Interface study · 2026",
+      "image": "images/projects/rebuilt-billioncodes-studio.webp",
+      "alt": "Interface preview of the Billioncodes proposal desk",
+      "caption": "An independent rebuild exploring scope, pricing, and proposal revisions. A local software project, separate from historic client work."
+    },
+    {
+      "id": "campushub",
+      "title": "CampusHub marketplace",
+      "category": "Interface study · 2026",
+      "image": "images/projects/rebuilt-campushub-marketplace.webp",
+      "alt": "Interface preview of the CampusHub marketplace pilot",
+      "caption": "An independent campus resale pilot exploring listings, reservations, and handover. A local project, separate from the original CampusHub service."
+    },
+    {
+      "id": "korpeatech",
+      "title": "Korpeatech scope studio",
+      "category": "Interface study · 2026",
+      "image": "images/projects/rebuilt-korpeatech-showcase.webp",
+      "alt": "Interface preview of the Korpeatech scope studio",
+      "caption": "An independent rebuild for defining project scope and acceptance criteria. A local study, not an official company service."
+    }
+  ]
+}

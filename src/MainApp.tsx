@@ -9,6 +9,7 @@ import { pageTitles } from "../shared/paths";
 const Projects = lazy(() => import("./components/Projects"));
 const ProjectDetail = lazy(() => import("./components/ProjectDetail"));
 const About = lazy(() => import("./components/AboutPage"));
+const Gallery = lazy(() => import("./components/Gallery"));
 const Experience = lazy(() => import("./components/ExperiencePage"));
 const Skills = lazy(() => import("./components/SkillsPage"));
 const Education = lazy(() => import("./components/EducationPage"));
@@ -24,7 +25,7 @@ export default function MainApp() {
     document.title =
       (pageTitles[pathname] ||
         (pathname.startsWith("/projects/") ? "Project" : "Page not found")) +
-      " | Josiah Adeyemo";
+      " | Comr. Josiah Adeyemo";
     if (previousPath.current !== pathname) {
       if (!hash) window.scrollTo({ top: 0, behavior: "instant" });
       document.getElementById("main-content")?.focus({ preventScroll: true });
@@ -51,6 +52,7 @@ export default function MainApp() {
               <Route path="/projects" element={<Projects />} />
               <Route path="/projects/:slug" element={<ProjectDetail />} />
               <Route path="/about" element={<About />} />
+              <Route path="/gallery" element={<Gallery />} />
               <Route path="/experience" element={<Experience />} />
               <Route path="/skills" element={<Skills />} />
               <Route path="/education" element={<Education />} />
