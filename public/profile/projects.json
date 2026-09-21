@@ -70,7 +70,7 @@
       "rebuildNote": "Original private-source project. Screens are from the September 10 Android demo with sample data, not a live service or a newly verified connected release."
     },
     {
-      "slug": "prank-studio",
+      "slug": "github-1380011815",
       "title": "Prankshit Studio",
       "image": "images/projects/prank-studio.webp",
       "bodyText": "- A browser-local creative workspace with 37 tools for fictional screen props, conversation storyboards and document mockups.\n- Shared React renderers support device/theme previews, validated draft import, PNG/SVG/PDF output and browser-encoded conversation video. PDF work is additive layering, not secure redaction.\n- Financial templates retain permanent sample warnings. These are fictional props, not transaction evidence; customer billing and payment integrations are not enabled.",

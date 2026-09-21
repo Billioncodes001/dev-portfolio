@@ -41,6 +41,12 @@ test("private-source showcases publish only reviewed case-study links and decoda
 test("new public work has previews and GitHub discovery does not duplicate the curated studio", async () => {
   const portfolio = await loadPortfolio(resolve("public"));
   const previews = await loadRepositoryPreviews(resolve("public"));
+  assert.equal(
+    portfolio.projects.find((project) => project.title === "Prankshit Studio")
+      ?.slug,
+    "github-1380011815",
+    "preserve the URL already published by automatic GitHub discovery",
+  );
   for (const name of ["tunji-ojo", "prank-studio"]) {
     const image = previews[`billioncodes001/${name}`];
     assert.ok(image);
