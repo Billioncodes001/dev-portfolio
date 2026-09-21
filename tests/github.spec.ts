@@ -67,7 +67,9 @@ test("new GitHub projects refresh in place, and failures preserve a contact draf
   });
   await page.goto("/projects");
   await expect(page.getByText("Fresh from GitHub")).toBeVisible();
-  await expect(page.locator(".project-card")).toHaveCount(14);
+  await expect(page.locator(".project-card")).toHaveCount(
+    original.projects.length + 1,
+  );
   await page.getByRole("button", { name: "GitHub", exact: true }).click();
   await expect(page.locator(".project-card")).toHaveCount(1);
   expanded = true;

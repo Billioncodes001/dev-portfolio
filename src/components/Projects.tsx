@@ -26,14 +26,16 @@ export default function Projects() {
       (filter === "GitHub"
         ? Boolean(project.repository)
         : filter === "Mobile"
-          ? /flutter|android|dart/.test(tags)
+          ? /\b(?:flutter|android|dart|react native|expo|ios)\b/.test(tags)
           : tags.includes(filter.toLowerCase()));
     return (
       matchesFilter &&
       (!stage ||
-        (stage === "unreviewed"
-          ? !project.release
-          : project.release?.stage === stage)) &&
+        (stage === "private-source"
+          ? project.sourceVisibility === "private"
+          : stage === "unreviewed"
+            ? !project.release && project.sourceVisibility !== "private"
+            : project.release?.stage === stage)) &&
       (project.title + " " + project.bodyText + " " + tags)
         .toLowerCase()
         .includes(query)
@@ -118,6 +120,9 @@ export default function Projects() {
                 </option>
               ))}
               <option value="unreviewed">Not reviewed</option>
+              <option value="private-source">
+                Private source / Case study
+              </option>
             </select>
           </label>
           <p>

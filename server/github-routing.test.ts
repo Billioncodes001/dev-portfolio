@@ -51,6 +51,6 @@ test("new repository detail routes become valid without restarting production", 
   assert.equal((await fetch(url + "/projects/github-999")).status, 200);
   assert.equal(
     (await (await fetch(url + "/api/portfolio")).json()).projects.length,
-    14,
+    base.projects.length + 1,
   );
 });

@@ -68,7 +68,7 @@ test("profile content validates and the API returns all original projects", asyn
   assert.equal(response.status, 200);
   const data = portfolioSchema.parse(await response.json());
   assert.equal(data.home.name, "Comr. Josiah Adeyemo");
-  assert.equal(data.projects.length, 13);
+  assert.equal(data.projects.length, 18);
   assert.equal(response.headers.get("cache-control"), "no-store");
   assert.equal(response.headers.get("x-powered-by"), null);
 });

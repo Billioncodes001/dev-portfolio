@@ -122,7 +122,9 @@ test("configured preview assets exist and external or traversing paths are rejec
     "billioncodes001/app-launch-inspector",
     "billioncodes001/billioncodes-academy",
     "billioncodes001/dev-portfolio",
+    "billioncodes001/prank-studio",
     "billioncodes001/social-claim-verifier",
+    "billioncodes001/tunji-ojo",
     "billioncodes001/x-browser-mcp",
   ]);
   for (const path of Object.values(previews))

@@ -10,7 +10,7 @@ test("home renders complete content, intact images, and no horizontal overflow",
   await expect(
     page.getByRole("heading", { name: /Thoughtful code/ }),
   ).toBeVisible();
-  await expect(page.getByRole("heading", { name: /Korpeatech/ })).toBeVisible();
+  await expect(page.getByRole("heading", { name: /OSINT \/ Neural/ })).toBeVisible();
   for (const image of await page.locator("img").all())
     await image.scrollIntoViewIfNeeded();
   await page.locator(".site-footer").scrollIntoViewIfNeeded();
@@ -50,7 +50,7 @@ test("home renders complete content, intact images, and no horizontal overflow",
 
 test("project filters, search, and deep-link reload work", async ({ page }) => {
   await page.goto("/projects");
-  await expect(page.locator(".project-card")).toHaveCount(13);
+  await expect(page.locator(".project-card")).toHaveCount(18);
   await page.getByRole("button", { name: "Python", exact: true }).click();
   await expect(page.locator(".project-card")).toHaveCount(2);
   await page
@@ -60,7 +60,7 @@ test("project filters, search, and deep-link reload work", async ({ page }) => {
     page.getByRole("heading", { name: "No matches this time." }),
   ).toBeVisible();
   await page.getByRole("button", { name: "Clear filters" }).click();
-  await expect(page.locator(".project-card")).toHaveCount(13);
+  await expect(page.locator(".project-card")).toHaveCount(18);
   await page
     .getByRole("link", { name: "Explore Korpeatech", exact: false })
     .click();

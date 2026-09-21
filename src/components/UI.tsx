@@ -137,9 +137,11 @@ export function ProjectCard({
           <p>{projectSummary(project)}</p>
           <div className="release-badge">
             <span className="tiny-dot" aria-hidden="true" />
-            {project.release
-              ? releaseLabels[project.release.stage]
-              : "Release not reviewed"}
+            {project.sourceVisibility === "private"
+              ? "Private source"
+              : project.release
+                ? releaseLabels[project.release.stage]
+                : "Release not reviewed"}
           </div>
         </div>
         <Link

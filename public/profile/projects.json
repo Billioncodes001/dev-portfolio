@@ -1,6 +1,89 @@
 {
   "projects": [
     {
+      "slug": "osint-neural",
+      "sourceVisibility": "private",
+      "title": "OSINT / Neural",
+      "image": "images/projects/osint-neural.webp",
+      "bodyText": "- A searchable research-tool atlas presented as an interactive 3D neural map, with 167 clusters, saved services and dated catalog evidence.\n- Separates page availability from scoped functional verification. The public explorer is static; background investigation commands are available only in the separately configured local runtime.\n- Source remains private. The public case study documents the architecture, actual interface and verification boundaries without exposing job history or investigation targets.",
+      "tags": ["React", "Three.js", "Node.js", "Cloudflare Pages"],
+      "links": [
+        {
+          "text": "Public explorer",
+          "href": "https://osint-neural-atlas.pages.dev/"
+        },
+        {
+          "text": "Case study",
+          "href": "https://github.com/Billioncodes001/dev-portfolio/blob/main/docs/projects/osint-neural.md"
+        }
+      ],
+      "rebuildNote": "Original project. Public catalog, private source. Reviewed landing-page capture; no private searches or account data are published."
+    },
+    {
+      "slug": "vantage",
+      "sourceVisibility": "private",
+      "title": "Vantage Visual Intelligence",
+      "image": "images/projects/vantage.webp",
+      "bodyText": "- A private visual-investigation workspace with source-image preservation, inspection jobs, reviewed observations and case exports.\n- React and FastAPI connect a tenant-isolated PostgreSQL data model, private object storage and asynchronous workers. Model outputs are hypotheses, not proof of identity, location or authenticity.\n- The public pilot has its own account boundary. Source, customer cases and uploaded evidence remain private; this showcase contains only the public landing page and reviewed technical description.",
+      "tags": ["React", "TypeScript", "FastAPI", "PostgreSQL", "Celery"],
+      "links": [
+        { "text": "Public pilot", "href": "https://vantageintel.app/" },
+        {
+          "text": "Case study",
+          "href": "https://github.com/Billioncodes001/dev-portfolio/blob/main/docs/projects/vantage.md"
+        }
+      ],
+      "rebuildNote": "Original private-source pilot. No customer evidence is shown. Deployment is not a claim of forensic accuracy, accreditation or production certification."
+    },
+    {
+      "slug": "overlay-studio",
+      "sourceVisibility": "private",
+      "title": "Overlay Studio",
+      "image": "images/projects/overlay-studio.webp",
+      "bodyText": "- A creator-facing streaming design studio with coordinated scenes, webcam frames, panels and animated assets.\n- A deterministic design engine shares its renderer between previews and exported artwork; an asynchronous Bun, Redis and FFmpeg pipeline handles render jobs and account-owned packages.\n- The public website is a preview. Hosted generation requires a configured render service, and paid checkout is not enabled. Source and private account libraries remain private.",
+      "tags": ["Next.js", "TypeScript", "Bun", "Redis", "FFmpeg"],
+      "links": [
+        {
+          "text": "Public preview",
+          "href": "https://stream-overlay-builder.pages.dev/"
+        },
+        {
+          "text": "Case study",
+          "href": "https://github.com/Billioncodes001/dev-portfolio/blob/main/docs/projects/overlay-studio.md"
+        }
+      ],
+      "rebuildNote": "Original private-source project. The screenshot is the public landing page; paid commerce and production rendering availability are not implied."
+    },
+    {
+      "slug": "mymecho",
+      "sourceVisibility": "private",
+      "title": "MyMecho",
+      "image": "images/projects/mymecho.webp",
+      "bodyText": "- A Nigerian auto-care mobile experience for drivers and mechanics, covering service requests, offers, booking conversations and job progress.\n- The showcased Android demo uses fictional participants and device-local data. Its customer and mechanic journeys include cancellations, availability and roadside scenarios.\n- A connected backend and staff workspace are under development, separate from the demo shown here. No real dispatch or payment is claimed; source and prerelease builds remain private.",
+      "tags": ["React Native", "Expo", "TypeScript", "Node.js", "Socket.IO"],
+      "links": [
+        {
+          "text": "Case study",
+          "href": "https://github.com/Billioncodes001/dev-portfolio/blob/main/docs/projects/mymecho.md"
+        }
+      ],
+      "rebuildNote": "Original private-source project. Screens are from the September 10 Android demo with sample data, not a live service or a newly verified connected release."
+    },
+    {
+      "slug": "prank-studio",
+      "title": "Prankshit Studio",
+      "image": "images/projects/prank-studio.webp",
+      "bodyText": "- A browser-local creative workspace with 37 tools for fictional screen props, conversation storyboards and document mockups.\n- Shared React renderers support device/theme previews, validated draft import, PNG/SVG/PDF output and browser-encoded conversation video. PDF work is additive layering, not secure redaction.\n- Financial templates retain permanent sample warnings. These are fictional props, not transaction evidence; customer billing and payment integrations are not enabled.",
+      "tags": ["React", "TypeScript", "Vinext", "SVG", "PDF"],
+      "links": [
+        {
+          "text": "GitHub",
+          "href": "https://github.com/Billioncodes001/prank-studio"
+        }
+      ],
+      "rebuildNote": "Original project. Actual local workspace screenshot with fictional content. GitHub checks do not automatically publish the separately managed Sites deployment."
+    },
+    {
       "image": "images/projects/rebuilt-korpeatech-showcase.webp",
       "title": "Korpeatech - Tech Solutions",
       "bodyText": "- A private local scope studio with an orange engineering-led identity: define a project's users, success measure, scope boundaries and testable acceptance criteria.\n- Track risks and dependencies, compare immutable revisions, recover earlier scope and export a saved handoff as Markdown, JSON or a printable document.\n- Password-gated, with stale-edit protection and safe retries. Ready means the planning checklist is complete, not that delivery is approved. No external request is sent.",

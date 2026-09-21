@@ -92,6 +92,7 @@ export const projectSchema = z.object({
     .regex(/^[a-z0-9-]+$/)
     .optional(),
   source: z.enum(["curated", "github"]).default("curated"),
+  sourceVisibility: z.enum(["public", "private"]).optional(),
   repository: repositorySchema.optional(),
   rebuildNote: text.optional(),
   release: projectReleaseSchema.optional(),

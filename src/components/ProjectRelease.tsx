@@ -2,6 +2,23 @@ import type { Project } from "../../shared/schema";
 import { releaseLabels } from "../../shared/releases";
 
 export default function ProjectRelease({ project }: { project: Project }) {
+  if (project.sourceVisibility === "private")
+    return (
+      <section className="release-sheet" aria-label="Source access">
+        <p className="eyebrow">Public case study / Private source</p>
+        <h2>A closer look, without exposing the source.</h2>
+        <p>
+          Selected screenshots and technical notes are shared with the owner's
+          permission. Application code, private accounts and customer data are
+          not published. The case study explains what was checked and what
+          remains a preview, demo or development workflow.
+        </p>
+        <p>
+          Any public website has its own access rules. This portfolio entry is
+          not a download entitlement or a production-readiness certification.
+        </p>
+      </section>
+    );
   const release = project.release;
   if (!release)
     return (

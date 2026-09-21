@@ -1,4 +1,24 @@
 {
+  "billioncodes001/prank-studio": {
+    "stage": "browser-tool",
+    "checkedOn": "2026-09-21",
+    "commit": "c9cd86edbb850f5dc891608dad22f36ada75a6f7",
+    "summary": "A browser-local creative workspace for fictional screen props, conversation storyboards and document mockups.",
+    "verification": "GitHub Actions passed renderer checks across 248 device/theme combinations, draft/import validation, financial-prop labels, TypeScript and the production build. A fresh local workspace capture was reviewed; camera and microphone permissions were not requested.",
+    "setupUrl": "https://github.com/Billioncodes001/prank-studio#readme",
+    "ciUrl": "https://github.com/Billioncodes001/prank-studio/actions/runs/35618629685",
+    "notes": [
+      "37 catalog tools share device/theme presets, a common preview/export renderer and validated local draft import.",
+      "Export fictional scenes as PNG, SVG or PDF; supported browsers can encode conversation playback as WebM.",
+      "Financial-prop views retain permanent sample labels, including test-account exports."
+    ],
+    "limitations": [
+      "Fictional content only; not official screenshots or proof of conversations, invoices or payments.",
+      "PDF editing adds layers and rearranges pages; it is not secure redaction. Browser size and codec limits apply.",
+      "Optional test login is server-backed, not billing or DRM. No payment provider or real customer entitlement is configured.",
+      "GitHub CI validates source; the existing Sites deployment has a separate publication and access policy."
+    ]
+  },
   "billioncodes001/angular-mini-projects": {
     "stage": "browser-tool",
     "checkedOn": "2026-09-10",

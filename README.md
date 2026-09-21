@@ -46,7 +46,9 @@ Terminate HTTPS at your reverse proxy and configure HSTS there. Set `SITE_ORIGIN
 
 ## GitHub integration
 
-Work automatically combines the 13 curated showcases with eligible public repositories from **Billioncodes001**. The backend refreshes its cache every five minutes when requested; a visible browser checks every minute. New non-empty public projects normally appear within about six minutes of GitHub indexing them. Existing curated cards are not duplicated. Add the topic `portfolio-hide` to exclude a repository from discovery.
+Work automatically combines 18 curated showcases with eligible public repositories from **Billioncodes001**. The backend refreshes its cache every five minutes when requested; a visible browser checks every minute. New non-empty public projects normally appear within about six minutes of GitHub indexing them. Existing curated cards are not duplicated. Add the topic `portfolio-hide` to exclude a repository from discovery.
+
+The [reviewed project case studies](docs/projects/README.md) add OSINT / Neural, Vantage, Overlay Studio and MyMecho without exposing their private source. Prankshit Studio links to its public repository; Tunji-Ojo has a reviewed website screenshot in the discovery preview map. Case-study descriptions distinguish public previews, local demos and release limitations.
 
 All thirteen curated projects have new, tested source repositories and updated showcase links. All have actual interface screenshots, including the Tkinter desktop app. These are independent local demos, not recovered source histories or official company services. GitHub-discovered projects can receive reviewed local screenshots through `public/profile/repository-previews.json`; App Launch Inspector and Social Claim Verifier are configured there. See [GitHub setup and migration details](docs/GITHUB.md) for configuration, repositories and limitations.
 
