@@ -50,7 +50,7 @@
 .os-wallpaper {
   position: absolute;
   inset: 0;
-  background: #0d1f1a url("/media/wallpaper-poster.webp") center / cover;
+  background: #2a1c12 url("/media/morning-wide-poster.webp") center / cover;
 }
 .os-wallpaper video,
 .os-wallpaper img {
@@ -607,7 +607,9 @@
   cursor: default;
   font-size: 12px;
   font-weight: 500;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
+  text-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.9),
+    0 0 8px rgba(0, 0, 0, 0.6);
 }
 .os-icons button:hover span:last-child,
 .os-icons button:focus-visible span:last-child {
@@ -2070,4 +2072,10 @@
 /* Hidden, not aria-hidden: keeps its buttons out of the tab order too. */
 .os.is-narrow:not(.show-home) .ios-home {
   visibility: hidden;
+}
+
+@media (max-aspect-ratio: 1/1) {
+  .os-wallpaper {
+    background-image: url("/media/morning-tall-poster.webp");
+  }
 }

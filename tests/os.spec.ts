@@ -6,10 +6,25 @@ test("first visit boots, locks, and unlocks into the desktop", async ({
 }) => {
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
+  // The boot lasts about a second, so record it as it happens rather than
+  // racing a visibility check against it on a busy machine.
+  await page.addInitScript(() => {
+    new MutationObserver((_, observer) => {
+      if (document.querySelector(".os-boot")) {
+        (window as Window & { sawBoot?: boolean }).sawBoot = true;
+        observer.disconnect();
+      }
+    }).observe(document, { childList: true, subtree: true });
+  });
   await page.goto("/");
   await expect(
-    page.getByRole("status", { name: "Starting JA/OS" }),
-  ).toBeVisible();
+    page.getByRole("list", { name: "Notifications" }).getByRole("button"),
+  ).not.toHaveCount(0);
+  expect(
+    await page.evaluate(
+      () => (window as Window & { sawBoot?: boolean }).sawBoot,
+    ),
+  ).toBe(true);
   await expect(
     page.getByRole("list", { name: "Notifications" }).getByRole("button"),
   ).not.toHaveCount(0);
