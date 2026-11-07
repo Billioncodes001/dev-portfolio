@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect, front } from "./fixtures";
 import { resolve } from "node:path";
 import { loadRepositoryPreviews } from "../server/content";
 import { mergeProjects } from "../server/github";
@@ -63,7 +63,9 @@ test("curated and discovered screenshots load on Work and project details", asyn
     await page
       .getByRole("link", { name: "Explore " + title, exact: true })
       .click();
-    await expect(page.locator("h1")).toHaveText(title);
-    await expect(preview).toBeVisible();
+    await expect(front(page).locator("h1")).toHaveText(title);
+    await expect(
+      front(page).getByRole("img", { name: title + " interface preview" }),
+    ).toBeVisible();
   }
 });

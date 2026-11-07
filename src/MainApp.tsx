@@ -1,83 +1,76 @@
-import { lazy, Suspense, useEffect, useRef } from "react";
-import { Link, Route, Routes, useLocation } from "react-router-dom";
-import NavBar from "./components/NavBar";
-import Home from "./components/Home";
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { PortfolioProvider } from "./hooks/usePortfolio";
-import { Footer } from "./components/UI";
 import { pageTitles } from "../shared/paths";
+import OS, { Boot, type Phase, type Theme } from "./os/OS";
 
-const Projects = lazy(() => import("./components/Projects"));
-const ProjectDetail = lazy(() => import("./components/ProjectDetail"));
-const About = lazy(() => import("./components/AboutPage"));
-const Gallery = lazy(() => import("./components/Gallery"));
-const Experience = lazy(() => import("./components/ExperiencePage"));
-const Skills = lazy(() => import("./components/SkillsPage"));
-const Education = lazy(() => import("./components/EducationPage"));
-const Blog = lazy(() => import("./components/Blog"));
-const Achievements = lazy(() => import("./components/Achievements"));
-const Testimonials = lazy(() => import("./components/Testimonials"));
-const Contact = lazy(() => import("./components/Contact"));
+const BOOTED = "ja-os-booted";
+
+function initialTheme(): Theme {
+  try {
+    return localStorage.getItem("portfolio-theme") === "dark"
+      ? "dark"
+      : "light";
+  } catch {
+    return "light";
+  }
+}
+
+/** Shared deep links skip straight to the page; first visits get the full boot. */
+function initialPhase(pathname: string): Phase {
+  if (pathname !== "/") return "desktop";
+  try {
+    if (sessionStorage.getItem(BOOTED)) return "desktop";
+  } catch {
+    /* Without storage every visit simply boots. */
+  }
+  return "boot";
+}
 
 export default function MainApp() {
-  const { pathname, hash } = useLocation();
-  const previousPath = useRef(pathname);
+  const { pathname } = useLocation();
+  const [phase, setPhase] = useState<Phase>(() => initialPhase(pathname));
+  const [theme, setTheme] = useState(initialTheme);
+
   useEffect(() => {
     document.title =
       (pageTitles[pathname] ||
         (pathname.startsWith("/projects/") ? "Project" : "Page not found")) +
       " | Comr. Josiah Adeyemo";
-    if (previousPath.current !== pathname) {
-      if (!hash) window.scrollTo({ top: 0, behavior: "instant" });
-      document.getElementById("main-content")?.focus({ preventScroll: true });
-      previousPath.current = pathname;
+  }, [pathname]);
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+    try {
+      localStorage.setItem("portfolio-theme", theme);
+    } catch {
+      /* The theme still works when storage is unavailable. */
     }
-  }, [pathname, hash]);
+  }, [theme]);
+  useEffect(() => {
+    if (phase === "boot") return;
+    try {
+      sessionStorage.setItem(BOOTED, "1");
+    } catch {
+      /* Storage is optional. */
+    }
+  }, [phase]);
+
   return (
     <div id="top">
       <a href="#main-content" className="skip-link">
         Skip to content
       </a>
-      <NavBar />
-      <main id="main-content" tabIndex={-1}>
-        <PortfolioProvider>
-          <Suspense
-            fallback={
-              <div className="load-state" role="status">
-                Loading this chapter...
-              </div>
-            }
-          >
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/projects" element={<Projects />} />
-              <Route path="/projects/:slug" element={<ProjectDetail />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/gallery" element={<Gallery />} />
-              <Route path="/experience" element={<Experience />} />
-              <Route path="/skills" element={<Skills />} />
-              <Route path="/education" element={<Education />} />
-              <Route path="/blog" element={<Blog />} />
-              <Route path="/achievements" element={<Achievements />} />
-              <Route path="/testimonials" element={<Testimonials />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route
-                path="*"
-                element={
-                  <section className="load-state">
-                    <p className="eyebrow">404 / Uncharted territory</p>
-                    <h1>This page took a wrong turn.</h1>
-                    <p>Let's get you back to something good.</p>
-                    <Link className="button primary" to="/">
-                      Back to home
-                    </Link>
-                  </section>
-                }
-              />
-            </Routes>
-          </Suspense>
-        </PortfolioProvider>
-      </main>
-      <Footer />
+      <PortfolioProvider>
+        {phase !== "boot" && (
+          <OS
+            phase={phase}
+            setPhase={setPhase}
+            theme={theme}
+            setTheme={setTheme}
+          />
+        )}
+      </PortfolioProvider>
+      {phase === "boot" && <Boot onDone={() => setPhase("lock")} />}
     </div>
   );
 }
