@@ -28,7 +28,7 @@ const RouteView = memo(function RouteView({ path }: { path: string }) {
         </div>
       }
     >
-      <Routes location={path}>
+      <Routes location={path} key={path}>
         <Route path="/" element={<Home />} />
         <Route path="/projects" element={<Projects />} />
         <Route path="/projects/:slug" element={<ProjectDetail />} />

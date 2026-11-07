@@ -45,8 +45,8 @@ test("deep links skip the boot and windows keep the URL in sync", async ({
   await expect(page.getByText(/You've reached/)).toHaveCount(0);
   await expect(front(page)).toHaveAccessibleName("Work");
   await page
-    .getByRole("navigation", { name: "Main navigation" })
-    .getByRole("link", { name: "About", exact: true })
+    .getByRole("list", { name: "Apps" })
+    .getByRole("button", { name: "About", exact: true })
     .click();
   await expect(page).toHaveURL(/\/about$/);
   await expect(page.locator(".os-window")).toHaveCount(2);
@@ -83,8 +83,8 @@ test("windows drag, maximise, and minimise to the dock", async ({
   await page.getByRole("button", { name: "Minimise About" }).click();
   await expect(page.locator(".os-window.is-min")).toHaveCount(1);
   await page
-    .getByRole("navigation", { name: "Dock" })
-    .getByRole("button", { name: /^About/ })
+    .getByRole("list", { name: "Apps" })
+    .getByRole("button", { name: "About", exact: true })
     .click();
   await expect(page.locator(".os-window.is-min")).toHaveCount(0);
   await expect(page).toHaveURL(/\/about$/);
@@ -92,12 +92,17 @@ test("windows drag, maximise, and minimise to the dock", async ({
 
 test("terminal commands explore the portfolio", async ({ page }, info) => {
   await page.goto("/about");
-  if (info.project.name === "mobile")
+  if (info.project.name === "mobile") {
     await page.getByRole("button", { name: "Home", exact: true }).click();
-  await page
-    .getByRole("navigation", { name: "Dock" })
-    .getByRole("button", { name: /^Terminal/ })
-    .click();
+    await page
+      .getByRole("list", { name: "Apps" })
+      .getByRole("button", { name: "Terminal", exact: true })
+      .click();
+  } else
+    await page
+      .getByRole("navigation", { name: "Dock" })
+      .getByRole("button", { name: /^Terminal/ })
+      .click();
   const shell = page.getByRole("textbox", { name: "Terminal command" });
   await expect(shell).toBeFocused();
   await shell.fill("whoami");
@@ -123,9 +128,12 @@ test("terminal commands explore the portfolio", async ({ page }, info) => {
 
 test("the launcher searches apps and projects from the keyboard", async ({
   page,
-}) => {
+}, info) => {
   await page.goto("/about");
-  await page.getByRole("button", { name: /^Search/ }).click();
+  if (info.project.name === "mobile") {
+    await page.getByRole("button", { name: "Home", exact: true }).click();
+    await page.getByRole("button", { name: "Search", exact: true }).click();
+  } else await page.getByRole("button", { name: /^Search/ }).click();
   const field = page.getByRole("combobox", {
     name: "Search apps and projects",
   });
@@ -141,4 +149,63 @@ test("the launcher searches apps and projects from the keyboard", async ({
   await expect(page.getByText('Nothing matches "zzzz-nothing".')).toBeVisible();
   await field.press("Escape");
   await expect(field).toHaveCount(0);
+});
+
+test("Calendar books a meeting straight into Mail", async ({ page }, info) => {
+  await page.goto("/contact");
+  if (info.project.name === "mobile") {
+    await page.getByRole("button", { name: "Home", exact: true }).click();
+    await page
+      .getByRole("list", { name: "Apps" })
+      .getByRole("button", { name: "Calendar", exact: true })
+      .click();
+  } else
+    await page
+      .getByRole("navigation", { name: "Dock" })
+      .getByRole("button", { name: /^Calendar/ })
+      .click();
+  const book = page.getByRole("button", { name: "Book a meeting" });
+  await expect(book).toBeEnabled();
+  await book.click();
+  await expect(page).toHaveURL(/\/contact\?meeting=/);
+  await expect(
+    page.getByRole("textbox", { name: "A little about your idea" }),
+  ).toHaveValue(/I'd like to book a call on /);
+});
+
+test("Safari opens projects as tabs, live where they allow it", async ({
+  page,
+}, info) => {
+  test.skip(info.project.name === "mobile", "Covered by the desktop layout");
+  await page.goto("/about");
+  await page
+    .getByRole("navigation", { name: "Dock" })
+    .getByRole("button", { name: /^Safari/ })
+    .click();
+  const tabs = page.getByRole("tablist", { name: "Projects" });
+  await expect(tabs.getByRole("tab").first()).toHaveText("Favorites");
+  await expect(
+    page.locator("iframe[title='OSINT / Neural (live site)']"),
+  ).toHaveAttribute("src", "https://osint-neural-atlas.pages.dev/");
+  await tabs.getByRole("tab", { name: "Favorites" }).click();
+  await page.getByRole("button", { name: "Korpeatech", exact: true }).click();
+  await expect(
+    page.getByRole("button", { name: "Read the case study" }),
+  ).toBeVisible();
+});
+
+test("music follows the visitor's mute choice", async ({ page }, info) => {
+  test.skip(
+    info.project.name === "mobile",
+    "The sound switch is in the menu bar",
+  );
+  await page.goto("/about");
+  const mute = page.getByRole("button", { name: "Mute music" });
+  await expect(mute).toHaveAttribute("aria-pressed", "true");
+  await mute.click();
+  await expect(
+    page.getByRole("button", { name: "Play music" }),
+  ).toHaveAttribute("aria-pressed", "false");
+  await page.reload();
+  await expect(page.getByRole("button", { name: "Play music" })).toBeVisible();
 });

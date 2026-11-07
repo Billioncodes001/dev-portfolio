@@ -190,8 +190,8 @@ test("navigation works at each viewport and theme choice persists", async ({
       .click();
   } else
     await page
-      .getByRole("navigation", { name: "Main navigation" })
-      .getByRole("link", { name: "About", exact: true })
+      .getByRole("list", { name: "Apps" })
+      .getByRole("button", { name: "About", exact: true })
       .click();
   await expect(page).toHaveURL(/\/about$/);
   await expect(
@@ -200,6 +200,8 @@ test("navigation works at each viewport and theme choice persists", async ({
   if (info.project.name === "mobile") {
     await page.getByRole("button", { name: "Home", exact: true }).click();
     await expect(page.getByRole("list", { name: "Apps" })).toBeVisible();
+    // The appearance switch lives in the Mac menu bar; phones have none.
+    return;
   }
   await page.getByRole("button", { name: "Switch to dark theme" }).click();
   await page.reload();
