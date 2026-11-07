@@ -177,6 +177,16 @@ test("Safari opens projects as tabs, live where they allow it", async ({
   page,
 }, info) => {
   test.skip(info.project.name === "mobile", "Covered by the desktop layout");
+  // Deep links are served by the app (not the static index), so they must
+  // carry the frame-src that lets the live tab load.
+  for (const path of ["/", "/about", "/projects/osint-neural"]) {
+    const csp = (await page.request.get(path)).headers()[
+      "content-security-policy"
+    ];
+    expect(csp, path).toMatch(
+      /frame-src [^;]*https:\/\/osint-neural-atlas\.pages\.dev/,
+    );
+  }
   await page.goto("/about");
   await page
     .getByRole("navigation", { name: "Dock" })
