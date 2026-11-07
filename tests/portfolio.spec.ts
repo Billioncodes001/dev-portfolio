@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "./fixtures";
 import AxeBuilder from "@axe-core/playwright";
 
 test("home renders complete content, intact images, and no horizontal overflow", async ({
@@ -10,10 +10,12 @@ test("home renders complete content, intact images, and no horizontal overflow",
   await expect(
     page.getByRole("heading", { name: /Thoughtful code/ }),
   ).toBeVisible();
-  await expect(page.getByRole("heading", { name: /OSINT \/ Neural/ })).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: /OSINT \/ Neural/ }),
+  ).toBeVisible();
   for (const image of await page.locator("img").all())
     await image.scrollIntoViewIfNeeded();
-  await page.locator(".site-footer").scrollIntoViewIfNeeded();
+  await page.locator(".contact-banner").scrollIntoViewIfNeeded();
   await expect
     .poll(() =>
       page
@@ -180,20 +182,25 @@ test("navigation works at each viewport and theme choice persists", async ({
     page.getByRole("heading", { name: /Thoughtful code/ }),
   ).toBeVisible();
   if (info.project.name === "mobile") {
-    await page.getByRole("button", { name: "Open menu" }).click();
-    await page.keyboard.press("Escape");
-    await expect(page.getByRole("button", { name: "Open menu" })).toBeFocused();
-    await page.getByRole("button", { name: "Open menu" }).click();
-  }
-  await page
-    .getByRole("navigation", { name: "Main navigation" })
-    .getByRole("link", { name: "About", exact: true })
-    .click();
+    // Phones get a home screen: back out of Welcome, then tap an app.
+    await page.getByRole("button", { name: "Home", exact: true }).click();
+    await page
+      .getByRole("list", { name: "Apps" })
+      .getByRole("button", { name: "About", exact: true })
+      .click();
+  } else
+    await page
+      .getByRole("navigation", { name: "Main navigation" })
+      .getByRole("link", { name: "About", exact: true })
+      .click();
+  await expect(page).toHaveURL(/\/about$/);
   await expect(
     page.getByRole("heading", { name: "Engineer. Builder. Human." }),
   ).toBeVisible();
-  if (info.project.name === "mobile")
-    await expect(page.getByRole("button", { name: "Open menu" })).toBeVisible();
+  if (info.project.name === "mobile") {
+    await page.getByRole("button", { name: "Home", exact: true }).click();
+    await expect(page.getByRole("list", { name: "Apps" })).toBeVisible();
+  }
   await page.getByRole("button", { name: "Switch to dark theme" }).click();
   await page.reload();
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");

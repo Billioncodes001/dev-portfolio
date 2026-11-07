@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "./fixtures";
 
 test("private-source case studies have working previews and never promise public source", async ({
   page,

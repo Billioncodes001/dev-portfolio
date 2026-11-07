@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect, front } from "./fixtures";
 import AxeBuilder from "@axe-core/playwright";
 
 test("new GitHub projects refresh in place, and failures preserve a contact draft", async ({
@@ -88,7 +88,7 @@ test("new GitHub projects refresh in place, and failures preserve a contact draf
   await page
     .getByRole("link", { name: "Explore A New Project", exact: true })
     .click();
-  await expect(page.locator("h1")).toHaveText("A New Project");
+  await expect(front(page).locator("h1")).toHaveText("A New Project");
   await expect(
     page.getByRole("heading", { name: "Review pending." }),
   ).toBeVisible();

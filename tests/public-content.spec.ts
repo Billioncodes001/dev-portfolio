@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "./fixtures";
 
 test("unsupported testimonials, awards, and article links are absent from API and public source", async ({
   page,
