@@ -25,7 +25,11 @@ export function createApp(options: Options) {
   app.use(
     helmet({
       contentSecurityPolicy: {
-        directives: { "upgrade-insecure-requests": null },
+        directives: {
+          "upgrade-insecure-requests": null,
+          // Safari's live tab (src/os/apps/Safari.tsx) embeds this project.
+          "frame-src": ["'self'", "https://osint-neural-atlas.pages.dev"],
+        },
       },
       strictTransportSecurity: false,
     }),

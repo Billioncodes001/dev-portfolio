@@ -12,29 +12,47 @@ import {
   ChevronLeft,
   Github,
   Linkedin,
-  Lock,
   Mail,
-  Maximize2,
-  Minus,
   Moon,
   Search,
   Sun,
+  Volume2,
+  VolumeX,
   X,
 } from "lucide-react";
 import { usePortfolio } from "../hooks/usePortfolio";
-import {
-  assetUrl,
-  projectName,
-  projectSlug,
-  projectSummary,
-} from "../components/UI";
+import { projectName, projectSlug, projectSummary } from "../components/UI";
 import { pageTitles } from "../../shared/paths";
-import { apps, appForPath, desktopApps, dockApps, type AppId } from "./apps";
+import {
+  apps,
+  appForPath,
+  desktopApps,
+  dockApps,
+  homeApps,
+  phoneDock,
+  type AppId,
+} from "./apps";
+import AppIcon from "./AppIcon";
+import LockScreen from "./LockScreen";
 import RouteView from "./RouteView";
 import Terminal from "./Terminal";
 import Wallpaper from "./Wallpaper";
+import Calendar from "./apps/Calendar";
+import Notes from "./apps/Notes";
+import Safari from "./apps/Safari";
+import SysInfo from "./apps/SysInfo";
+import { sound, useSound } from "./sound";
+import { Battery, Signal, Wifi } from "./StatusIcons";
+import {
+  menuDate,
+  reducedMotion,
+  shortTime,
+  useClock,
+  useNarrow,
+} from "./util";
 import "./os.css";
 
+export { default as AppIcon } from "./AppIcon";
 export type Theme = "light" | "dark";
 export type Phase = "boot" | "lock" | "desktop";
 
@@ -51,89 +69,30 @@ type Win = {
   closing: boolean;
 };
 
-const MENU = 30;
-const DOCK = 92;
-const reducedMotion = () =>
-  window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-function useNarrow() {
-  const query = "(max-width: 760px)";
-  const [narrow, setNarrow] = useState(() => window.matchMedia(query).matches);
-  useEffect(() => {
-    const media = window.matchMedia(query);
-    const update = () => setNarrow(media.matches);
-    media.addEventListener("change", update);
-    return () => media.removeEventListener("change", update);
-  }, []);
-  return narrow;
-}
-
-function useClock() {
-  const [now, setNow] = useState(() => new Date());
-  useEffect(() => {
-    const timer = setInterval(() => setNow(new Date()), 15_000);
-    return () => clearInterval(timer);
-  }, []);
-  return now;
-}
-
-/** Experience entries aren't stored in date order; prefer the one still running. */
-const currentRole = <T extends { dateText: string }>(items: T[]) =>
-  items.find((item) => /present/i.test(item.dateText)) ?? items[0];
-
-const time = (date: Date) =>
-  date.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
-const day = (date: Date) =>
-  date.toLocaleDateString([], {
-    weekday: "long",
-    month: "long",
-    day: "numeric",
-  });
-
-export function AppIcon({ id, size = 54 }: { id: AppId; size?: number }) {
-  const app = apps[id];
-  const Icon = app.icon;
-  return (
-    <span
-      className="app-icon"
-      style={{
-        width: size,
-        height: size,
-        background: app.tint[0],
-        color: app.tint[1],
-      }}
-      aria-hidden="true"
-    >
-      <Icon size={size * 0.46} strokeWidth={1.8} />
-    </span>
-  );
-}
+const MENU = 26;
+const DOCK = 86;
 
 /* ------------------------------------------------------------------ Boot */
 
-const bootLines = [
-  "JA/OS 2.0 · Lagos build",
-  "mounting /home/josiah",
-  "indexing projects and repositories",
-  "starting window server",
-  "connecting to github.com/billioncodes001",
-  "warming up the coffee machine",
-  "ready.",
-];
-
+/** A Mac-style power-on: the mark and a filling progress bar. */
 export function Boot({ onDone }: { onDone: () => void }) {
-  const [shown, setShown] = useState(reducedMotion() ? bootLines.length : 1);
   const done = useRef(onDone);
   done.current = onDone;
+  const [progress, setProgress] = useState(reducedMotion() ? 100 : 4);
   useEffect(() => {
-    const finish = () => done.current();
-    if (shown >= bootLines.length) {
-      const timer = setTimeout(finish, reducedMotion() ? 150 : 420);
+    if (progress >= 100) {
+      const timer = setTimeout(
+        () => done.current(),
+        reducedMotion() ? 100 : 350,
+      );
       return () => clearTimeout(timer);
     }
-    const timer = setTimeout(() => setShown((n) => n + 1), 190);
+    const timer = setTimeout(
+      () => setProgress((p) => Math.min(100, p + 8 + Math.random() * 18)),
+      110,
+    );
     return () => clearTimeout(timer);
-  }, [shown]);
+  }, [progress]);
   useEffect(() => {
     const skip = () => done.current();
     window.addEventListener("keydown", skip);
@@ -146,172 +105,12 @@ export function Boot({ onDone }: { onDone: () => void }) {
       aria-label="Starting JA/OS"
       onClick={() => done.current()}
     >
-      <div className="os-boot-inner">
-        <div className="os-boot-mark">
-          ja<span>.</span>
-        </div>
-        <ol>
-          {bootLines.slice(0, shown).map((text, index) => (
-            <li key={text}>
-              <span className={index === bootLines.length - 1 ? "ready" : ""}>
-                {index === 0
-                  ? "›"
-                  : index === bootLines.length - 1
-                    ? "●"
-                    : "ok"}
-              </span>
-              {text}
-            </li>
-          ))}
-        </ol>
-        <div className="os-boot-bar">
-          <i style={{ width: (shown / bootLines.length) * 100 + "%" }} />
-        </div>
-        <p className="os-boot-skip">Click or press any key to skip</p>
+      <div className="os-boot-mark" aria-hidden="true">
+        ja<span>.</span>
       </div>
-    </div>
-  );
-}
-
-/* ----------------------------------------------------------- Lock screen */
-
-function LockScreen({
-  onUnlock,
-}: {
-  onUnlock: (path?: string, app?: AppId) => void;
-}) {
-  const data = usePortfolio();
-  const now = useClock();
-  const [drag, setDrag] = useState(0);
-  const start = useRef<number | null>(null);
-  const [leaving, setLeaving] = useState(false);
-  const hour = now.getHours();
-  const greeting =
-    hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
-  const latest = data.projects[0];
-  const role = currentRole(data.experiences);
-  const lead = data.leadership[0];
-
-  const unlock = useCallback(
-    (path?: string, app?: AppId) => {
-      setLeaving(true);
-      setTimeout(() => onUnlock(path, app), reducedMotion() ? 0 : 420);
-    },
-    [onUnlock],
-  );
-  useEffect(() => {
-    const key = (event: KeyboardEvent) => {
-      if (["Enter", " ", "ArrowUp"].includes(event.key)) {
-        if ((event.target as HTMLElement).closest("button")) return;
-        event.preventDefault();
-        unlock();
-      }
-    };
-    window.addEventListener("keydown", key);
-    return () => window.removeEventListener("keydown", key);
-  }, [unlock]);
-
-  const notes: {
-    app: AppId;
-    title: string;
-    when: string;
-    body: string;
-    path?: string;
-  }[] = [
-    {
-      app: "contact",
-      title: "Leave Josiah a note ✍️",
-      when: "now",
-      body: "Tap to say hello. It goes straight to his inbox.",
-      path: "/contact",
-    },
-  ];
-  if (latest)
-    notes.push({
-      app: "work",
-      title: "Work · " + projectName(latest),
-      when: "pinned",
-      body: projectSummary(latest),
-      path: "/projects/" + projectSlug(latest),
-    });
-  if (lead)
-    notes.push({
-      app: "about",
-      title: lead.title,
-      when: lead.period,
-      body: lead.organization,
-      path: "/about",
-    });
-  if (role)
-    notes.push({
-      app: "experience",
-      title: role.title,
-      when: /present/i.test(role.dateText) ? "current" : role.dateText,
-      body: role.subtitle,
-      path: "/experience",
-    });
-  if (data.github && data.github.repositories > 0)
-    notes.push({
-      app: "terminal",
-      title: "GitHub sync",
-      when: data.github.status === "live" ? "live" : "cached",
-      body: `${data.github.repositories} public repositories from @${data.github.username}. Type "ls projects" in Terminal.`,
-    });
-
-  return (
-    <div
-      className={"os-lock" + (leaving ? " is-leaving" : "")}
-      style={drag ? { transform: `translateY(${-drag}px)` } : undefined}
-      onPointerDown={(event) => {
-        if ((event.target as HTMLElement).closest("button")) return;
-        start.current = event.clientY;
-        event.currentTarget.setPointerCapture(event.pointerId);
-      }}
-      onPointerMove={(event) => {
-        if (start.current === null) return;
-        setDrag(Math.max(0, start.current - event.clientY));
-      }}
-      onPointerUp={() => {
-        if (start.current === null) return;
-        start.current = null;
-        if (drag > 110) unlock();
-        setDrag(0);
-      }}
-    >
-      <Wallpaper />
-      <div className="os-lock-photo" aria-hidden="true">
-        <img src={assetUrl(data.about.imageSource)} alt="" />
+      <div className="os-boot-bar" aria-hidden="true">
+        <i style={{ width: progress + "%" }} />
       </div>
-      <header className="os-lock-clock">
-        <p>{day(now)}</p>
-        <h1 aria-label={"The time is " + time(now)}>{time(now)}</h1>
-        <p className="os-lock-hello">
-          {greeting}. You've reached <strong>{data.home.name}</strong>.
-        </p>
-      </header>
-      <ul className="os-notes" aria-label="Notifications">
-        {notes.map((note, index) => (
-          <li
-            key={note.title}
-            style={{ animationDelay: 120 + index * 110 + "ms" }}
-          >
-            <button type="button" onClick={() => unlock(note.path, note.app)}>
-              <AppIcon id={note.app} size={38} />
-              <span className="os-note-text">
-                <span className="os-note-head">
-                  <b>{note.title}</b>
-                  <time>{note.when}</time>
-                </span>
-                <span>{note.body}</span>
-              </span>
-            </button>
-          </li>
-        ))}
-      </ul>
-      <button type="button" className="os-unlock" onClick={() => unlock()}>
-        <span className="os-unlock-bar" aria-hidden="true" />
-        Swipe up or press Enter to unlock
-      </button>
     </div>
   );
 }
@@ -378,8 +177,8 @@ function OsWindow({
       el.style.left = x + "px";
       el.style.top = y + "px";
     } else {
-      el.style.width = Math.max(380, g.rect.w + dx) + "px";
-      el.style.height = Math.max(260, g.rect.h + dy) + "px";
+      el.style.width = Math.max(340, g.rect.w + dx) + "px";
+      el.style.height = Math.max(240, g.rect.h + dy) + "px";
     }
   };
   const end = () => {
@@ -399,12 +198,12 @@ function OsWindow({
     <section
       ref={node}
       className={
-        "os-window" +
+        "os-window win-" +
+        win.key +
         (active ? " is-active" : "") +
         (win.max ? " is-max" : "") +
         (win.min ? " is-min" : "") +
-        (win.closing ? " is-closing" : "") +
-        (win.key === "terminal" ? " is-terminal" : "")
+        (win.closing ? " is-closing" : "")
       }
       style={{
         left: win.x,
@@ -428,43 +227,56 @@ function OsWindow({
         }}
       >
         {narrow ? (
-          <button type="button" className="os-back" onClick={onMin}>
-            <ChevronLeft size={18} /> Home
+          <button type="button" className="ios-back" onClick={onMin}>
+            <ChevronLeft size={22} /> Home
           </button>
         ) : (
-          <span className="os-title-app">
-            <AppIcon id={win.key} size={18} />
-          </span>
+          <div className="traffic">
+            <button
+              type="button"
+              className="tl-close"
+              onClick={onClose}
+              aria-label={"Close " + title}
+            >
+              <svg viewBox="0 0 8 8" aria-hidden="true">
+                <path d="M1.5 1.5l5 5M6.5 1.5l-5 5" />
+              </svg>
+            </button>
+            <button
+              type="button"
+              className="tl-min"
+              onClick={onMin}
+              aria-label={"Minimise " + title}
+            >
+              <svg viewBox="0 0 8 8" aria-hidden="true">
+                <path d="M1 4h6" />
+              </svg>
+            </button>
+            <button
+              type="button"
+              className="tl-max"
+              onClick={onMax}
+              aria-label={(win.max ? "Restore " : "Maximise ") + title}
+            >
+              <svg viewBox="0 0 8 8" aria-hidden="true">
+                <path d="M2 2h3.2L2 5.2V2ZM6 6H2.8L6 2.8V6Z" />
+              </svg>
+            </button>
+          </div>
         )}
         <h2>{title}</h2>
-        <div className="os-controls">
-          {!narrow && (
-            <>
-              <button
-                type="button"
-                onClick={onMin}
-                aria-label={"Minimise " + title}
-              >
-                <Minus size={13} />
-              </button>
-              <button
-                type="button"
-                onClick={onMax}
-                aria-label={(win.max ? "Restore " : "Maximise ") + title}
-              >
-                <Maximize2 size={12} />
-              </button>
-            </>
-          )}
+        {narrow ? (
           <button
             type="button"
-            className="os-close"
+            className="ios-close"
             onClick={onClose}
             aria-label={"Close " + title}
           >
-            <X size={14} />
+            <X size={16} />
           </button>
-        </div>
+        ) : (
+          <span />
+        )}
       </header>
       <div className="os-window-body" tabIndex={-1}>
         {children}
@@ -477,6 +289,14 @@ function OsWindow({
           onPointerMove={move}
           onPointerUp={end}
           onPointerCancel={end}
+        />
+      )}
+      {narrow && (
+        <button
+          type="button"
+          className="ios-home-bar"
+          aria-label="Go to Home Screen"
+          onClick={onMin}
         />
       )}
     </section>
@@ -517,11 +337,11 @@ function Launcher({
         onPointerDown={(event) => event.stopPropagation()}
       >
         <div className="os-launcher-field">
-          <Search size={18} />
+          <Search size={20} />
           <input
             autoFocus
             value={query}
-            placeholder="Search apps and projects…"
+            placeholder="Spotlight Search"
             aria-label="Search apps and projects"
             role="combobox"
             aria-expanded="true"
@@ -541,7 +361,6 @@ function Launcher({
               } else if (event.key === "Enter") pick(results[index]);
             }}
           />
-          <kbd>esc</kbd>
         </div>
         <ul id="os-launcher-results" role="listbox">
           {results.map((hit, i) => (
@@ -552,7 +371,7 @@ function Launcher({
                 onPointerEnter={() => setIndex(i)}
                 onClick={() => pick(hit)}
               >
-                <AppIcon id={hit.app} size={30} />
+                <AppIcon id={hit.app} size={28} />
                 <span>
                   <b>{hit.label}</b>
                   <i>{hit.hint}</i>
@@ -566,6 +385,228 @@ function Launcher({
         </ul>
       </div>
     </div>
+  );
+}
+
+/* ----------------------------------------------------------- Menu bar */
+
+type MenuItem =
+  { label: string; run?: () => void; href?: string; hint?: string } | "-";
+
+function MenuBar({
+  appName,
+  menus,
+  theme,
+  setTheme,
+  onSearch,
+}: {
+  appName: string;
+  menus: [string, MenuItem[]][];
+  theme: Theme;
+  setTheme: (theme: Theme) => void;
+  onSearch: () => void;
+}) {
+  const now = useClock();
+  const music = useSound();
+  const [open, setOpen] = useState<string | null>(null);
+  const bar = useRef<HTMLElement>(null);
+  useEffect(() => {
+    if (!open) return;
+    const away = (event: PointerEvent) => {
+      if (!bar.current?.contains(event.target as Node)) setOpen(null);
+    };
+    const key = (event: KeyboardEvent) =>
+      event.key === "Escape" && setOpen(null);
+    window.addEventListener("pointerdown", away);
+    window.addEventListener("keydown", key);
+    return () => {
+      window.removeEventListener("pointerdown", away);
+      window.removeEventListener("keydown", key);
+    };
+  }, [open]);
+  const all: [string, MenuItem[]][] = [...menus];
+  return (
+    <header className="os-menubar" ref={bar}>
+      <nav className="os-menus" aria-label="Menu bar">
+        {all.map(([name, items], index) => (
+          <div className="os-menu-wrap" key={name}>
+            <button
+              type="button"
+              className={
+                (index === 0 ? "os-logo" : index === 1 ? "os-menu-app" : "") +
+                (open === name ? " is-open" : "")
+              }
+              aria-haspopup="menu"
+              aria-expanded={open === name}
+              onClick={() => setOpen(open === name ? null : name)}
+              onPointerEnter={() => open && open !== name && setOpen(name)}
+            >
+              {index === 0 ? (
+                <>
+                  ja<span>.</span>
+                </>
+              ) : index === 1 ? (
+                appName
+              ) : (
+                name
+              )}
+            </button>
+            {open === name && (
+              <div className="os-menu" role="menu">
+                {items.map((item, i) =>
+                  item === "-" ? (
+                    <hr key={i} />
+                  ) : item.href ? (
+                    <a
+                      key={item.label}
+                      role="menuitem"
+                      href={item.href}
+                      target={
+                        item.href.startsWith("mailto:") ? undefined : "_blank"
+                      }
+                      rel="noreferrer"
+                      onClick={() => setOpen(null)}
+                    >
+                      {item.label}
+                      {item.hint && <kbd>{item.hint}</kbd>}
+                    </a>
+                  ) : (
+                    <button
+                      type="button"
+                      role="menuitem"
+                      key={item.label}
+                      onClick={() => {
+                        setOpen(null);
+                        item.run?.();
+                      }}
+                    >
+                      {item.label}
+                      {item.hint && <kbd>{item.hint}</kbd>}
+                    </button>
+                  ),
+                )}
+              </div>
+            )}
+          </div>
+        ))}
+      </nav>
+      <div className="os-menubar-right">
+        <button
+          type="button"
+          className="os-icon-btn"
+          onClick={() => sound.toggle()}
+          aria-label={music.enabled ? "Mute music" : "Play music"}
+          aria-pressed={music.enabled}
+          title={music.enabled ? "Now playing: Lagos After Dark" : "Music off"}
+        >
+          {music.enabled ? <Volume2 size={15} /> : <VolumeX size={15} />}
+          {music.enabled && music.playing && (
+            <span className="os-eq" aria-hidden="true">
+              <i />
+              <i />
+              <i />
+            </span>
+          )}
+        </button>
+        <button
+          type="button"
+          className="os-icon-btn"
+          onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+          aria-label={
+            "Switch to " + (theme === "light" ? "dark" : "light") + " theme"
+          }
+        >
+          {theme === "light" ? <Moon size={14} /> : <Sun size={14} />}
+        </button>
+        <Battery />
+        <Wifi />
+        <button
+          type="button"
+          className="os-icon-btn"
+          onClick={onSearch}
+          aria-label="Search (Ctrl or Command K)"
+        >
+          <Search size={14} />
+        </button>
+        <time className="os-clock">{menuDate(now)}</time>
+      </div>
+    </header>
+  );
+}
+
+/* -------------------------------------------------------------- Dock */
+
+function Dock({
+  items,
+  running,
+  launching,
+  onOpen,
+  extras,
+  narrow,
+}: {
+  items: AppId[];
+  running: (id: AppId) => boolean;
+  launching: AppId | null;
+  onOpen: (id: AppId) => void;
+  extras?: { network: string; href: string; Icon: typeof Mail }[];
+  narrow: boolean;
+}) {
+  const dock = useRef<HTMLElement>(null);
+  // macOS magnification: icons swell with the pointer's distance.
+  const magnify = (x: number | null) => {
+    if (narrow || reducedMotion()) return;
+    for (const el of dock.current?.querySelectorAll<HTMLElement>(
+      ".os-dock-item",
+    ) ?? []) {
+      const rect = el.getBoundingClientRect();
+      const d = x === null ? 999 : Math.abs(x - (rect.left + rect.width / 2));
+      el.style.setProperty("--m", String(1 + 0.55 * Math.max(0, 1 - d / 130)));
+    }
+  };
+  return (
+    <nav
+      ref={dock}
+      className="os-dock"
+      aria-label="Dock"
+      onPointerMove={(event) => magnify(event.clientX)}
+      onPointerLeave={() => magnify(null)}
+    >
+      {items.map((id) => (
+        <button
+          type="button"
+          key={id}
+          className={
+            "os-dock-item" +
+            (running(id) ? " is-running" : "") +
+            (launching === id ? " is-launching" : "")
+          }
+          onClick={() => onOpen(id)}
+          aria-label={apps[id].title + (running(id) ? " (open)" : "")}
+        >
+          <AppIcon id={id} size={narrow ? 58 : 50} />
+          <span className="os-dock-tip">{apps[id].title}</span>
+        </button>
+      ))}
+      {!!extras?.length && <span className="os-dock-sep" aria-hidden="true" />}
+      {extras?.map(({ network, href, Icon }) => (
+        <a
+          key={network}
+          className="os-dock-item"
+          href={href}
+          target={href.startsWith("mailto:") ? undefined : "_blank"}
+          rel="noreferrer"
+          aria-label={network}
+        >
+          <span
+            className={"app-icon icon-social icon-" + network}
+            aria-hidden="true"
+          >
+            <Icon />
+          </span>
+          <span className="os-dock-tip">{network}</span>
+        </a>
+      ))}
+    </nav>
   );
 }
 
@@ -589,7 +630,9 @@ export default function OS({
   const now = useClock();
   const [wins, setWins] = useState<Win[]>([]);
   const [launcher, setLauncher] = useState(false);
-  const [menu, setMenu] = useState(false);
+  const [banner, setBanner] = useState(false);
+  const [launching, setLaunching] = useState<AppId | null>(null);
+  const [install, setInstall] = useState<(() => void) | null>(null);
   const zTop = useRef(20);
   const [bounds, setBounds] = useState(() => ({
     w: window.innerWidth,
@@ -602,17 +645,51 @@ export default function OS({
     return () => window.removeEventListener("resize", resize);
   }, []);
 
+  // Music needs a gesture. Unlocking is one; deep links wait for the first tap.
+  useEffect(() => {
+    if (phase !== "desktop") return;
+    const first = () => sound.start();
+    window.addEventListener("pointerdown", first, { once: true });
+    window.addEventListener("keydown", first, { once: true });
+    return () => {
+      window.removeEventListener("pointerdown", first);
+      window.removeEventListener("keydown", first);
+    };
+  }, [phase]);
+  useEffect(() => () => sound.stop(), []);
+
+  // A note banner slides in shortly after reaching the desktop.
+  useEffect(() => {
+    if (phase !== "desktop") return;
+    const show = setTimeout(() => setBanner(true), 2200);
+    const hide = setTimeout(() => setBanner(false), 11000);
+    return () => {
+      clearTimeout(show);
+      clearTimeout(hide);
+    };
+  }, [phase]);
+
+  // "Add to Home Screen" uses the browser's install prompt where available.
+  useEffect(() => {
+    const ready = (event: Event) => {
+      event.preventDefault();
+      const prompt = event as Event & { prompt: () => Promise<void> };
+      setInstall(() => () => void prompt.prompt());
+    };
+    window.addEventListener("beforeinstallprompt", ready);
+    return () => window.removeEventListener("beforeinstallprompt", ready);
+  }, []);
+
   const place = useCallback(
     (key: AppId, count: number): Pick<Win, "x" | "y" | "w" | "h"> => {
-      const small = key === "terminal";
-      // Wide screens keep the widget column (left) and icon column (right) clear.
-      const left = bounds.w >= 1180 ? 292 : 16;
+      const left = bounds.w >= 1180 ? 40 : 16;
       const right = bounds.w >= 1180 ? 130 : 16;
       const room = bounds.w - left - right;
       const step = (count % 5) * 28;
-      const w = Math.min(small ? 700 : 1100, room - 40 - step);
-      const y = MENU + 18 + step;
-      const h = Math.min(small ? 460 : 780, bounds.h - DOCK - 16 - y);
+      const [pw, ph] = apps[key].size ?? [1080, 780];
+      const w = Math.min(pw, room - 40 - step);
+      const y = MENU + 22 + step;
+      const h = Math.min(ph, bounds.h - DOCK - 16 - y);
       return {
         x: left + Math.max(0, Math.round((room - 40 - step - w) / 2)) + step,
         y,
@@ -635,6 +712,10 @@ export default function OS({
               ? { ...w, path: path ?? w.path, z, min: false, closing: false }
               : w,
           );
+        if (!reducedMotion()) {
+          setLaunching(key);
+          setTimeout(() => setLaunching(null), 700);
+        }
         const open = list.filter((w) => !w.closing).length;
         return [
           ...list,
@@ -660,23 +741,30 @@ export default function OS({
     const state = location.state as { desktop?: boolean } | null;
     if (location.pathname === "/" && state?.desktop) return;
     const key = appForPath(location.pathname) ?? "welcome";
-    // Keep the hash so in-page anchors such as /about#leadership still land.
-    ensure(key, location.pathname + location.hash);
-  }, [location.pathname, location.hash, location.state, phase, ensure]);
+    // Keep search and hash so ?meeting= and #leadership still land.
+    ensure(key, location.pathname + location.search + location.hash);
+  }, [
+    location.pathname,
+    location.search,
+    location.hash,
+    location.state,
+    phase,
+    ensure,
+  ]);
 
   const visible = wins.filter((w) => !w.min && !w.closing);
   const top = visible.reduce<Win | null>(
     (a, w) => (!a || w.z > a.z ? w : a),
     null,
   );
+  const here = location.pathname + location.search + location.hash;
 
   const focus = (win: Win) => {
     if (top?.key === win.key) return;
     zTop.current += 1;
     const z = zTop.current;
     setWins((list) => list.map((w) => (w.key === win.key ? { ...w, z } : w)));
-    if (win.path && win.path !== location.pathname + location.hash)
-      navigate(win.path, { replace: true });
+    if (win.path && win.path !== here) navigate(win.path, { replace: true });
   };
   const leaveUrl = (gone: AppId) => {
     const rest = visible
@@ -694,7 +782,7 @@ export default function OS({
         setWins((list) =>
           list.filter((w) => !(w.key === win.key && w.closing)),
         ),
-      reducedMotion() ? 0 : 180,
+      reducedMotion() ? 0 : 200,
     );
     if (win.path) leaveUrl(win.key);
   };
@@ -717,13 +805,19 @@ export default function OS({
     [navigate, ensure],
   );
   const openPath = useCallback((path: string) => navigate(path), [navigate]);
+  // Minimise everything in one go; per-window minimise would point the URL at
+  // the next window and reopen it.
+  const goHome = () => {
+    setWins((list) => list.map((w) => ({ ...w, min: true })));
+    navigate("/", { replace: true, state: { desktop: true } });
+  };
 
   useEffect(() => {
     const key = (event: KeyboardEvent) => {
       if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
         event.preventDefault();
         setLauncher((v) => !v);
-      } else if (event.key === "Escape") setMenu(false);
+      }
     };
     window.addEventListener("keydown", key);
     return () => window.removeEventListener("keydown", key);
@@ -731,12 +825,12 @@ export default function OS({
 
   const titleFor = (win: Win) => {
     if (win.key === "project") {
-      const slug = win.path?.split("#")[0].split("/")[2];
+      const slug = win.path?.split(/[?#]/)[0].split("/")[2];
       const project = data.projects.find((p) => projectSlug(p) === slug);
       return project ? projectName(project) : "Project";
     }
-    if (win.key === "welcome" && win.path && win.path !== "/")
-      return pageTitles[win.path] ?? "Not found";
+    if (win.key === "welcome" && win.path && win.path.split(/[?#]/)[0] !== "/")
+      return pageTitles[win.path.split(/[?#]/)[0]] ?? "Not found";
     return apps[win.key].title;
   };
 
@@ -777,11 +871,20 @@ export default function OS({
           ? Linkedin
           : Mail,
   }));
+  const email = data.social.find((item) => item.network === "email")?.href;
+  const running = (id: AppId) => wins.some((w) => w.key === id && !w.closing);
+  const onDock = (id: AppId) => {
+    const win = wins.find((w) => w.key === id && !w.closing);
+    if (win && !win.min && top?.key === id && !narrow) minimise(win);
+    else openApp(id);
+  };
 
   if (phase === "lock")
     return (
       <LockScreen
+        narrow={narrow}
         onUnlock={(path, app) => {
+          sound.start();
           setPhase("desktop");
           if (path) navigate(path);
           else if (app) {
@@ -792,8 +895,141 @@ export default function OS({
       />
     );
 
-  const role = currentRole(data.experiences);
+  const menus: [string, MenuItem[]][] = [
+    [
+      "ja",
+      [
+        { label: "About JA/OS", run: () => ensure("sysinfo") },
+        { label: "About Josiah", run: () => openApp("about") },
+        "-",
+        ...(data.resume
+          ? [{ label: "Download résumé", href: data.resume }]
+          : []),
+        { label: "Lock Screen", run: () => setPhase("lock"), hint: "⌃⌘Q" },
+        { label: "Restart…", run: () => setPhase("boot") },
+      ],
+    ],
+    [
+      "app",
+      [
+        {
+          label: "About " + (top ? titleFor(top) : "Finder"),
+          run: () => ensure("sysinfo"),
+        },
+        "-",
+        ...(top
+          ? [
+              {
+                label: "Hide " + titleFor(top),
+                run: () => minimise(top),
+                hint: "⌘H",
+              },
+              {
+                label: "Quit " + titleFor(top),
+                run: () => close(top),
+                hint: "⌘Q",
+              },
+            ]
+          : [{ label: "Open Welcome", run: () => openApp("welcome") }]),
+      ],
+    ],
+    [
+      "File",
+      [
+        { label: "New Message", run: () => openApp("contact"), hint: "⌘N" },
+        { label: "New Terminal Window", run: () => ensure("terminal") },
+        { label: "Book a Meeting…", run: () => ensure("calendar") },
+        "-",
+        ...(top
+          ? [{ label: "Close Window", run: () => close(top), hint: "⌘W" }]
+          : []),
+      ],
+    ],
+    [
+      "Edit",
+      [
+        {
+          label: "Copy Email Address",
+          run: () =>
+            email &&
+            void navigator.clipboard?.writeText(email.replace("mailto:", "")),
+        },
+        {
+          label: "Copy Portfolio Link",
+          run: () => void navigator.clipboard?.writeText(window.location.href),
+        },
+      ],
+    ],
+    [
+      "View",
+      [
+        {
+          label: theme === "light" ? "Dark Appearance" : "Light Appearance",
+          run: () => setTheme(theme === "light" ? "dark" : "light"),
+        },
+        {
+          label: "Enter Full Screen",
+          run: () => void document.documentElement.requestFullscreen?.(),
+          hint: "⌃⌘F",
+        },
+        { label: "Spotlight Search", run: () => setLauncher(true), hint: "⌘K" },
+      ],
+    ],
+    [
+      "Window",
+      [
+        ...(top
+          ? [
+              { label: "Minimise", run: () => minimise(top), hint: "⌘M" },
+              { label: "Zoom", run: () => maximise(top) },
+              "-" as const,
+            ]
+          : []),
+        ...wins
+          .filter((w) => !w.closing)
+          .map((w) => ({
+            label: (top?.key === w.key ? "✓ " : "   ") + titleFor(w),
+            run: () => (w.path ? navigate(w.path) : ensure(w.key)),
+          })),
+      ],
+    ],
+    [
+      "Help",
+      [
+        { label: "Search", run: () => setLauncher(true), hint: "⌘K" },
+        { label: "Terminal Commands", run: () => ensure("terminal") },
+        ...socials.map((s) => ({
+          label: "Find me on " + s.network,
+          href: s.href,
+        })),
+      ],
+    ],
+  ];
+
   const homeVisible = narrow && !top;
+  // On phones the banner would cover the app's back button, so it only
+  // appears over the home screen.
+  const bannerNote = banner &&
+    top?.key !== "contact" &&
+    (!narrow || homeVisible) && (
+      <button
+        type="button"
+        className="os-banner"
+        onClick={() => {
+          setBanner(false);
+          openApp("contact");
+        }}
+      >
+        <AppIcon id="contact" size={38} />
+        <span className="os-note-text">
+          <span className="os-note-head">
+            <b>Leave Josiah a note ✍️</b>
+            <time>now</time>
+          </span>
+          <span>Tap to say hello. It goes straight to his inbox.</span>
+        </span>
+      </button>
+    );
 
   return (
     <div
@@ -803,175 +1039,96 @@ export default function OS({
     >
       <Wallpaper />
 
-      <header className="os-menubar">
-        <div className="os-menubar-left">
-          <div className="os-menu-wrap">
-            <button
-              type="button"
-              className="os-logo"
-              aria-expanded={menu}
-              aria-haspopup="menu"
-              onClick={() => setMenu((v) => !v)}
-            >
-              ja<span>.</span>
-            </button>
-            {menu && (
-              <div
-                className="os-menu"
-                role="menu"
-                onClick={() => setMenu(false)}
+      {narrow ? (
+        <header className="ios-status">
+          <time>{shortTime(now).replace(/\s?[AP]M$/i, "")}</time>
+          <span className="ios-status-right">
+            <Signal />
+            <Wifi />
+            <Battery showPercent />
+          </span>
+        </header>
+      ) : (
+        <MenuBar
+          appName={top ? titleFor(top) : "Finder"}
+          menus={menus}
+          theme={theme}
+          setTheme={setTheme}
+          onSearch={() => setLauncher(true)}
+        />
+      )}
+
+      {/* Crawlable links for search engines and screen readers. */}
+      <nav className="sr-only" aria-label="Site pages">
+        {Object.values(apps)
+          .filter((app) => app.path)
+          .map((app) => (
+            <Link key={app.id} to={app.path!}>
+              {app.title}
+            </Link>
+          ))}
+      </nav>
+
+      {narrow ? (
+        <div className="ios-home">
+          <ul className="ios-grid" aria-label="Apps">
+            <li className="ios-widget">
+              <button
+                type="button"
+                onClick={() => (install ? install() : openApp("about"))}
+                aria-label={install ? "Add to Home Screen" : "About Josiah"}
               >
-                <button
-                  type="button"
-                  role="menuitem"
-                  onClick={() => openApp("about")}
-                >
-                  About Josiah
-                </button>
-                <button
-                  type="button"
-                  role="menuitem"
-                  onClick={() => openApp("contact")}
-                >
-                  Send a message…
-                </button>
-                {data.resume && (
-                  <a
-                    role="menuitem"
-                    href={data.resume}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    Download résumé
-                  </a>
-                )}
-                <hr />
-                <button
-                  type="button"
-                  role="menuitem"
-                  onClick={() => setTheme(theme === "light" ? "dark" : "light")}
-                >
-                  {theme === "light" ? "Dark" : "Light"} windows
-                </button>
-                <button
-                  type="button"
-                  role="menuitem"
-                  onClick={() => setPhase("lock")}
-                >
-                  Lock screen
-                </button>
-                <button
-                  type="button"
-                  role="menuitem"
-                  onClick={() => setPhase("boot")}
-                >
-                  Restart…
-                </button>
-              </div>
-            )}
-          </div>
-          <strong className="os-menubar-app">
-            {top ? titleFor(top) : "Desktop"}
-          </strong>
-          {!narrow && (
-            <nav className="os-menubar-links" aria-label="Main navigation">
-              <Link to="/projects">Work</Link>
-              <Link to="/about">About</Link>
-              <Link to="/experience">Experience</Link>
-              <Link to="/contact">Contact</Link>
-            </nav>
-          )}
-        </div>
-        <div className="os-menubar-right">
-          {!narrow && (
-            <span className="os-status">
-              <i /> Open to new work
-            </span>
-          )}
-          <button
-            type="button"
-            className="os-icon-btn"
-            onClick={() => setLauncher(true)}
-            aria-label="Search (Ctrl or Command K)"
-          >
-            <Search size={15} />
-          </button>
-          <button
-            type="button"
-            className="os-icon-btn"
-            onClick={() => setTheme(theme === "light" ? "dark" : "light")}
-            aria-label={
-              "Switch to " + (theme === "light" ? "dark" : "light") + " theme"
-            }
-          >
-            {theme === "light" ? <Moon size={15} /> : <Sun size={15} />}
-          </button>
-          <button
-            type="button"
-            className="os-icon-btn"
-            onClick={() => setPhase("lock")}
-            aria-label="Lock screen"
-          >
-            <Lock size={14} />
-          </button>
-          <time className="os-clock">
-            {!narrow &&
-              now.toLocaleDateString([], {
-                weekday: "short",
-                month: "short",
-                day: "numeric",
-              }) + "  "}
-            {time(now)}
-          </time>
-        </div>
-      </header>
-
-      {/* Desktop layer: icons and widgets on wide screens, a home screen on phones. */}
-      <div className="os-desk">
-        <aside className="os-widgets" aria-label="Status">
-          <div className="os-widget os-widget-hello">
-            <img src={assetUrl(data.about.imageSource)} alt="" />
-            <div>
-              <b>{data.home.name}</b>
-              <span>{data.home.roles[0]?.replace(/^an? /, "")}</span>
-            </div>
-          </div>
-          {role && (
-            <button
-              type="button"
-              className="os-widget"
-              onClick={() => openApp("experience")}
-            >
-              <small>Currently</small>
-              <b>{role.title}</b>
-              <span>{role.subtitle}</span>
-            </button>
-          )}
-          <div className="os-widget os-widget-tip">
-            <small>Tip</small>
-            <span>
-              Press{" "}
-              <kbd>{navigator.platform.includes("Mac") ? "⌘" : "Ctrl"}</kbd>{" "}
-              <kbd>K</kbd> to search, or open <b>Terminal</b> and type{" "}
-              <code>help</code>.
-            </span>
-          </div>
-        </aside>
-
-        <ul className="os-icons" aria-label="Apps">
-          {(narrow
-            ? [...dockApps.filter((id) => id !== "welcome"), ...desktopApps]
-            : desktopApps
-          ).map((id) => (
-            <li key={id}>
-              <button type="button" onClick={() => openApp(id)}>
-                <AppIcon id={id} size={narrow ? 58 : 50} />
-                <span>{apps[id].title}</span>
+                <img src="/media/lock-tall.webp" alt="" />
+                <span>{install ? "Add to Home Screen" : data.home.name}</span>
               </button>
             </li>
-          ))}
-        </ul>
-      </div>
+            {homeApps.map((id) => (
+              <li key={id}>
+                <button type="button" onClick={() => openApp(id)}>
+                  <AppIcon id={id} size={60} />
+                  <span>{apps[id].title}</span>
+                </button>
+              </li>
+            ))}
+            {socials
+              .filter((s) => s.network !== "email")
+              .map(({ network, href, Icon }) => (
+                <li key={network}>
+                  <a href={href} target="_blank" rel="noreferrer">
+                    <span
+                      className={"app-icon icon-social icon-" + network}
+                      style={{ ["--s" as string]: "60px" }}
+                      aria-hidden="true"
+                    >
+                      <Icon />
+                    </span>
+                    <span>{network === "github" ? "GitHub" : "LinkedIn"}</span>
+                  </a>
+                </li>
+              ))}
+          </ul>
+          <button
+            type="button"
+            className="ios-search"
+            onClick={() => setLauncher(true)}
+          >
+            <Search size={14} /> Search
+          </button>
+        </div>
+      ) : (
+        <div className="os-desk">
+          <ul className="os-icons" aria-label="Apps">
+            {desktopApps.map((id) => (
+              <li key={id}>
+                <button type="button" onClick={() => openApp(id)}>
+                  <AppIcon id={id} size={48} />
+                  <span>{apps[id].title}</span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       <main className="os-windows" id="main-content" tabIndex={-1}>
         {wins.map((win) => (
@@ -984,7 +1141,7 @@ export default function OS({
             bounds={bounds}
             onFocus={() => focus(win)}
             onClose={() => close(win)}
-            onMin={() => minimise(win)}
+            onMin={() => (narrow ? goHome() : minimise(win))}
             onMax={() => maximise(win)}
             onCommit={(rect) =>
               setWins((list) =>
@@ -999,6 +1156,14 @@ export default function OS({
                 setTheme={setTheme}
                 close={() => close(win)}
               />
+            ) : win.key === "calendar" ? (
+              <Calendar open={openPath} />
+            ) : win.key === "safari" ? (
+              <Safari open={openPath} />
+            ) : win.key === "notes" ? (
+              <Notes />
+            ) : win.key === "sysinfo" ? (
+              <SysInfo open={openPath} />
             ) : (
               <div className="os-page">
                 <RouteView path={win.path ?? "/"} />
@@ -1008,48 +1173,16 @@ export default function OS({
         ))}
       </main>
 
-      <nav className="os-dock" aria-label="Dock">
-        {(narrow
-          ? (["welcome", "work", "terminal", "contact"] as AppId[])
-          : dockApps
-        ).map((id) => {
-          const running = wins.some((w) => w.key === id && !w.closing);
-          return (
-            <button
-              type="button"
-              key={id}
-              className={"os-dock-item" + (running ? " is-running" : "")}
-              onClick={() => {
-                const win = wins.find((w) => w.key === id && !w.closing);
-                if (win && !win.min && top?.key === id && !narrow)
-                  minimise(win);
-                else openApp(id);
-              }}
-              aria-label={apps[id].title + (running ? " (open)" : "")}
-            >
-              <AppIcon id={id} size={narrow ? 50 : 46} />
-              <span className="os-dock-tip">{apps[id].title}</span>
-            </button>
-          );
-        })}
-        {!narrow && <span className="os-dock-sep" aria-hidden="true" />}
-        {!narrow &&
-          socials.map(({ network, href, Icon }) => (
-            <a
-              key={network}
-              className="os-dock-item"
-              href={href}
-              target={href.startsWith("mailto:") ? undefined : "_blank"}
-              rel="noreferrer"
-              aria-label={network}
-            >
-              <span className="app-icon app-icon-social" aria-hidden="true">
-                <Icon size={21} />
-              </span>
-              <span className="os-dock-tip">{network}</span>
-            </a>
-          ))}
-      </nav>
+      {bannerNote}
+
+      <Dock
+        items={narrow ? phoneDock : dockApps}
+        running={running}
+        launching={launching}
+        onOpen={onDock}
+        extras={narrow ? undefined : socials}
+        narrow={narrow}
+      />
 
       {launcher && <Launcher hits={hits} onClose={() => setLauncher(false)} />}
     </div>

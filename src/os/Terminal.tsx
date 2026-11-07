@@ -34,7 +34,7 @@ const commands = [
 ];
 
 const openable = Object.values(apps)
-  .filter((app) => app.id !== "project")
+  .filter((app) => app.id !== "project" && app.id !== "sysinfo")
   .map((app) => app.title.toLowerCase().replace(/\s+/g, "-"));
 
 /** A typeable name: repo name for GitHub projects, otherwise the page slug. */

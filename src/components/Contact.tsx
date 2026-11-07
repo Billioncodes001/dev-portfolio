@@ -1,4 +1,5 @@
 import { useRef, useState, type FormEvent } from "react";
+import { useLocation } from "react-router-dom";
 import {
   ArrowUpRight,
   Check,
@@ -30,7 +31,18 @@ export default function Contact() {
     portfolio.social
       .find((item) => item.network === "email")
       ?.href.replace("mailto:", "") || "jhardeyemor@gmail.com";
-  const [form, setForm] = useState<ContactInput>(empty);
+  const { search } = useLocation();
+  // Calendar's "Book a meeting" links here with ?meeting=<day> to pre-fill.
+  const [form, setForm] = useState<ContactInput>(() => {
+    const day = new URLSearchParams(search).get("meeting");
+    return day
+      ? {
+          ...empty,
+          service: "Collaboration",
+          message: `Hi Josiah, I'd like to book a call on ${day}. Here's what I'd like to talk about: `,
+        }
+      : empty;
+  });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [status, setStatus] = useState<
     "idle" | "sending" | "success" | "error"
