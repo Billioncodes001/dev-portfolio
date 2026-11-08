@@ -88,7 +88,10 @@ results.push(
   await measure(page, "dock sweep", async () => {
     const dock = (await page.locator(".os-dock").boundingBox())!;
     for (let i = 0; i <= 60; i++)
-      await page.mouse.move(dock.x + (dock.width * i) / 60, dock.y + dock.height / 2);
+      await page.mouse.move(
+        dock.x + (dock.width * i) / 60,
+        dock.y + dock.height / 2,
+      );
     await page.mouse.move(dock.x, dock.y - 200);
   }),
 );
@@ -122,7 +125,8 @@ results.push(
 );
 results.push(
   await measure(page, "wallpaper parallax", async () => {
-    for (let i = 0; i <= 60; i++) await page.mouse.move(200 + i * 15, 300 + (i % 10) * 20);
+    for (let i = 0; i <= 60; i++)
+      await page.mouse.move(200 + i * 15, 300 + (i % 10) * 20);
   }),
 );
 results.push(
