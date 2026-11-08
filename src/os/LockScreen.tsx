@@ -41,6 +41,10 @@ export default function LockScreen({
   const latest = data.projects[0];
   const role = currentRole(data.experiences);
   const lead = data.leadership[0];
+  // The newest dated activity after the standing role reads as a headline.
+  const news = data.leadership.find(
+    (e, i) => i > 0 && /\d{4}/.test(e.period) && !/–/.test(e.period),
+  );
 
   const unlock = useCallback(
     (path?: string, app?: AppId) => {
@@ -84,6 +88,14 @@ export default function LockScreen({
       when: lead.period,
       body: lead.organization,
       path: "/about",
+    });
+  if (news)
+    notes.push({
+      app: "achievements",
+      title: "📰 In the news · " + news.title,
+      when: news.period,
+      body: news.description,
+      path: "/experience#leadership",
     });
   if (role)
     notes.push({

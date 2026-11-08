@@ -17,6 +17,7 @@ export default function Messages({ open }: { open: (path: string) => void }) {
   const tools = data.skills.flatMap((s) => s.items.map((i) => i.title));
   const featured = data.projects.slice(0, 3).map(projectName);
   const lead = data.leadership[0];
+  const news = data.leadership[1];
 
   const answers: Record<string, string[]> = {
     "What do you do?": [
@@ -39,6 +40,14 @@ export default function Messages({ open }: { open: (path: string) => void }) {
           `The full story is in Notes, under Leadership.`,
         ]
       : [`Student leadership. It's all in Notes.`],
+    ...(news
+      ? {
+          "What's new?": [
+            `${news.period}: ${news.description}`,
+            `The source is linked under Leadership in Experience.`,
+          ],
+        }
+      : {}),
     "Tell me a secret 🤫": [
       `Okay, but keep it between us.`,
       `There are 7 secrets hidden in this OS. You just found one. 👀`,

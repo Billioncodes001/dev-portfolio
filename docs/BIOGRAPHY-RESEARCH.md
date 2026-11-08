@@ -50,3 +50,14 @@ All four gallery images are Git-tracked under `public/images`. Vite copies their
 ## Live release verification
 
 Feature commit: `8f8e0986d74c3959af18981d489f5bfa064b7c5a`. GitHub verification run `34642013691` passed both runtime/browser suites. Cloudflare Workers Builds published version `c88f540f-be4f-4597-a004-ed87e44f58c8` at 2026-09-11 20:03 UTC. The live API returned Comr. Josiah Adeyemo, Assistant General Secretary (2025), Zonal Coordinator (2026), and four gallery records.
+
+## Update — 8 November 2026
+
+New public coverage since the September research, added to `public/profile/leadership.json` and the biography:
+
+- [The Interviews, 22 October 2026](https://www.theinterviewsng.com/nans-south-west-zone-executives-courtesy-visit-to-aig-zone-11-aig-bassey-s-ewah-assures-students-police-police-protection-and-partnership/): Comrade Josiah Adeyemo led NANS South-West executives on a courtesy visit to AIG Zone 11, Osogbo (21 October), offering partnership on peace and security and naming student sensitisation as a priority.
+- [Vanguard, 2 October 2026](https://www.vanguardngr.com/2026/10/abducted-corps-members-nans-raises-alarm-over-%E2%82%A650m-ransom/): co-signed, as Southwest Zone D Coordinator, the statement on reported ransom demands for abducted prospective corps members.
+- [News Chronicle, 20 July 2026](https://thenews-chronicle.com/nans-threatens-to-shut-down-osun-tertiary-institutions-over-rising-election-related-violence/): co-signed the warning against election-related violence on Osun campuses.
+- [adeyemojosiahkayode.com.ng](https://adeyemojosiahkayode.com.ng/about): the Coordinator's own site gives the tenure as 2026–2027; its [press page](https://adeyemojosiahkayode.com.ng/press.html) lists nine self-published statements (February–July 2026). These are presented as statements issued, not as outcomes achieved.
+
+Not used: the site's claim of representing "over 2,000,000 students" (no independent source), and its phone number. A 2024 Tribune report calls him "newly elected" Assistant General Secretary in October 2024; the timeline keeps the owner-confirmed 2025.
