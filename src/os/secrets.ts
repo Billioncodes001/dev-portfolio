@@ -16,7 +16,11 @@ export const SECRETS = [
     title: "Logo masher",
     hint: "The ja. mark in the menu bar, five times",
   },
-  { id: "arcade", title: "Exterminator", hint: "Squash 15 bugs in one round" },
+  {
+    id: "arcade",
+    title: "Shipped it",
+    hint: "Reach the deploy flag in Bug Squash",
+  },
   {
     id: "chat",
     title: "Confidant",

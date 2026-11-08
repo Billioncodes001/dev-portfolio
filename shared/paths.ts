@@ -10,6 +10,8 @@ export const pageTitles: Record<string, string> = {
   "/achievements": "Recognition",
   "/testimonials": "Kind Words",
   "/contact": "Get in Touch",
+  "/pocket": "ja. pocket",
+  "/press": "In the News",
 };
 
 export const slugify = (value: string) =>

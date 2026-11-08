@@ -112,6 +112,18 @@ export const portfolioSchema = z.object({
       }),
     )
     .default([]),
+  press: z
+    .array(
+      z.object({
+        kind: z.enum(["coverage", "statement"]),
+        outlet: text,
+        date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+        headline: text,
+        summary: text,
+        href: webUrl,
+      }),
+    )
+    .default([]),
   gallery: z
     .array(
       z.object({

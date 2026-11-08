@@ -1,5 +1,6 @@
 import gallery from "../public/profile/gallery.json";
 import leadership from "../public/profile/leadership.json";
+import press from "../public/profile/press.json";
 import home from "../public/profile/home.json";
 import about from "../public/profile/about.json";
 import projects from "../public/profile/projects.json";
@@ -28,6 +29,7 @@ export const portfolio = portfolioSchema.parse({
   about,
   gallery: gallery.items,
   leadership: leadership.entries,
+  press: press.press,
   projects: attachReleases(
     projects.projects.map((project) => projectSchema.parse(project)),
     releases,

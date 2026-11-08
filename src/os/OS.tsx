@@ -41,7 +41,7 @@ import Calendar from "./apps/Calendar";
 import Notes from "./apps/Notes";
 import Safari from "./apps/Safari";
 import SysInfo from "./apps/SysInfo";
-import Arcade from "./apps/Arcade";
+import Pocket, { CARTS, type CartId } from "./pocket/Pocket";
 import Messages from "./apps/Messages";
 import Secrets from "./apps/Secrets";
 import Stats from "./Stats";
@@ -648,6 +648,17 @@ export default function OS({
   const [launching, setLaunching] = useState<AppId | null>(null);
   const [install, setInstall] = useState<(() => void) | null>(null);
   const secrets = useSecrets();
+  // Sections whose content is still being verified stay off the home screen.
+  const shown = useCallback(
+    (id: AppId) =>
+      !(
+        (id === "blog" && !data.blogs.length) ||
+        (id === "achievements" && !data.achievements.length) ||
+        (id === "testimonials" && !data.testimonials.length) ||
+        (id === "press" && !data.press.length)
+      ),
+    [data],
+  );
   const zTop = useRef(20);
   const [bounds, setBounds] = useState(() => ({
     w: window.innerWidth,
@@ -875,7 +886,7 @@ export default function OS({
   const hits = useMemo(() => {
     const all: Hit[] = [
       ...Object.values(apps)
-        .filter((app) => app.id !== "project")
+        .filter((app) => app.id !== "project" && shown(app.id))
         .map((app) => ({
           id: "app-" + app.id,
           label: app.title,
@@ -898,7 +909,7 @@ export default function OS({
         .filter((hit) => (hit.label + " " + hit.hint).toLowerCase().includes(q))
         .slice(0, 9);
     };
-  }, [data.projects, openApp, openPath]);
+  }, [data.projects, openApp, openPath, shown]);
 
   const socials = data.social.map((item) => ({
     ...item,
@@ -1150,7 +1161,7 @@ export default function OS({
             <li className="ios-widget">
               <Stats onOpen={() => openApp("work")} />
             </li>
-            {homeApps.map((id) => (
+            {homeApps.filter(shown).map((id) => (
               <li key={id}>
                 <button type="button" onClick={() => openApp(id)}>
                   <AppIcon id={id} size={60} />
@@ -1187,7 +1198,7 @@ export default function OS({
         <div className="os-desk">
           <Stats onOpen={() => openApp("work")} />
           <ul className="os-icons" aria-label="Apps">
-            {desktopApps.map((id) => (
+            {desktopApps.filter(shown).map((id) => (
               <li key={id}>
                 <button type="button" onClick={() => openApp(id)}>
                   <AppIcon id={id} size={48} />
@@ -1233,8 +1244,20 @@ export default function OS({
               <Notes />
             ) : win.key === "messages" ? (
               <Messages open={openPath} />
-            ) : win.key === "arcade" ? (
-              <Arcade />
+            ) : win.key === "pocket" ? (
+              <Pocket
+                cart={
+                  (CARTS.find(
+                    (c) =>
+                      c.id ===
+                      new URLSearchParams(win.path?.split("?")[1]).get("c"),
+                  )?.id ?? null) as CartId | null
+                }
+                setCart={(c) =>
+                  navigate(c ? "/pocket?c=" + c : "/pocket", { replace: true })
+                }
+                open={openPath}
+              />
             ) : win.key === "secrets" ? (
               <Secrets />
             ) : win.key === "sysinfo" ? (

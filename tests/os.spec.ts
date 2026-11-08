@@ -271,19 +271,57 @@ test("Messages answers questions and the secrets hunt counts finds", async ({
   await expect(page.getByText(/2 of 7 found/)).toBeVisible();
 });
 
-test("Bug Squash plays from the keyboard", async ({ page }, info) => {
-  test.skip(info.project.name === "mobile", "Covered by the desktop layout");
-  await page.goto("/about");
-  await page
-    .getByRole("list", { name: "Apps" })
-    .getByRole("button", { name: "Bug Squash", exact: true })
-    .click();
-  await page.getByRole("button", { name: "Start" }).click();
-  await expect(page.getByText(/\d+s$/)).toBeVisible();
-  const screen = page.getByRole("application", { name: /Bug Squash/ });
-  await screen.focus();
-  await screen.press("Enter");
-  await expect(page.getByText(/^Score \d+$/)).toBeVisible();
+test("ja. pocket plays cartridges from the keyboard and pad", async ({
+  page,
+}, info) => {
+  await page.goto("/pocket");
+  const pocket = page.getByRole("application", { name: /ja\. pocket console/ });
+  await expect(page.getByText("Insert a cartridge")).toBeVisible();
+  // A click inserts a cartridge, and the cartridge lives in the URL.
+  await page.getByRole("button", { name: /About me cartridge/ }).click();
+  await expect(page).toHaveURL(/\/pocket\?c=about$/);
+  await expect(page.getByText(/^1 of \d+$/)).toBeVisible();
+  await pocket.press("x");
+  await pocket.press("x");
+  await expect(page.getByText(/^2 of \d+$/)).toBeVisible();
+  // Number keys swap cartridges; menus open with A and close with B.
+  await pocket.press("3");
+  await expect(page).toHaveURL(/c=projects$/);
+  await pocket.press("ArrowDown");
+  await pocket.press("x");
+  await expect(
+    page.getByRole("button", { name: /Read the case study/ }),
+  ).toBeVisible();
+  await pocket.press("z");
+  await expect(page.getByRole("heading", { name: "Projects" })).toBeVisible();
+  // On-screen buttons work as well as keys.
+  await page.getByRole("button", { name: /Leadership cartridge/ }).click();
+  await page.getByRole("button", { name: "A button, select" }).click();
+  await expect(
+    page.getByText("Zonal Coordinator — Southwest Zone D"),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "Eject cartridge" }).click();
+  await expect(page).toHaveURL(/\/pocket$/);
+  if (info.project.name === "mobile") return;
+  await pocket.press("6");
+  await expect(page.getByRole("img", { name: /Bug Squash/ })).toBeVisible();
+});
+
+test("In the News lists sourced coverage and statements", async ({ page }) => {
+  await page.goto("/press");
+  await expect(page.locator("h1")).toHaveText(/In the\s*news/);
+  const cards = page.locator(".recognition-grid article");
+  await expect(cards).not.toHaveCount(0);
+  for (const link of await cards.getByRole("link").all())
+    expect(await link.getAttribute("href")).toMatch(/^https:\/\//);
+  await page.getByRole("button", { name: "Statements" }).click();
+  await expect(cards.first()).toContainText("Read the statement");
+  // Sections still waiting on evidence stay off the home screen.
+  await expect(
+    page
+      .getByRole("list", { name: "Apps" })
+      .getByRole("button", { name: "Kind words" }),
+  ).toHaveCount(0);
 });
 
 test("a missing page is a secret too", async ({ page }) => {

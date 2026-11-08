@@ -10,6 +10,7 @@ import {
   Mail,
   MessageCircle,
   MessageSquareQuote,
+  Newspaper,
   UserRound,
   Wrench,
   type LucideIcon,
@@ -30,7 +31,8 @@ const glyphs: Partial<Record<AppId, LucideIcon>> = {
   contact: Mail,
   safari: Compass,
   messages: MessageCircle,
-  arcade: Gamepad2,
+  pocket: Gamepad2,
+  press: Newspaper,
   secrets: KeyRound,
 };
 

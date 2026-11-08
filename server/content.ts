@@ -28,6 +28,7 @@ export async function loadPortfolio(publicDir: string) {
     "home",
     "about",
     "leadership",
+    "press",
     "gallery",
     "projects",
     "experiences",
@@ -53,6 +54,7 @@ export async function loadPortfolio(publicDir: string) {
     home: content.home,
     about: content.about,
     leadership: content.leadership.entries,
+    press: content.press.press,
     gallery: content.gallery.items,
     projects: attachReleases(
       content.projects.projects,

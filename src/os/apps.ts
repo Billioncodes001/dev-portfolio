@@ -17,7 +17,8 @@ export type AppId =
   | "notes"
   | "sysinfo"
   | "messages"
-  | "arcade"
+  | "pocket"
+  | "press"
   | "secrets";
 
 export type OsApp = {
@@ -138,11 +139,19 @@ export const apps: Record<AppId, OsApp> = {
     blurb: "Ask me anything, iMessage style",
     size: [420, 600],
   },
-  arcade: {
-    id: "arcade",
-    title: "Bug Squash",
-    blurb: "A pocket console game: squash bugs before the deploy",
-    size: [380, 600],
+  press: {
+    id: "press",
+    title: "In the News",
+    path: "/press",
+    blurb: "Press coverage and statements from my NANS work",
+  },
+  pocket: {
+    id: "pocket",
+    title: "ja. pocket",
+    path: "/pocket",
+    blurb:
+      "My portfolio on a handheld: slot in a cartridge, or play Bug Squash",
+    size: [760, 720],
   },
   secrets: {
     id: "secrets",
@@ -171,9 +180,10 @@ export const desktopApps: AppId[] = [
   "skills",
   "education",
   "blog",
+  "press",
   "achievements",
   "testimonials",
-  "arcade",
+  "pocket",
   "secrets",
 ];
 /** Phones: the home-screen grid (after the photo widget) and the dock. */
@@ -186,8 +196,9 @@ export const homeApps: AppId[] = [
   "skills",
   "education",
   "blog",
+  "press",
   "achievements",
-  "arcade",
+  "pocket",
   "secrets",
   "testimonials",
   "welcome",

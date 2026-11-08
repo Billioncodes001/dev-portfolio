@@ -95,7 +95,7 @@ export default function LockScreen({
       title: "📰 In the news · " + news.title,
       when: news.period,
       body: news.description,
-      path: "/experience#leadership",
+      path: "/press",
     });
   if (role)
     notes.push({

@@ -14,6 +14,7 @@ const Blog = lazy(() => import("../components/Blog"));
 const Achievements = lazy(() => import("../components/Achievements"));
 const Testimonials = lazy(() => import("../components/Testimonials"));
 const Contact = lazy(() => import("../components/Contact"));
+const Press = lazy(() => import("../components/Press"));
 
 function NotFound() {
   useEffect(() => unlock("lost"), []);
@@ -56,6 +57,7 @@ const RouteView = memo(function RouteView({ path }: { path: string }) {
         <Route path="/achievements" element={<Achievements />} />
         <Route path="/testimonials" element={<Testimonials />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/press" element={<Press />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Suspense>
