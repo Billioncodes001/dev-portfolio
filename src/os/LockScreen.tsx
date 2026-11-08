@@ -34,7 +34,9 @@ export default function LockScreen({
 }) {
   const data = usePortfolio();
   const now = useClock();
-  const [drag, setDrag] = useState(0);
+  const screen = useRef<HTMLDivElement>(null);
+  const lift = useRef(0);
+  const samples = useRef<{ y: number; t: number }[]>([]);
   const [leaving, setLeaving] = useState(false);
   const [torch, setTorch] = useState(false);
   const start = useRef<number | null>(null);
@@ -48,6 +50,8 @@ export default function LockScreen({
 
   const unlock = useCallback(
     (path?: string, app?: AppId) => {
+      const el = screen.current;
+      if (el) el.style.transition = "";
       setLeaving(true);
       setTimeout(() => onUnlock(path, app), reducedMotion() ? 0 : 380);
     },
@@ -113,7 +117,32 @@ export default function LockScreen({
       body: `${data.github.repositories} public repositories from @${data.github.username}. Type "ls projects" in Terminal.`,
     });
 
-  const lift = Math.min(drag, 400);
+  // The screen follows the finger 1:1 (with a little resistance past the
+  // threshold); the photo trails behind for depth. All of it is transforms
+  // written straight to the DOM, so a drag never re-renders React.
+  const paint = (y: number) => {
+    const el = screen.current;
+    if (!el) return;
+    const h = el.offsetHeight || 800;
+    const d = y < 260 ? y : 260 + (y - 260) * 0.45;
+    lift.current = y;
+    el.style.transform = d ? `translate3d(0, ${-d}px, 0)` : "";
+    el.style.opacity = d ? String(Math.max(0.35, 1 - d / (h * 0.9))) : "";
+    const photo = el.querySelector<HTMLElement>(".os-lock-photo");
+    if (photo)
+      photo.style.transform = d
+        ? `translate3d(0, ${d * 0.45}px, 0) scale(${1 + d * 0.00012})`
+        : "";
+  };
+  const settle = () => {
+    const el = screen.current;
+    if (!el) return;
+    el.style.transition =
+      "transform 0.5s var(--spring-soft), opacity 0.35s var(--ease-out)";
+    const photo = el.querySelector<HTMLElement>(".os-lock-photo");
+    if (photo) photo.style.transition = "transform 0.5s var(--spring-soft)";
+    paint(0);
+  };
   return (
     <div
       className={
@@ -121,11 +150,7 @@ export default function LockScreen({
         (leaving ? " is-leaving" : "") +
         (narrow ? " is-narrow" : "")
       }
-      style={
-        lift
-          ? { transform: `translateY(${-lift}px)`, opacity: 1 - lift / 600 }
-          : undefined
-      }
+      ref={screen}
       onPointerDown={(event) => {
         // The bottom "Swipe up" strip is where people swipe, so only real
         // controls (notifications, torch, camera) opt out of dragging.
@@ -136,21 +161,35 @@ export default function LockScreen({
         )
           return;
         start.current = event.clientY;
+        samples.current = [{ y: event.clientY, t: event.timeStamp }];
+        event.currentTarget.style.transition = "none";
+        const photo =
+          event.currentTarget.querySelector<HTMLElement>(".os-lock-photo");
+        if (photo) photo.style.transition = "none";
         event.currentTarget.setPointerCapture(event.pointerId);
       }}
       onPointerMove={(event) => {
-        if (start.current !== null)
-          setDrag(Math.max(0, start.current - event.clientY));
+        if (start.current === null) return;
+        samples.current = [
+          ...samples.current.filter((p) => event.timeStamp - p.t < 100),
+          { y: event.clientY, t: event.timeStamp },
+        ];
+        paint(Math.max(0, start.current - event.clientY));
       }}
-      onPointerUp={() => {
+      onPointerUp={(event) => {
         if (start.current === null) return;
         start.current = null;
-        if (drag > 110) unlock();
-        setDrag(0);
+        // A quick flick unlocks even when it is short.
+        const first = samples.current[0];
+        const v = first
+          ? (first.y - event.clientY) / Math.max(1, event.timeStamp - first.t)
+          : 0;
+        if (lift.current > 110 || (lift.current > 24 && v > 0.55)) unlock();
+        else settle();
       }}
       onPointerCancel={() => {
         start.current = null;
-        setDrag(0);
+        settle();
       }}
     >
       <picture className="os-lock-photo" aria-hidden="true">

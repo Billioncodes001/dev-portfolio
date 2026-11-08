@@ -48,14 +48,34 @@ export default function Wallpaper() {
   // reads as layers rather than a flat picture.
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const root = document.documentElement.style;
+    // A critically damped follow: each frame closes part of the gap to the
+    // target, and the loop sleeps once everything has settled. Only
+    // transforms change, so nothing relayouts.
+    const target = { x: 0, y: 0 };
+    const now = { x: 0, y: 0 };
     let frame = 0;
+    const layers: [string, number, number, string][] = [
+      [".os-wallpaper video, .os-wallpaper img", -24, -18, "scale(1.07)"],
+    ];
+    const step = () => {
+      now.x += (target.x - now.x) * 0.09;
+      now.y += (target.y - now.y) * 0.09;
+      for (const [sel, kx, ky, extra] of layers)
+        for (const el of document.querySelectorAll<HTMLElement>(sel)) {
+          const t = `${(now.x * kx).toFixed(2)}px ${(now.y * ky).toFixed(2)}px`;
+          if (extra)
+            el.style.transform = `translate3d(${t.replace(" ", ", ")}, 0) ${extra}`;
+          else el.style.translate = t;
+        }
+      const settled =
+        Math.abs(target.x - now.x) < 0.001 &&
+        Math.abs(target.y - now.y) < 0.001;
+      frame = settled ? 0 : requestAnimationFrame(step);
+    };
     const set = (x: number, y: number) => {
-      cancelAnimationFrame(frame);
-      frame = requestAnimationFrame(() => {
-        root.setProperty("--px", x.toFixed(3));
-        root.setProperty("--py", y.toFixed(3));
-      });
+      target.x = x;
+      target.y = y;
+      if (!frame) frame = requestAnimationFrame(step);
     };
     const pointer = (event: PointerEvent) => {
       if (event.pointerType !== "mouse") return;

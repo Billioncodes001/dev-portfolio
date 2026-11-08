@@ -13,6 +13,11 @@
   --ios-blue: #0062cc;
   --ios-red: #d70015;
   --spring: cubic-bezier(0.2, 0.9, 0.25, 1.08);
+  /* Shared curves; src/os/motion.ts uses the same values. */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-in: cubic-bezier(0.64, 0, 0.78, 0);
+  --spring-soft: cubic-bezier(0.34, 1.32, 0.64, 1);
   --win-bar: rgba(236, 236, 238, 0.92);
   --win-bar-ink: #3a3a3c;
   --win-line: rgba(0, 0, 0, 0.1);
@@ -90,7 +95,7 @@
   font-weight: 800;
   letter-spacing: -0.08em;
   line-height: 1;
-  animation: os-fade 0.5s ease both;
+  animation: os-fade 0.5s var(--ease-out) both;
 }
 .os-boot-mark span,
 .os-logo span,
@@ -122,16 +127,19 @@
   padding: 7vh 16px 26px;
   touch-action: none;
   user-select: none;
-  transition:
-    transform 0.25s ease,
-    opacity 0.25s ease;
+  overflow: hidden;
+  will-change: transform;
 }
 .os-lock.is-leaving {
-  transform: translateY(-100%) !important;
-  opacity: 0.4 !important;
+  transform: translate3d(0, -100%, 0) !important;
+  opacity: 0.3 !important;
   transition:
-    transform 0.38s cubic-bezier(0.6, 0, 0.3, 1),
-    opacity 0.38s;
+    transform 0.42s var(--ease-in-out),
+    opacity 0.42s var(--ease-in) !important;
+}
+/* Depth while dragging (LockScreen.tsx): the photo trails the glass. */
+.os-lock-photo {
+  will-change: transform;
 }
 .os-lock-photo,
 .os-lock-photo img {
@@ -306,7 +314,7 @@
   padding: 6px;
 }
 .os-unlock svg {
-  animation: os-nudge 1.8s ease-in-out infinite;
+  animation: os-nudge 1.8s var(--ease-in-out) infinite;
 }
 @keyframes os-nudge {
   0%,
@@ -506,7 +514,7 @@
     0 0 0 0.5px rgba(255, 255, 255, 0.18) inset,
     0 0 0 0.5px rgba(0, 0, 0, 0.6),
     0 16px 40px rgba(0, 0, 0, 0.45);
-  animation: os-fade 0.12s ease both;
+  animation: os-fade 0.12s var(--ease-out) both;
   text-shadow: none;
 }
 .os-menu button,
@@ -559,7 +567,7 @@
   width: 2px;
   background: var(--os-lime);
   border-radius: 1px;
-  animation: os-eq 0.9s ease-in-out infinite;
+  animation: os-eq 0.9s var(--ease-in-out) infinite;
 }
 .os-eq i:nth-child(2) {
   animation-delay: -0.3s;
@@ -790,6 +798,15 @@
   gap: 4px;
   padding: 5px 6px;
   border-radius: 20px;
+  animation: os-dock-in 0.6s var(--spring) both 0.1s;
+}
+/* The glass is its own layer so it can widen with the icons via a transform. */
+.os-dock::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
   background: rgba(60, 60, 64, 0.32);
   backdrop-filter: blur(40px) saturate(1.8);
   -webkit-backdrop-filter: blur(40px) saturate(1.8);
@@ -797,7 +814,8 @@
     0 0 0 0.5px rgba(255, 255, 255, 0.22) inset,
     0 0 0 0.5px rgba(0, 0, 0, 0.4),
     0 10px 30px rgba(0, 0, 0, 0.3);
-  animation: os-dock-in 0.6s var(--spring) both 0.1s;
+  transform: scaleX(var(--spread, 1));
+  transition: transform 0.18s var(--ease-out);
 }
 @keyframes os-dock-in {
   from {
@@ -810,16 +828,16 @@
   display: grid;
   place-items: center;
   padding: 0;
-  margin: 0 calc((var(--m) - 1) * 14px);
   border: 0;
   background: none;
   cursor: default;
   text-decoration: none;
-  transform: translateY(calc((var(--m) - 1) * -16px)) scale(var(--m));
+  transition: transform 0.18s var(--ease-out);
+  will-change: transform;
+}
+.os-dock-item > .app-icon {
   transform-origin: bottom center;
-  transition:
-    transform 0.14s ease-out,
-    margin 0.14s ease-out;
+  transition: transform 0.18s var(--ease-out);
 }
 .os-dock-item.is-running::after {
   content: "";
@@ -829,10 +847,9 @@
   height: 4px;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.85);
-  transform: scale(calc(1 / var(--m)));
 }
 .os-dock-item.is-launching .app-icon {
-  animation: os-bounce 0.7s ease-in-out;
+  animation: os-bounce 0.7s var(--ease-in-out);
 }
 @keyframes os-bounce {
   30% {
@@ -898,15 +915,11 @@
     0 0 0 1px rgba(255, 255, 255, 0.08) inset,
     0 22px 70px rgba(0, 0, 0, 0.42),
     0 6px 18px rgba(0, 0, 0, 0.22);
-  animation: os-window-in 0.3s var(--spring) both;
+  animation: os-window-in 0.42s var(--ease-out) both;
   transition:
-    left 0.3s var(--spring),
-    top 0.3s var(--spring),
-    width 0.3s var(--spring),
-    height 0.3s var(--spring),
-    opacity 0.2s,
-    transform 0.2s,
-    box-shadow 0.2s;
+    opacity 0.2s var(--ease-out),
+    transform 0.2s var(--ease-out),
+    box-shadow 0.25s var(--ease-out);
 }
 .os-window:not(.is-active) {
   box-shadow:
@@ -914,8 +927,13 @@
     0 12px 36px rgba(0, 0, 0, 0.3);
 }
 .os-window.is-dragging {
-  transition: none;
+  transition: box-shadow 0.25s var(--ease-out);
   user-select: none;
+  will-change: transform;
+  box-shadow:
+    0 0 0 0.5px rgba(0, 0, 0, 0.45),
+    0 34px 90px rgba(0, 0, 0, 0.5),
+    0 10px 26px rgba(0, 0, 0, 0.26);
 }
 .os-window.is-max {
   left: 0 !important;
@@ -924,21 +942,19 @@
   height: calc(100% - 26px) !important;
   border-radius: 0;
 }
+/* Minimising zooms into the app's icon (motion.ts); this is the end state. */
 .os-window.is-min {
   opacity: 0;
-  transform: translateY(55%) scale(0.2);
-  transform-origin: bottom center;
   pointer-events: none;
   visibility: hidden;
-  transition:
-    opacity 0.3s,
-    transform 0.35s cubic-bezier(0.5, 0, 0.7, 0.4),
-    visibility 0s 0.35s;
 }
 .os-window.is-closing {
   opacity: 0;
-  transform: scale(0.96);
+  transform: scale(0.94);
   pointer-events: none;
+  transition:
+    opacity 0.18s var(--ease-in),
+    transform 0.2s var(--ease-in);
 }
 .os-titlebar {
   flex: none;
@@ -1735,7 +1751,7 @@
   justify-items: center;
   align-items: start;
   padding: 18vh 16px 16px;
-  animation: os-fade 0.12s ease both;
+  animation: os-fade 0.12s var(--ease-out) both;
 }
 .os-launcher {
   width: min(640px, 100%);
@@ -1923,7 +1939,7 @@
   height: calc(100% - 50px) !important;
   border-radius: 0;
   box-shadow: none;
-  animation: os-app-open 0.38s var(--spring) both;
+  animation: os-app-open 0.42s var(--ease-out) both;
 }
 @keyframes os-app-open {
   from {
@@ -1934,10 +1950,6 @@
 }
 .os.is-narrow .os-window:not(.is-active) {
   visibility: hidden;
-}
-.os.is-narrow .os-window.is-min {
-  transform: scale(0.3);
-  transform-origin: center;
 }
 .os.is-narrow .os-titlebar {
   height: 44px;
@@ -2076,24 +2088,12 @@
 
 /* ------------------------------------------------------------- Depth */
 
-/* --px/--py run from -0.5 to 0.5 with the pointer (or phone tilt). The
-   wallpaper drifts against it and widgets float over it, so the desktop has
-   layers. */
+/* The wallpaper, desktop icons and stats widget drift at different depths;
+   Wallpaper.tsx drives them with a spring. */
 .os-wallpaper video,
 .os-wallpaper img {
-  transform: translate3d(
-      calc(var(--px, 0) * -22px),
-      calc(var(--py, 0) * -16px),
-      0
-    )
-    scale(1.06);
-  transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+  transform: scale(1.07);
   will-change: transform;
-}
-.os-icons,
-.os-stats {
-  translate: calc(var(--px, 0) * 8px) calc(var(--py, 0) * 6px);
-  transition: translate 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 .os-windows {
   perspective: 1600px;
@@ -2101,7 +2101,7 @@
 @keyframes os-window-in {
   from {
     opacity: 0;
-    transform: perspective(1200px) rotateX(12deg) scale(0.9) translateY(24px);
+    transform: perspective(1400px) rotateX(7deg) scale(0.94) translateY(18px);
   }
 }
 
@@ -2139,10 +2139,8 @@
     0 18px 40px rgba(0, 0, 0, 0.35);
   transform: perspective(700px) rotateX(var(--rx)) rotateY(var(--ry));
   transform-style: preserve-3d;
-  transition:
-    transform 0.25s ease-out,
-    translate 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
-  animation: os-fade-up 0.6s 0.2s both;
+  transition: transform 0.35s var(--ease-out);
+  animation: os-fade-up 0.6s 0.2s var(--ease-out) both;
 }
 .os-stats-title {
   font-size: 11px;
@@ -2886,4 +2884,53 @@
 }
 .os-window .pocket {
   height: 100%;
+}
+
+/* ------------------------------------------------------------- Exits */
+
+.os-route {
+  animation: os-route-in 0.34s var(--ease-out) both;
+}
+@keyframes os-route-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 10px, 0);
+  }
+}
+.os-banner.is-leaving {
+  animation: os-banner-out 0.32s var(--ease-in) both;
+  pointer-events: none;
+}
+@keyframes os-banner-out {
+  to {
+    opacity: 0;
+    transform: translate3d(110%, 0, 0);
+  }
+}
+.os.is-narrow .os-banner.is-leaving {
+  animation-name: os-banner-up;
+}
+@keyframes os-banner-up {
+  to {
+    opacity: 0;
+    transform: translate3d(0, -130%, 0);
+  }
+}
+.os-launcher-scrim.is-leaving {
+  animation: os-fade-out 0.17s var(--ease-in) both;
+  pointer-events: none;
+}
+.os-launcher-scrim.is-leaving .os-launcher {
+  animation: os-pop-out 0.17s var(--ease-in) both;
+}
+@keyframes os-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes os-pop-out {
+  to {
+    opacity: 0;
+    transform: scale(0.97) translate3d(0, -6px, 0);
+  }
 }

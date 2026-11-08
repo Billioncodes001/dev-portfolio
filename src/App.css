@@ -1717,7 +1717,7 @@ blockquote {
   width: 40%;
   height: 100%;
   background: var(--ink);
-  animation: loading 1s ease-in-out infinite;
+  animation: loading 1s var(--ease-in-out) infinite;
 }
 .skeleton {
   display: block;
@@ -2818,7 +2818,7 @@ blockquote {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  transition: transform 0.3s ease;
+  transition: transform 0.3s var(--ease-out);
 }
 .gallery-portrait .gallery-image {
   background: #382323;

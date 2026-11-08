@@ -1,6 +1,7 @@
 import {
   useCallback,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -47,6 +48,7 @@ import Secrets from "./apps/Secrets";
 import Stats from "./Stats";
 import { SECRETS, dismissLatest, unlock, useSecrets } from "./secrets";
 import { sound, useSound } from "./sound";
+import { flip, iconRect, takeLaunch, useExit, zoom } from "./motion";
 import { Battery, Signal, Wifi } from "./StatusIcons";
 import {
   menuDate,
@@ -153,7 +155,56 @@ function OsWindow({
     px: number;
     py: number;
     rect: { x: number; y: number; w: number; h: number };
+    x: number;
+    y: number;
+    frame: number;
   } | null>(null);
+  const last = useRef<DOMRect | null>(null);
+  const first = useRef(true);
+  const was = useRef({
+    max: win.max,
+    min: win.min,
+    closing: win.closing,
+    active,
+  });
+
+  // Opening grows the window out of the icon that launched it.
+  useLayoutEffect(() => {
+    const el = node.current;
+    const from = takeLaunch(win.key);
+    if (!el || !from) return;
+    if (zoom(el, from, "in")) el.style.animation = "none";
+    // Mount only: later changes are handled below.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  // Maximise, minimise and close animate with transforms only (FLIP), so the
+  // page inside never relayouts mid-motion.
+  useLayoutEffect(() => {
+    const el = node.current;
+    const before = was.current;
+    was.current = { max: win.max, min: win.min, closing: win.closing, active };
+    if (!el || first.current) {
+      first.current = false;
+      return;
+    }
+    if (before.max !== win.max && last.current) flip(el, last.current);
+    // On phones only the app on screen animates; the rest are hidden already.
+    if (
+      before.min !== win.min &&
+      (!narrow || (win.min ? before.active : true))
+    ) {
+      const icon = iconRect(win.key);
+      if (icon) zoom(el, icon, win.min ? "out" : "in");
+    }
+    if (!before.closing && win.closing && narrow) {
+      const icon = iconRect(win.key);
+      if (icon && zoom(el, icon, "out")) el.style.animation = "none";
+    }
+  }, [win.max, win.min, win.closing, win.key, narrow, active]);
+  useLayoutEffect(() => {
+    if (node.current && !win.min)
+      last.current = node.current.getBoundingClientRect();
+  });
 
   const begin = (mode: "move" | "size") => (event: ReactPointerEvent) => {
     if (narrow || win.max || event.button !== 0) return;
@@ -166,6 +217,9 @@ function OsWindow({
       px: event.clientX,
       py: event.clientY,
       rect: { x: win.x, y: win.y, w: win.w, h: win.h },
+      x: win.x,
+      y: win.y,
+      frame: 0,
     };
     (event.currentTarget as HTMLElement).setPointerCapture(event.pointerId);
     node.current?.classList.add("is-dragging");
@@ -177,19 +231,30 @@ function OsWindow({
     const dx = event.clientX - g.px;
     const dy = event.clientY - g.py;
     if (g.mode === "move") {
-      const x = Math.min(Math.max(g.rect.x + dx, 80 - g.rect.w), bounds.w - 80);
-      const y = Math.min(Math.max(g.rect.y + dy, MENU), bounds.h - 60);
-      el.style.left = x + "px";
-      el.style.top = y + "px";
+      // Dragging moves a composited layer; left/top are written once, on drop.
+      g.x = Math.min(Math.max(g.rect.x + dx, 80 - g.rect.w), bounds.w - 80);
+      g.y = Math.min(Math.max(g.rect.y + dy, MENU), bounds.h - 60);
+      el.style.transform = `translate3d(${g.x - g.rect.x}px, ${g.y - g.rect.y}px, 0)`;
     } else {
-      el.style.width = Math.max(340, g.rect.w + dx) + "px";
-      el.style.height = Math.max(240, g.rect.h + dy) + "px";
+      // Resizing has to relayout, so it does so at most once a frame.
+      cancelAnimationFrame(g.frame);
+      g.frame = requestAnimationFrame(() => {
+        el.style.width = Math.max(340, g.rect.w + dx) + "px";
+        el.style.height = Math.max(240, g.rect.h + dy) + "px";
+      });
     }
   };
   const end = () => {
     const el = node.current;
     if (!gesture.current || !el) return;
+    const g = gesture.current;
     gesture.current = null;
+    cancelAnimationFrame(g.frame);
+    if (g.mode === "move") {
+      el.style.left = g.x + "px";
+      el.style.top = g.y + "px";
+      el.style.transform = "";
+    }
     el.classList.remove("is-dragging");
     onCommit({
       x: parseFloat(el.style.left),
@@ -320,9 +385,11 @@ type Hit = {
 
 function Launcher({
   hits,
+  leaving,
   onClose,
 }: {
   hits: (q: string) => Hit[];
+  leaving: boolean;
   onClose: () => void;
 }) {
   const [query, setQuery] = useState("");
@@ -334,7 +401,10 @@ function Launcher({
     hit.go();
   };
   return (
-    <div className="os-launcher-scrim" onPointerDown={onClose}>
+    <div
+      className={"os-launcher-scrim" + (leaving ? " is-leaving" : "")}
+      onPointerDown={onClose}
+    >
       <div
         className="os-launcher"
         role="dialog"
@@ -566,22 +636,64 @@ function Dock({
   narrow: boolean;
 }) {
   const dock = useRef<HTMLElement>(null);
-  // macOS magnification: icons swell with the pointer's distance.
+  const layout = useRef<{
+    left: number;
+    centers: number[];
+    sizes: number[];
+    width: number;
+  } | null>(null);
+  const frame = useRef(0);
+  // macOS magnification: icons swell with the pointer's distance and push
+  // their neighbours aside. Positions are measured once per hover (offsets
+  // ignore transforms), and every frame after that is transforms only.
+  const measure = () => {
+    const nav = dock.current;
+    if (!nav) return null;
+    const items = [...nav.querySelectorAll<HTMLElement>(".os-dock-item")];
+    const left = nav.getBoundingClientRect().left;
+    layout.current = {
+      left,
+      centers: items.map((el) => el.offsetLeft + el.offsetWidth / 2),
+      sizes: items.map((el) => el.offsetWidth),
+      width: nav.offsetWidth,
+    };
+    return layout.current;
+  };
   const magnify = (x: number | null) => {
     if (narrow || reducedMotion()) return;
-    for (const el of dock.current?.querySelectorAll<HTMLElement>(
-      ".os-dock-item",
-    ) ?? []) {
-      const rect = el.getBoundingClientRect();
-      const d = x === null ? 999 : Math.abs(x - (rect.left + rect.width / 2));
-      el.style.setProperty("--m", String(1 + 0.55 * Math.max(0, 1 - d / 130)));
-    }
+    cancelAnimationFrame(frame.current);
+    frame.current = requestAnimationFrame(() => {
+      const nav = dock.current;
+      const l = layout.current ?? measure();
+      if (!nav || !l) return;
+      const items = nav.querySelectorAll<HTMLElement>(".os-dock-item");
+      const scale = l.centers.map((c) =>
+        x === null
+          ? 1
+          : 1 + 0.6 * Math.max(0, 1 - Math.abs(x - l.left - c) / 140) ** 1.6,
+      );
+      const extra = scale.map((m, i) => (m - 1) * l.sizes[i]);
+      const total = extra.reduce((a, b) => a + b, 0);
+      let before = 0;
+      // The button slides; only its icon scales, so the running dot stays put.
+      items.forEach((el, i) => {
+        const shift = before + extra[i] / 2 - total / 2;
+        before += extra[i];
+        el.style.transform = `translate3d(${shift}px, 0, 0)`;
+        const icon = el.firstElementChild as HTMLElement | null;
+        if (icon)
+          icon.style.transform = `translate3d(0, ${(1 - scale[i]) * 14}px, 0) scale(${scale[i]})`;
+      });
+      nav.style.setProperty("--spread", String(1 + total / l.width));
+      if (x === null) layout.current = null;
+    });
   };
   return (
     <nav
       ref={dock}
       className="os-dock"
       aria-label="Dock"
+      onPointerEnter={() => measure()}
       onPointerMove={(event) => magnify(event.clientX)}
       onPointerLeave={() => magnify(null)}
     >
@@ -595,6 +707,7 @@ function Dock({
             (launching === id ? " is-launching" : "")
           }
           onClick={() => onOpen(id)}
+          data-app={id}
           aria-label={apps[id].title + (running(id) ? " (open)" : "")}
         >
           <AppIcon id={id} size={narrow ? 58 : 50} />
@@ -648,6 +761,10 @@ export default function OS({
   const [launching, setLaunching] = useState<AppId | null>(null);
   const [install, setInstall] = useState<(() => void) | null>(null);
   const secrets = useSecrets();
+  const launcherExit = useExit(launcher, 170);
+  const secretExit = useExit(!!secrets.latest, 320);
+  const lastSecret = useRef<(typeof SECRETS)[number] | null>(null);
+  const bannerExit = useExit(banner, 320);
   // Sections whose content is still being verified stay off the home screen.
   const shown = useCallback(
     (id: AppId) =>
@@ -808,7 +925,7 @@ export default function OS({
         setWins((list) =>
           list.filter((w) => !(w.key === win.key && w.closing)),
         ),
-      reducedMotion() ? 0 : 200,
+      reducedMotion() ? 0 : narrow ? 380 : 200,
     );
     if (win.path) leaveUrl(win.key);
   };
@@ -1062,12 +1179,12 @@ export default function OS({
   const homeVisible = narrow && !top;
   // On phones the banner would cover the app's back button, so it only
   // appears over the home screen.
-  const bannerNote = banner &&
+  const bannerNote = bannerExit.mounted &&
     top?.key !== "contact" &&
     (!narrow || homeVisible) && (
       <button
         type="button"
-        className="os-banner"
+        className={"os-banner" + (bannerExit.leaving ? " is-leaving" : "")}
         onClick={() => {
           setBanner(false);
           openApp("contact");
@@ -1084,11 +1201,15 @@ export default function OS({
       </button>
     );
 
-  const found = SECRETS.find((x) => x.id === secrets.latest);
-  const secretNote = found && (
+  const latest = SECRETS.find((x) => x.id === secrets.latest);
+  if (latest) lastSecret.current = latest;
+  const found = lastSecret.current;
+  const secretNote = secretExit.mounted && found && (
     <button
       type="button"
-      className="os-banner is-secret"
+      className={
+        "os-banner is-secret" + (secretExit.leaving ? " is-leaving" : "")
+      }
       onClick={() => {
         dismissLatest();
         ensure("secrets");
@@ -1163,7 +1284,7 @@ export default function OS({
             </li>
             {homeApps.filter(shown).map((id) => (
               <li key={id}>
-                <button type="button" onClick={() => openApp(id)}>
+                <button type="button" data-app={id} onClick={() => openApp(id)}>
                   <AppIcon id={id} size={60} />
                   <span>{apps[id].title}</span>
                 </button>
@@ -1200,7 +1321,7 @@ export default function OS({
           <ul className="os-icons" aria-label="Apps">
             {desktopApps.filter(shown).map((id) => (
               <li key={id}>
-                <button type="button" onClick={() => openApp(id)}>
+                <button type="button" data-app={id} onClick={() => openApp(id)}>
                   <AppIcon id={id} size={48} />
                   <span>{apps[id].title}</span>
                 </button>
@@ -1282,7 +1403,13 @@ export default function OS({
         narrow={narrow}
       />
 
-      {launcher && <Launcher hits={hits} onClose={() => setLauncher(false)} />}
+      {launcherExit.mounted && (
+        <Launcher
+          hits={hits}
+          leaving={launcherExit.leaving}
+          onClose={() => setLauncher(false)}
+        />
+      )}
     </div>
   );
 }

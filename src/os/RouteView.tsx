@@ -44,22 +44,25 @@ const RouteView = memo(function RouteView({ path }: { path: string }) {
         </div>
       }
     >
-      <Routes location={path} key={path}>
-        <Route path="/" element={<Home />} />
-        <Route path="/projects" element={<Projects />} />
-        <Route path="/projects/:slug" element={<ProjectDetail />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/gallery" element={<Gallery />} />
-        <Route path="/experience" element={<Experience />} />
-        <Route path="/skills" element={<Skills />} />
-        <Route path="/education" element={<Education />} />
-        <Route path="/blog" element={<Blog />} />
-        <Route path="/achievements" element={<Achievements />} />
-        <Route path="/testimonials" element={<Testimonials />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/press" element={<Press />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+      {/* Keyed by path so each page change fades in. */}
+      <div className="os-route" key={path}>
+        <Routes location={path}>
+          <Route path="/" element={<Home />} />
+          <Route path="/projects" element={<Projects />} />
+          <Route path="/projects/:slug" element={<ProjectDetail />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/gallery" element={<Gallery />} />
+          <Route path="/experience" element={<Experience />} />
+          <Route path="/skills" element={<Skills />} />
+          <Route path="/education" element={<Education />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/achievements" element={<Achievements />} />
+          <Route path="/testimonials" element={<Testimonials />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/press" element={<Press />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </div>
     </Suspense>
   );
 });
