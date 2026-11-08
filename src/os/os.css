@@ -940,12 +940,6 @@
   transform: scale(0.96);
   pointer-events: none;
 }
-@keyframes os-window-in {
-  from {
-    opacity: 0;
-    transform: scale(0.9) translateY(14px);
-  }
-}
 .os-titlebar {
   flex: none;
   height: 38px;
@@ -2078,4 +2072,425 @@
   .os-wallpaper {
     background-image: url("/media/morning-tall-poster.webp");
   }
+}
+
+/* ------------------------------------------------------------- Depth */
+
+/* --px/--py run from -0.5 to 0.5 with the pointer (or phone tilt). The
+   wallpaper drifts against it and widgets float over it, so the desktop has
+   layers. */
+.os-wallpaper video,
+.os-wallpaper img {
+  transform: translate3d(
+      calc(var(--px, 0) * -22px),
+      calc(var(--py, 0) * -16px),
+      0
+    )
+    scale(1.06);
+  transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+  will-change: transform;
+}
+.os-icons,
+.os-stats {
+  translate: calc(var(--px, 0) * 8px) calc(var(--py, 0) * 6px);
+  transition: translate 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.os-windows {
+  perspective: 1600px;
+}
+@keyframes os-window-in {
+  from {
+    opacity: 0;
+    transform: perspective(1200px) rotateX(12deg) scale(0.9) translateY(24px);
+  }
+}
+
+/* ------------------------------------------------------- Stats widget */
+
+.os-stats {
+  --rx: 0deg;
+  --ry: 0deg;
+  --gx: 50%;
+  --gy: 0%;
+  position: absolute;
+  top: 18px;
+  right: 124px;
+  width: 232px;
+  display: grid;
+  gap: 10px;
+  padding: 14px 16px;
+  border: 0;
+  border-radius: 22px;
+  color: #fff;
+  text-align: left;
+  pointer-events: auto;
+  cursor: pointer;
+  background:
+    radial-gradient(
+      circle at var(--gx) var(--gy),
+      rgba(255, 255, 255, 0.22),
+      transparent 60%
+    ),
+    rgba(28, 28, 32, 0.42);
+  backdrop-filter: blur(24px) saturate(1.6);
+  -webkit-backdrop-filter: blur(24px) saturate(1.6);
+  box-shadow:
+    0 0 0 0.5px rgba(255, 255, 255, 0.18) inset,
+    0 18px 40px rgba(0, 0, 0, 0.35);
+  transform: perspective(700px) rotateX(var(--rx)) rotateY(var(--ry));
+  transform-style: preserve-3d;
+  transition:
+    transform 0.25s ease-out,
+    translate 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+  animation: os-fade-up 0.6s 0.2s both;
+}
+.os-stats-title {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0.75;
+}
+.os-stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 14px;
+  transform: translateZ(30px);
+}
+.os-stat {
+  display: grid;
+}
+.os-stat b {
+  font-family: "Manrope", var(--sys);
+  font-size: 28px;
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+.os-stat span {
+  font-size: 11.5px;
+  opacity: 0.8;
+}
+.ios-widget .os-stats {
+  position: relative;
+  inset: auto;
+  width: 100%;
+  aspect-ratio: 1;
+  align-content: space-between;
+  padding: 12px;
+  border-radius: 24px;
+  translate: none;
+}
+.ios-widget .os-stats-grid {
+  gap: 6px 8px;
+}
+.ios-widget .os-stat b {
+  font-size: 22px;
+}
+.ios-widget .os-stat span {
+  font-size: 10px !important;
+  font-weight: 500 !important;
+  white-space: normal !important;
+}
+
+/* ----------------------------------------------------- Secrets banner */
+
+.os-banner.is-secret b {
+  color: #ffd60a;
+}
+.icon-messages {
+  background: linear-gradient(180deg, #65f27b, #0fbd3c);
+}
+.icon-arcade {
+  background: linear-gradient(180deg, #b49cff, #6b4bf0);
+}
+.icon-secrets {
+  background: linear-gradient(180deg, #ffd60a, #f59e0b);
+  color: #3a2500;
+}
+
+/* ------------------------------------------------------------ Messages */
+
+.messages {
+  height: 100%;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  background: var(--paper);
+  font-family: var(--sys);
+}
+.messages-head {
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+  padding: 12px 12px 10px;
+  border-bottom: 0.5px solid var(--win-line);
+}
+.messages-head img {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: 50% 25%;
+}
+.messages-head b {
+  font-size: 13px;
+}
+.messages-head span {
+  font-size: 11px;
+  opacity: 0.6;
+}
+.messages-log {
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px 12px;
+}
+.bubble {
+  max-width: 78%;
+  margin: 0;
+  padding: 8px 12px;
+  border-radius: 18px;
+  font-size: 14px;
+  line-height: 1.35;
+  animation: os-pop 0.25s var(--spring) both;
+}
+.bubble.from-them {
+  align-self: flex-start;
+  background: var(--win-bar);
+  border-bottom-left-radius: 5px;
+}
+.bubble.from-me {
+  align-self: flex-end;
+  background: #0a7cff;
+  color: #fff;
+  border-bottom-right-radius: 5px;
+}
+.bubble.is-typing {
+  display: flex;
+  gap: 4px;
+  padding: 12px 14px;
+}
+.bubble.is-typing i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.4;
+  animation: os-typing 1s infinite;
+}
+.bubble.is-typing i:nth-child(2) {
+  animation-delay: 0.15s;
+}
+.bubble.is-typing i:nth-child(3) {
+  animation-delay: 0.3s;
+}
+@keyframes os-typing {
+  50% {
+    opacity: 1;
+    transform: translateY(-3px);
+  }
+}
+.messages-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 10px 12px 14px;
+  border-top: 0.5px solid var(--win-line);
+}
+.messages-chips button {
+  padding: 6px 11px;
+  border: 1px solid #0a64d6;
+  border-radius: 99px;
+  background: transparent;
+  color: #0a64d6;
+  font-size: 12.5px;
+  cursor: pointer;
+}
+.messages-chips button.is-primary {
+  background: #0a64d6;
+  color: #fff;
+}
+[data-theme="dark"] .messages-chips button:not(.is-primary) {
+  border-color: #64a8ff;
+  color: #64a8ff;
+}
+
+/* -------------------------------------------------------------- Arcade */
+
+.arcade {
+  height: 100%;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: radial-gradient(circle at 50% 0%, #3b2a1c, #120c08 70%);
+  overflow: auto;
+}
+.arcade-console {
+  width: min(300px, 100%);
+  display: grid;
+  gap: 14px;
+  padding: 16px 18px 22px;
+  border-radius: 22px 22px 46px 22px;
+  background: linear-gradient(160deg, #c9c2f5, #9d93e6);
+  box-shadow:
+    0 2px 0 rgba(255, 255, 255, 0.6) inset,
+    0 -6px 0 rgba(0, 0, 0, 0.14) inset,
+    0 24px 40px rgba(0, 0, 0, 0.5);
+  transform: perspective(900px) rotateX(6deg);
+  color: #2b2457;
+}
+.arcade-brand {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 700;
+}
+.arcade-screen {
+  position: relative;
+  display: grid;
+  gap: 8px;
+  padding: 10px;
+  border-radius: 10px;
+  background: #8bac0f;
+  color: #0f380f;
+  font-family: var(--mono);
+  box-shadow: 0 0 0 8px #2b2457;
+  outline: none;
+}
+.arcade-screen:focus-visible {
+  box-shadow:
+    0 0 0 8px #2b2457,
+    0 0 0 11px #ffd60a;
+}
+.arcade-hud {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  font-weight: 700;
+}
+.arcade-board {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+}
+.arcade-hole {
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: #306230;
+  box-shadow: 0 4px 0 #0f380f inset;
+  font-size: 28px;
+  cursor: pointer;
+}
+.arcade-hole.is-cursor {
+  outline: 3px solid #0f380f;
+  outline-offset: 1px;
+}
+.arcade-hole.has-bug span,
+.arcade-hole.is-splat span {
+  animation: os-pop 0.18s var(--spring) both;
+}
+.arcade-overlay {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  gap: 6px;
+  text-align: center;
+  border-radius: 10px;
+  background: rgba(155, 188, 15, 0.92);
+  font-size: 12px;
+}
+.arcade-overlay b {
+  font-size: 18px;
+}
+.arcade-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.arcade-dpad {
+  position: relative;
+  width: 64px;
+  height: 64px;
+}
+.arcade-dpad i {
+  position: absolute;
+  inset: 22px 0;
+  border-radius: 4px;
+  background: #2b2457;
+}
+.arcade-dpad i + i {
+  inset: 0 22px;
+}
+.arcade-btn {
+  min-width: 64px;
+  height: 64px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 99px;
+  background: #ffd60a;
+  color: #3a2500;
+  font-weight: 800;
+  box-shadow: 0 4px 0 #b88a00;
+  cursor: pointer;
+}
+.arcade-btn:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 #b88a00;
+}
+
+/* ------------------------------------------------------------- Secrets */
+
+.secrets {
+  height: 100%;
+  overflow-y: auto;
+  padding: 18px;
+  font-family: var(--sys);
+}
+.secrets-count {
+  margin: 0 0 8px;
+  font-size: 15px;
+}
+.secrets progress {
+  width: 100%;
+  height: 8px;
+  accent-color: #f59e0b;
+}
+.secrets ul {
+  list-style: none;
+  margin: 14px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+.secrets li {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: var(--win-bar);
+  opacity: 0.75;
+}
+.secrets li.is-found {
+  opacity: 1;
+  box-shadow: 0 0 0 1px #f59e0b inset;
+}
+.secrets li > span:first-child {
+  font-size: 22px;
+}
+.secrets li b,
+.secrets li small {
+  display: block;
+}
+.secrets li small {
+  opacity: 0.75;
+}
+.secrets-done {
+  margin-top: 14px;
+  font-weight: 600;
 }

@@ -234,3 +234,60 @@ test("music follows the visitor's mute choice", async ({ page }, info) => {
   await page.reload();
   await expect(page.getByRole("button", { name: "Play music" })).toBeVisible();
 });
+
+test("Messages answers questions and the secrets hunt counts finds", async ({
+  page,
+}, info) => {
+  await page.goto("/about");
+  if (info.project.name === "mobile")
+    await page.getByRole("button", { name: "Home", exact: true }).click();
+  await page
+    .getByRole("navigation", { name: "Dock" })
+    .getByRole("button", { name: /^Messages/ })
+    .click();
+  const ask = page.getByRole("group", { name: "Ask Josiah" });
+  await ask.getByRole("button", { name: "What's your stack?" }).click();
+  await expect(page.getByRole("log")).toContainText("tools and counting");
+  await ask.getByRole("button", { name: /Tell me a secret/ }).click();
+  await expect(page.getByText(/Secret found: Confidant/)).toBeVisible();
+  await page.getByText(/Secret found: Confidant/).click();
+  await expect(page.getByText("1/7")).toBeVisible();
+  // Progress survives a reload, and the Konami code is a second find.
+  await page.reload();
+  for (const key of [
+    "ArrowUp",
+    "ArrowUp",
+    "ArrowDown",
+    "ArrowDown",
+    "ArrowLeft",
+    "ArrowRight",
+    "ArrowLeft",
+    "ArrowRight",
+    "b",
+    "a",
+  ])
+    await page.keyboard.press(key);
+  await expect(page.getByText(/Secret found: Old-school/)).toBeVisible();
+  await expect(page.getByText(/2 of 7 found/)).toBeVisible();
+});
+
+test("Bug Squash plays from the keyboard", async ({ page }, info) => {
+  test.skip(info.project.name === "mobile", "Covered by the desktop layout");
+  await page.goto("/about");
+  await page
+    .getByRole("list", { name: "Apps" })
+    .getByRole("button", { name: "Bug Squash", exact: true })
+    .click();
+  await page.getByRole("button", { name: "Start" }).click();
+  await expect(page.getByText(/\d+s$/)).toBeVisible();
+  const screen = page.getByRole("application", { name: /Bug Squash/ });
+  await screen.focus();
+  await screen.press("Enter");
+  await expect(page.getByText(/^Score \d+$/)).toBeVisible();
+});
+
+test("a missing page is a secret too", async ({ page }) => {
+  await page.goto("/nowhere-at-all");
+  await expect(page.getByText("This page took a wrong turn.")).toBeVisible();
+  await expect(page.getByText(/Secret found: Off the map/)).toBeVisible();
+});

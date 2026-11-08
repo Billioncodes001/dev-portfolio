@@ -4,8 +4,11 @@ import {
   Briefcase,
   Compass,
   Folder,
+  Gamepad2,
   GraduationCap,
+  KeyRound,
   Mail,
+  MessageCircle,
   MessageSquareQuote,
   UserRound,
   Wrench,
@@ -26,6 +29,9 @@ const glyphs: Partial<Record<AppId, LucideIcon>> = {
   testimonials: MessageSquareQuote,
   contact: Mail,
   safari: Compass,
+  messages: MessageCircle,
+  arcade: Gamepad2,
+  secrets: KeyRound,
 };
 
 /**

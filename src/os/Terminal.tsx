@@ -1,3 +1,4 @@
+import { unlock } from "./secrets";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { usePortfolio } from "../hooks/usePortfolio";
 import { projectName, projectSlug, projectSummary } from "../components/UI";
@@ -255,7 +256,8 @@ export default function Terminal({ open, openApp, setTheme, close }: Props) {
       case "history":
         return past.length ? past.join("\n") : "Nothing yet.";
       case "sudo":
-        return "Permission denied. Nice try, though. I'll take it as a compliment.";
+        unlock("sudo");
+        return "🏆 Secret found. Also: Permission denied. Nice try, though. I'll take it as a compliment.";
       case "rm":
         return "rm: this portfolio is read-only. Everything here stays.";
       case "clear":

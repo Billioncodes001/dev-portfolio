@@ -1,4 +1,5 @@
-import { lazy, memo, Suspense } from "react";
+import { lazy, memo, Suspense, useEffect } from "react";
+import { unlock } from "./secrets";
 import { Link, Route, Routes } from "react-router-dom";
 import Home from "../components/Home";
 
@@ -13,6 +14,20 @@ const Blog = lazy(() => import("../components/Blog"));
 const Achievements = lazy(() => import("../components/Achievements"));
 const Testimonials = lazy(() => import("../components/Testimonials"));
 const Contact = lazy(() => import("../components/Contact"));
+
+function NotFound() {
+  useEffect(() => unlock("lost"), []);
+  return (
+    <section className="load-state">
+      <p className="eyebrow">404 / Uncharted territory</p>
+      <h1>This page took a wrong turn.</h1>
+      <p>You found a secret, though. Let's get you back to something good.</p>
+      <Link className="button primary" to="/">
+        Back to home
+      </Link>
+    </section>
+  );
+}
 
 /**
  * Renders one page at a fixed path. Each window owns its own path, so several
@@ -41,19 +56,7 @@ const RouteView = memo(function RouteView({ path }: { path: string }) {
         <Route path="/achievements" element={<Achievements />} />
         <Route path="/testimonials" element={<Testimonials />} />
         <Route path="/contact" element={<Contact />} />
-        <Route
-          path="*"
-          element={
-            <section className="load-state">
-              <p className="eyebrow">404 / Uncharted territory</p>
-              <h1>This page took a wrong turn.</h1>
-              <p>Let's get you back to something good.</p>
-              <Link className="button primary" to="/">
-                Back to home
-              </Link>
-            </section>
-          }
-        />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Suspense>
   );

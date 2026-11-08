@@ -15,7 +15,10 @@ export type AppId =
   | "calendar"
   | "safari"
   | "notes"
-  | "sysinfo";
+  | "sysinfo"
+  | "messages"
+  | "arcade"
+  | "secrets";
 
 export type OsApp = {
   id: AppId;
@@ -129,6 +132,24 @@ export const apps: Record<AppId, OsApp> = {
     blurb: "The machine behind the portfolio",
     size: [340, 430],
   },
+  messages: {
+    id: "messages",
+    title: "Messages",
+    blurb: "Ask me anything, iMessage style",
+    size: [420, 600],
+  },
+  arcade: {
+    id: "arcade",
+    title: "Bug Squash",
+    blurb: "A pocket console game: squash bugs before the deploy",
+    size: [380, 600],
+  },
+  secrets: {
+    id: "secrets",
+    title: "Secrets",
+    blurb: "Seven secrets are hidden in this OS. Find them all",
+    size: [380, 520],
+  },
 };
 
 /** Wide screens: the dock. */
@@ -139,6 +160,7 @@ export const dockApps: AppId[] = [
   "gallery",
   "safari",
   "notes",
+  "messages",
   "terminal",
   "contact",
 ];
@@ -151,6 +173,8 @@ export const desktopApps: AppId[] = [
   "blog",
   "achievements",
   "testimonials",
+  "arcade",
+  "secrets",
 ];
 /** Phones: the home-screen grid (after the photo widget) and the dock. */
 export const homeApps: AppId[] = [
@@ -163,10 +187,12 @@ export const homeApps: AppId[] = [
   "education",
   "blog",
   "achievements",
+  "arcade",
+  "secrets",
   "testimonials",
   "welcome",
 ];
-export const phoneDock: AppId[] = ["gallery", "safari", "notes", "contact"];
+export const phoneDock: AppId[] = ["messages", "safari", "gallery", "contact"];
 
 /** Which window a URL belongs to. Every project detail shares one viewer window. */
 export function appForPath(pathname: string): AppId | null {

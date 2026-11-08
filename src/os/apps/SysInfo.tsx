@@ -1,9 +1,12 @@
+import { useEffect } from "react";
+import { unlock } from "../secrets";
 import { usePortfolio } from "../../hooks/usePortfolio";
 import { assetUrl } from "../../components/UI";
 
 /** "About this machine", where the machine is me. */
 export default function SysInfo({ open }: { open: (path: string) => void }) {
   const data = usePortfolio();
+  useEffect(() => unlock("sysinfo"), []);
   const rows: [string, string][] = [
     ["Engineer", data.home.name],
     ["Chip", "Curiosity, Lagos-tuned"],

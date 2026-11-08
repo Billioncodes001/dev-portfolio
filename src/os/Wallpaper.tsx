@@ -43,6 +43,48 @@ export default function Wallpaper() {
     };
   }, [name]);
 
+  // Depth: the wallpaper drifts against the pointer (or the phone's tilt
+  // where the browser offers it without a permission prompt), so the desktop
+  // reads as layers rather than a flat picture.
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const root = document.documentElement.style;
+    let frame = 0;
+    const set = (x: number, y: number) => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        root.setProperty("--px", x.toFixed(3));
+        root.setProperty("--py", y.toFixed(3));
+      });
+    };
+    const pointer = (event: PointerEvent) => {
+      if (event.pointerType !== "mouse") return;
+      set(
+        event.clientX / window.innerWidth - 0.5,
+        event.clientY / window.innerHeight - 0.5,
+      );
+    };
+    const tilt = (event: DeviceOrientationEvent) => {
+      if (event.gamma == null || event.beta == null) return;
+      set(
+        Math.max(-1, Math.min(1, event.gamma / 30)) / 2,
+        Math.max(-1, Math.min(1, (event.beta - 45) / 30)) / 2,
+      );
+    };
+    const needsPermission =
+      !("DeviceOrientationEvent" in window) ||
+      typeof (
+        DeviceOrientationEvent as unknown as { requestPermission?: unknown }
+      ).requestPermission === "function";
+    window.addEventListener("pointermove", pointer);
+    if (!needsPermission) window.addEventListener("deviceorientation", tilt);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("pointermove", pointer);
+      window.removeEventListener("deviceorientation", tilt);
+    };
+  }, []);
+
   return (
     <div className="os-wallpaper" aria-hidden="true">
       {still ? (

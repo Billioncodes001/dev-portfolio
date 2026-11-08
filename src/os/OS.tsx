@@ -41,6 +41,11 @@ import Calendar from "./apps/Calendar";
 import Notes from "./apps/Notes";
 import Safari from "./apps/Safari";
 import SysInfo from "./apps/SysInfo";
+import Arcade from "./apps/Arcade";
+import Messages from "./apps/Messages";
+import Secrets from "./apps/Secrets";
+import Stats from "./Stats";
+import { SECRETS, dismissLatest, unlock, useSecrets } from "./secrets";
 import { sound, useSound } from "./sound";
 import { Battery, Signal, Wifi } from "./StatusIcons";
 import {
@@ -410,6 +415,12 @@ function MenuBar({
   const music = useSound();
   const [open, setOpen] = useState<string | null>(null);
   const bar = useRef<HTMLElement>(null);
+  const mash = useRef<number[]>([]);
+  const tapLogo = () => {
+    const now = Date.now();
+    mash.current = [...mash.current.filter((t) => now - t < 2500), now];
+    if (mash.current.length >= 5) unlock("logo");
+  };
   useEffect(() => {
     if (!open) return;
     const away = (event: PointerEvent) => {
@@ -438,7 +449,10 @@ function MenuBar({
               }
               aria-haspopup="menu"
               aria-expanded={open === name}
-              onClick={() => setOpen(open === name ? null : name)}
+              onClick={() => {
+                if (index === 0) tapLogo();
+                setOpen(open === name ? null : name);
+              }}
               onPointerEnter={() => open && open !== name && setOpen(name)}
             >
               {index === 0 ? (
@@ -633,6 +647,7 @@ export default function OS({
   const [banner, setBanner] = useState(false);
   const [launching, setLaunching] = useState<AppId | null>(null);
   const [install, setInstall] = useState<(() => void) | null>(null);
+  const secrets = useSecrets();
   const zTop = useRef(20);
   const [bounds, setBounds] = useState(() => ({
     w: window.innerWidth,
@@ -812,6 +827,29 @@ export default function OS({
     navigate("/", { replace: true, state: { desktop: true } });
   };
 
+  // The Konami code, typed anywhere.
+  useEffect(() => {
+    const code =
+      "ArrowUp ArrowUp ArrowDown ArrowDown ArrowLeft ArrowRight ArrowLeft ArrowRight b a";
+    let typed: string[] = [];
+    const key = (event: KeyboardEvent) => {
+      typed = [
+        ...typed,
+        event.key.length === 1 ? event.key.toLowerCase() : event.key,
+      ].slice(-10);
+      if (typed.join(" ") === code) unlock("konami");
+    };
+    window.addEventListener("keydown", key);
+    return () => window.removeEventListener("keydown", key);
+  }, []);
+
+  // A found secret shows as a banner for a few seconds.
+  useEffect(() => {
+    if (!secrets.latest) return;
+    const hide = setTimeout(dismissLatest, 5000);
+    return () => clearTimeout(hide);
+  }, [secrets.latest]);
+
   useEffect(() => {
     const key = (event: KeyboardEvent) => {
       if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
@@ -901,6 +939,10 @@ export default function OS({
       [
         { label: "About JA/OS", run: () => ensure("sysinfo") },
         { label: "About Josiah", run: () => openApp("about") },
+        {
+          label: `Secrets (${secrets.found.length}/${SECRETS.length})`,
+          run: () => ensure("secrets"),
+        },
         "-",
         ...(data.resume
           ? [{ label: "Download résumé", href: data.resume }]
@@ -1031,6 +1073,29 @@ export default function OS({
       </button>
     );
 
+  const found = SECRETS.find((x) => x.id === secrets.latest);
+  const secretNote = found && (
+    <button
+      type="button"
+      className="os-banner is-secret"
+      onClick={() => {
+        dismissLatest();
+        ensure("secrets");
+      }}
+    >
+      <AppIcon id="secrets" size={38} />
+      <span className="os-note-text">
+        <span className="os-note-head">
+          <b>🏆 Secret found: {found.title}</b>
+          <time>now</time>
+        </span>
+        <span>
+          {secrets.found.length} of {SECRETS.length} found. Tap to see the rest.
+        </span>
+      </span>
+    </button>
+  );
+
   return (
     <div
       className={
@@ -1082,6 +1147,9 @@ export default function OS({
                 <span>{install ? "Add to Home Screen" : data.home.name}</span>
               </button>
             </li>
+            <li className="ios-widget">
+              <Stats onOpen={() => openApp("work")} />
+            </li>
             {homeApps.map((id) => (
               <li key={id}>
                 <button type="button" onClick={() => openApp(id)}>
@@ -1117,6 +1185,7 @@ export default function OS({
         </div>
       ) : (
         <div className="os-desk">
+          <Stats onOpen={() => openApp("work")} />
           <ul className="os-icons" aria-label="Apps">
             {desktopApps.map((id) => (
               <li key={id}>
@@ -1162,6 +1231,12 @@ export default function OS({
               <Safari open={openPath} />
             ) : win.key === "notes" ? (
               <Notes />
+            ) : win.key === "messages" ? (
+              <Messages open={openPath} />
+            ) : win.key === "arcade" ? (
+              <Arcade />
+            ) : win.key === "secrets" ? (
+              <Secrets />
             ) : win.key === "sysinfo" ? (
               <SysInfo open={openPath} />
             ) : (
@@ -1173,7 +1248,7 @@ export default function OS({
         ))}
       </main>
 
-      {bannerNote}
+      {secretNote || bannerNote}
 
       <Dock
         items={narrow ? phoneDock : dockApps}
