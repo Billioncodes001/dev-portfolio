@@ -2217,7 +2217,7 @@
 .messages {
   height: 100%;
   display: grid;
-  grid-template-rows: auto 1fr auto;
+  grid-template-rows: auto 1fr auto auto;
   background: var(--paper);
   font-family: var(--sys);
 }
@@ -2933,4 +2933,102 @@
     opacity: 0;
     transform: scale(0.97) translate3d(0, -6px, 0);
   }
+}
+
+/* Messages: bubbles with their buttons, and the compose bar. */
+.messages-log {
+  scroll-behavior: auto;
+  overscroll-behavior: contain;
+}
+.bubble-row {
+  display: grid;
+  gap: 6px;
+  max-width: 82%;
+}
+.bubble-row.from-me {
+  justify-self: end;
+}
+.bubble-row.from-them {
+  justify-self: start;
+}
+.bubble-row .bubble {
+  max-width: 100%;
+}
+.bubble-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.bubble-row.from-me .bubble-actions {
+  justify-content: flex-end;
+}
+.bubble-actions a,
+.bubble-actions button {
+  padding: 5px 11px;
+  border: 1px solid #0a64d6;
+  border-radius: 99px;
+  background: transparent;
+  color: #0a64d6;
+  font: inherit;
+  font-size: 12.5px;
+  text-decoration: none;
+  cursor: pointer;
+}
+.bubble-actions a:hover,
+.bubble-actions button:hover {
+  background: #0a64d6;
+  color: #fff;
+}
+[data-theme="dark"] .bubble-actions a,
+[data-theme="dark"] .bubble-actions button {
+  border-color: #64a8ff;
+  color: #64a8ff;
+}
+.messages-compose {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px 12px;
+  border-top: 0.5px solid var(--win-line);
+}
+.messages-compose input {
+  flex: 1;
+  min-width: 0;
+  height: 34px;
+  padding: 0 14px;
+  border: 1px solid var(--win-line);
+  border-radius: 99px;
+  background: var(--win-bar);
+  color: var(--ink);
+  font: inherit;
+  font-size: 14px;
+  outline: none;
+}
+.messages-compose input:focus-visible {
+  border-color: #0a64d6;
+  box-shadow: 0 0 0 3px rgba(10, 100, 214, 0.25);
+}
+.messages-compose button {
+  flex: none;
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: #0a64d6;
+  color: #fff;
+  cursor: pointer;
+}
+.messages-compose button:disabled {
+  background: var(--soft, #d1d1d6);
+  cursor: default;
+}
+.messages-chips {
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.messages-chips button {
+  flex: none;
 }

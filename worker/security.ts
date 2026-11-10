@@ -1,11 +1,15 @@
+import { FRAME_SOURCES } from "../shared/embeds";
+
 export const BODY_LIMIT = 16 * 1024;
 export const securityHeaders = {
   "X-Content-Type-Options": "nosniff",
   "X-Frame-Options": "DENY",
   "Referrer-Policy": "strict-origin-when-cross-origin",
   "Permissions-Policy": "camera=(), microphone=(), geolocation=()",
-  "Content-Security-Policy":
-    "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'; frame-src https://osint-neural-atlas.pages.dev",
+  "Content-Security-Policy": [
+    "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'",
+    `frame-src 'self' ${FRAME_SOURCES.join(" ")}`,
+  ].join("; "),
 };
 
 export class HttpError extends Error {

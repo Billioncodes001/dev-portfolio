@@ -2,6 +2,7 @@ import { z } from "zod";
 import { contactSchema, type Portfolio } from "../shared/schema";
 import { createGitHubFeed } from "../shared/github";
 import { pageTitles, projectSlug } from "../shared/paths";
+import { checkEmbeds, embedCandidates } from "../shared/embeds";
 import { portfolio, previews, releases } from "./content";
 import { accepted, findMessage, rateLimit, saveMessage } from "./store";
 import {
@@ -194,6 +195,11 @@ async function handle(request: Request, env: Env) {
           "Cache-Control": "no-store",
         },
       });
+    if (request.method === "GET" && path === "/api/embeds") {
+      const { data } = await getSnapshot(env);
+      const urls = embedCandidates(data.projects, url.hostname);
+      return json({ embeds: await checkEmbeds(urls, url.origin) });
+    }
     if (request.method === "POST" && path === "/api/contact")
       return contact(request, env);
     if (request.method === "GET" && path === "/api/admin/messages")

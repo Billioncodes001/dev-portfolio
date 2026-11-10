@@ -7,6 +7,7 @@ import { existsSync } from "node:fs";
 import { contactSchema, type Portfolio } from "../shared/schema";
 import type { MessageStore } from "./store";
 import { pageTitles, projectSlug } from "../shared/paths";
+import { FRAME_SOURCES, checkEmbeds, embedCandidates } from "../shared/embeds";
 
 interface Options {
   portfolio: Portfolio;
@@ -27,8 +28,8 @@ export function createApp(options: Options) {
       contentSecurityPolicy: {
         directives: {
           "upgrade-insecure-requests": null,
-          // Safari's live tab (src/os/apps/Safari.tsx) embeds this project.
-          "frame-src": ["'self'", "https://osint-neural-atlas.pages.dev"],
+          // Safari tabs frame project sites listed in shared/embeds.ts.
+          "frame-src": ["'self'", ...FRAME_SOURCES],
         },
       },
       strictTransportSecurity: false,
@@ -45,6 +46,12 @@ export function createApp(options: Options) {
     options.getPortfolio || (() => Promise.resolve(options.portfolio));
   app.get("/api/portfolio", async (_req, res) => {
     res.json(await getPortfolio());
+  });
+  app.get("/api/embeds", async (req, res) => {
+    const portfolio = await getPortfolio();
+    const origin = `${req.protocol}://${req.get("host")}`;
+    const urls = embedCandidates(portfolio.projects, req.hostname);
+    res.json({ embeds: await checkEmbeds(urls, origin) });
   });
   app.use(
     "/api/contact",

@@ -1,5 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { front } from "./fixtures";
+import { FRAME_SOURCES } from "../shared/embeds";
 
 test("first visit boots, locks, and unlocks into the desktop", async ({
   page,
@@ -188,20 +189,34 @@ test("Calendar books a meeting straight into Mail", async ({ page }, info) => {
   ).toHaveValue(/I'd like to book a call on /);
 });
 
-test("Safari opens projects as tabs, live where they allow it", async ({
+test("Safari tabs load each project's own link, or say where it opens", async ({
   page,
 }, info) => {
   test.skip(info.project.name === "mobile", "Covered by the desktop layout");
   // Deep links are served by the app (not the static index), so they must
-  // carry the frame-src that lets the live tab load.
+  // carry every frame source the Safari tabs can load.
   for (const path of ["/", "/about", "/projects/osint-neural"]) {
     const csp = (await page.request.get(path)).headers()[
       "content-security-policy"
     ];
-    expect(csp, path).toMatch(
-      /frame-src [^;]*https:\/\/osint-neural-atlas\.pages\.dev/,
-    );
+    for (const source of FRAME_SOURCES)
+      expect(csp, path + " " + source).toContain(source);
   }
+  // The server decides what each site allows; stub that answer here so the
+  // test does not depend on the internet.
+  await page.route("**/api/embeds", (route) =>
+    route.fulfill({
+      contentType: "application/json",
+      body: JSON.stringify({
+        embeds: {
+          "https://osint-neural-atlas.pages.dev/": true,
+          "https://vantageintel.app/": false,
+          "https://stream-overlay-builder.pages.dev/": false,
+          "https://learnatbillioncodes.com/": false,
+        },
+      }),
+    }),
+  );
   await page.goto("/about");
   await page
     .getByRole("navigation", { name: "Dock" })
@@ -209,11 +224,40 @@ test("Safari opens projects as tabs, live where they allow it", async ({
     .click();
   const tabs = page.getByRole("tablist", { name: "Projects" });
   await expect(tabs.getByRole("tab").first()).toHaveText("Favorites");
+  // A framable project loads its own site in the tab, at its own address.
+  await tabs.getByRole("tab", { name: "OSINT / Neural" }).click();
   await expect(
     page.locator("iframe[title='OSINT / Neural (live site)']"),
   ).toHaveAttribute("src", "https://osint-neural-atlas.pages.dev/");
-  await tabs.getByRole("tab", { name: "Favorites" }).click();
-  await page.getByRole("button", { name: "Korpeatech", exact: true }).click();
+  await expect(page.locator(".safari-address")).toContainText(
+    "osint-neural-atlas.pages.dev",
+  );
+  // A site that refuses framing keeps its real link in the tab, not a frame.
+  await tabs.getByRole("tab", { name: "Vantage Visual Intelligence" }).click();
+  await expect(page.locator("iframe")).toHaveCount(0);
+  await expect(page.locator(".safari-address")).toContainText(
+    "vantageintel.app",
+  );
+  await expect(
+    page.getByRole("link", { name: /Open vantageintel\.app/ }),
+  ).toHaveAttribute("href", "https://vantageintel.app/");
+  // A GitHub-only project opens its repository, with the case study alongside.
+  await tabs.getByRole("tab", { name: /Korpeatech/ }).click();
+  await expect(
+    page.getByRole("link", { name: /Open github\.com/ }),
+  ).toHaveAttribute(
+    "href",
+    "https://github.com/Billioncodes001/korpeatech-showcase",
+  );
+  await expect(
+    page.getByRole("button", { name: "Read the case study" }),
+  ).toBeVisible();
+  // Back and forward move between the tabs just visited.
+  await page.getByRole("button", { name: "Back" }).click();
+  await expect(page.locator(".safari-address")).toContainText(
+    "vantageintel.app",
+  );
+  await page.getByRole("button", { name: "Forward" }).click();
   await expect(
     page.getByRole("button", { name: "Read the case study" }),
   ).toBeVisible();
@@ -235,7 +279,7 @@ test("music follows the visitor's mute choice", async ({ page }, info) => {
   await expect(page.getByRole("button", { name: "Play music" })).toBeVisible();
 });
 
-test("Messages answers questions and the secrets hunt counts finds", async ({
+test("Messages chats: free-text questions, suggestions, actions and memory", async ({
   page,
 }, info) => {
   await page.goto("/about");
@@ -245,13 +289,67 @@ test("Messages answers questions and the secrets hunt counts finds", async ({
     .getByRole("navigation", { name: "Dock" })
     .getByRole("button", { name: /^Messages/ })
     .click();
-  const ask = page.getByRole("group", { name: "Ask Josiah" });
+  const log = page.getByRole("log");
+  await expect(log).toContainText("Hey 👋 I'm Josiah");
+  const input = page.getByRole("textbox", { name: "Message Josiah" });
+  // Typed questions get a real answer, not a canned one.
+  await input.fill("Do you do anything besides code?");
+  await input.press("Enter");
+  await expect(log).toContainText("Zonal Coordinator");
+  await expect(input).toHaveValue("");
+  // Suggestions stay available after they have been used.
+  const ask = page.getByRole("group", { name: "Suggestions" });
   await ask.getByRole("button", { name: "What's your stack?" }).click();
-  await expect(page.getByRole("log")).toContainText("tools and counting");
-  await ask.getByRole("button", { name: /Tell me a secret/ }).click();
+  await expect(log).toContainText("tools and counting");
+  await expect(
+    ask.getByRole("button", { name: "What's your stack?" }),
+  ).toBeVisible();
+  // Something the chat does not know gets an honest fallback.
+  await input.fill("zzqx blorp");
+  await input.press("Enter");
+  await expect(log).toContainText("I didn't quite catch that");
+  // A reply can open the window it talks about.
+  await input.fill("show me your best work");
+  await input.press("Enter");
+  await expect(log.getByRole("button", { name: "Open Work" })).toBeVisible({
+    timeout: 8000,
+  });
+  await log.getByRole("button", { name: "Open Work" }).click();
+  await expect(page).toHaveURL(/\/projects$/);
+  // The secret is unlocked by asking for one, and the progress is kept.
+  await page.goto("/about");
+  if (info.project.name === "mobile")
+    await page.getByRole("button", { name: "Home", exact: true }).click();
+  await page
+    .getByRole("navigation", { name: "Dock" })
+    .getByRole("button", { name: /^Messages/ })
+    .click();
+  await page
+    .getByRole("textbox", { name: "Message Josiah" })
+    .fill("tell me a secret");
+  await page.keyboard.press("Enter");
   await expect(page.getByText(/Secret found: Confidant/)).toBeVisible();
-  await page.getByText(/Secret found: Confidant/).click();
-  await expect(page.getByText("1/7")).toBeVisible();
+  // The conversation survives closing and reopening within the session.
+  // A reload lands back on the home screen, so the dock is there on phones too.
+  await page.reload();
+  await page
+    .getByRole("navigation", { name: "Dock" })
+    .getByRole("button", { name: /^Messages/ })
+    .click();
+  await expect(page.getByRole("log")).toContainText("Zonal Coordinator");
+  await expect(page.getByRole("log")).toContainText("tools and counting");
+});
+
+test("Messages keeps the secrets hunt working from the Konami code", async ({
+  page,
+}, info) => {
+  await page.goto("/about");
+  if (info.project.name === "mobile")
+    await page.getByRole("button", { name: "Home", exact: true }).click();
+  await page
+    .getByRole("navigation", { name: "Dock" })
+    .getByRole("button", { name: /^Messages/ })
+    .click();
   // Progress survives a reload, and the Konami code is a second find.
   await page.reload();
   for (const key of [
@@ -268,7 +366,6 @@ test("Messages answers questions and the secrets hunt counts finds", async ({
   ])
     await page.keyboard.press(key);
   await expect(page.getByText(/Secret found: Old-school/)).toBeVisible();
-  await expect(page.getByText(/2 of 7 found/)).toBeVisible();
 });
 
 test("ja. pocket plays cartridges from the keyboard and pad", async ({

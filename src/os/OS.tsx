@@ -1364,7 +1364,7 @@ export default function OS({
             ) : win.key === "notes" ? (
               <Notes />
             ) : win.key === "messages" ? (
-              <Messages open={openPath} />
+              <Messages open={openPath} openApp={openApp} />
             ) : win.key === "pocket" ? (
               <Pocket
                 cart={
