@@ -1,4 +1,4 @@
-import { test, expect } from "./fixtures";
+import { test, expect, landed, openWelcome } from "./fixtures";
 import AxeBuilder from "@axe-core/playwright";
 
 test("home renders complete content, intact images, and no horizontal overflow", async ({
@@ -7,6 +7,7 @@ test("home renders complete content, intact images, and no horizontal overflow",
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
   await page.goto("/");
+  await openWelcome(page, info.project.name);
   await expect(
     page.getByRole("heading", { name: /Thoughtful code/ }),
   ).toBeVisible();
@@ -142,7 +143,9 @@ test("contact errors preserve the draft for a retry", async ({ page }) => {
   );
 });
 
-test("all routes render and recover from unknown pages", async ({ page }) => {
+test("all routes render and recover from unknown pages", async ({
+  page,
+}, info) => {
   for (const path of [
     "/about",
     "/experience",
@@ -169,30 +172,29 @@ test("all routes render and recover from unknown pages", async ({ page }) => {
     .getByRole("main")
     .getByRole("link", { name: "Back to home", exact: true })
     .click();
-  await expect(
-    page.getByRole("heading", { name: /Thoughtful code/ }),
-  ).toBeVisible();
+  if (info.project.name === "mobile")
+    await expect(page.getByRole("list", { name: "Apps" })).toBeVisible();
+  else
+    await expect(
+      page.getByRole("heading", { name: /Thoughtful code/ }),
+    ).toBeVisible();
 });
 
 test("navigation works at each viewport and theme choice persists", async ({
   page,
 }, info) => {
   await page.goto("/");
-  await expect(
-    page.getByRole("heading", { name: /Thoughtful code/ }),
-  ).toBeVisible();
   if (info.project.name === "mobile") {
-    // Phones get a home screen: back out of Welcome, then tap an app.
-    await page.getByRole("button", { name: "Home", exact: true }).click();
-    await page
-      .getByRole("list", { name: "Apps" })
-      .getByRole("button", { name: "About", exact: true })
-      .click();
+    // Phones start on the home screen; tap an app from there.
+    await expect(page.getByRole("list", { name: "Apps" })).toBeVisible();
   } else
-    await page
-      .getByRole("list", { name: "Apps" })
-      .getByRole("button", { name: "About", exact: true })
-      .click();
+    await expect(
+      page.getByRole("heading", { name: /Thoughtful code/ }),
+    ).toBeVisible();
+  await page
+    .getByRole("list", { name: "Apps" })
+    .getByRole("button", { name: "About", exact: true })
+    .click();
   await expect(page).toHaveURL(/\/about$/);
   await expect(
     page.getByRole("heading", { name: "Engineer. Builder. Human." }),
@@ -214,7 +216,7 @@ test("navigation works at each viewport and theme choice persists", async ({
   });
 });
 
-test("content errors offer a working retry", async ({ page }) => {
+test("content errors offer a working retry", async ({ page }, info) => {
   let failed = true;
   await page.route("**/api/portfolio", (route) =>
     failed ? route.fulfill({ status: 503, body: "{}" }) : route.continue(),
@@ -223,6 +225,7 @@ test("content errors offer a working retry", async ({ page }) => {
   await expect(page.getByRole("alert")).toContainText("could not be loaded");
   failed = false;
   await page.getByRole("button", { name: "Reload portfolio" }).click();
+  await openWelcome(page, info.project.name);
   await expect(
     page.getByRole("heading", { name: /Thoughtful code/ }),
   ).toBeVisible();
@@ -234,7 +237,7 @@ test("key pages pass automated accessibility checks in both themes", async ({
   await page.emulateMedia({ reducedMotion: "reduce" });
   for (const path of ["/", "/projects", "/contact"]) {
     await page.goto(path);
-    await expect(page.locator("h1")).toBeVisible();
+    await expect(landed(page)).toBeVisible();
     for (const theme of ["light", "dark"]) {
       await page.evaluate((value) => {
         document.documentElement.dataset.theme = value;
@@ -266,7 +269,7 @@ test("layouts remain usable across narrow phones, tablets, and wide screens", as
     await page.setViewportSize({ width, height: 900 });
     for (const path of ["/", "/projects", "/about", "/contact"]) {
       await page.goto(path);
-      await expect(page.locator("h1")).toBeVisible();
+      await expect(landed(page)).toBeVisible();
       const overflow = await page.evaluate(() => ({
         width: innerWidth,
         content: document.documentElement.scrollWidth,

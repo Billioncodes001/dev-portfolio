@@ -1,10 +1,21 @@
-import { test, expect } from "@playwright/test";
+import { test, expect, type Page } from "@playwright/test";
 import { front } from "./fixtures";
 import { FRAME_SOURCES } from "../shared/embeds";
 
+/** Phones land on the home screen with nothing open; desktops open Welcome. */
+async function expectLanded(page: Page, project: string) {
+  if (project === "mobile") {
+    await expect(page.getByRole("list", { name: "Apps" })).toBeVisible();
+    await expect(page.locator(".os-window")).toHaveCount(0);
+  } else
+    await expect(
+      page.getByRole("heading", { name: /Thoughtful code/ }),
+    ).toBeVisible();
+}
+
 test("first visit boots, locks, and unlocks into the desktop", async ({
   page,
-}) => {
+}, info) => {
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
   // The boot lasts about a second, so record it as it happens rather than
@@ -31,14 +42,10 @@ test("first visit boots, locks, and unlocks into the desktop", async ({
   ).not.toHaveCount(0);
   await expect(page.getByText(/You've reached/)).toBeVisible();
   await page.keyboard.press("Enter");
-  await expect(
-    page.getByRole("heading", { name: /Thoughtful code/ }),
-  ).toBeVisible();
+  await expectLanded(page, info.project.name);
   // A returning visitor in the same tab skips straight to the desktop.
   await page.reload();
-  await expect(
-    page.getByRole("heading", { name: /Thoughtful code/ }),
-  ).toBeVisible();
+  await expectLanded(page, info.project.name);
   await expect(page.getByText(/You've reached/)).toHaveCount(0);
   expect(errors).toEqual([]);
 });

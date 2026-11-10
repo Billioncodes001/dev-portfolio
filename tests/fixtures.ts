@@ -21,3 +21,22 @@ export const test = base.extend({
 export const front = (page: Page) => page.locator(".os-window.is-active");
 
 export { expect };
+
+/**
+ * Phones open on the home screen, not on Welcome. This opens the Welcome page
+ * from there, and does nothing on the desktop, where Welcome opens by itself.
+ */
+export async function openWelcome(page: Page, project: string) {
+  if (project !== "mobile") return;
+  await page
+    .getByRole("list", { name: "Apps" })
+    .getByRole("button", { name: "Welcome", exact: true })
+    .click();
+}
+
+/** Whatever a page opens on: its heading, or the phone home screen. */
+export const landed = (page: Page) =>
+  page
+    .getByRole("heading", { level: 1 })
+    .or(page.getByRole("list", { name: "Apps" }))
+    .first();

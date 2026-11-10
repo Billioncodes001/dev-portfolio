@@ -881,8 +881,19 @@ export default function OS({
   // the back button all keep working inside the desktop.
   useEffect(() => {
     if (phase !== "desktop") return;
-    const state = location.state as { desktop?: boolean } | null;
-    if (location.pathname === "/" && state?.desktop) return;
+    const state = location.state as { desktop?: boolean; open?: string } | null;
+    const asked = state?.open === "welcome";
+    if (location.pathname === "/" && !asked && (state?.desktop || narrow)) {
+      // Plain "/" is the home screen. On phones that means nothing is in front
+      // (unlocking lands here); the desktop keeps its windows as they are.
+      if (narrow)
+        setWins((list) =>
+          list.some((w) => !w.min)
+            ? list.map((w) => ({ ...w, min: true }))
+            : list,
+        );
+      return;
+    }
     const key = appForPath(location.pathname) ?? "welcome";
     // Keep search and hash so ?meeting= and #leadership still land.
     ensure(key, location.pathname + location.search + location.hash);
@@ -892,6 +903,7 @@ export default function OS({
     location.hash,
     location.state,
     phase,
+    narrow,
     ensure,
   ]);
 
@@ -941,8 +953,10 @@ export default function OS({
     );
   const openApp = useCallback(
     (key: AppId) => {
-      const path = apps[key].path;
-      if (path) navigate(path);
+      // Welcome is "/", which by itself means the home screen, so it asks for
+      // itself by name.
+      if (key === "welcome") navigate("/", { state: { open: "welcome" } });
+      else if (apps[key].path) navigate(apps[key].path);
       else ensure(key);
     },
     [navigate, ensure],
