@@ -55,7 +55,8 @@ function ramp(target: number, done?: () => void) {
   const begin = performance.now();
   const step = (now: number) => {
     const t = Math.min(1, (now - begin) / 900);
-    el.volume = from + (target - from) * t;
+    // Float rounding can land a hair outside 0–1, which browsers reject.
+    el.volume = Math.min(1, Math.max(0, from + (target - from) * t));
     if (t < 1) fade = requestAnimationFrame(step);
     else done?.();
   };

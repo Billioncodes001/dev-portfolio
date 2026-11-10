@@ -26,9 +26,15 @@ export interface Env {
 
 let feed: ReturnType<typeof createGitHubFeed> | undefined;
 let feedKey = "";
-let snapshot: { data: Portfolio; body: string; expires: number } | undefined;
-let loading:
-  Promise<{ data: Portfolio; body: string; expires: number }> | undefined;
+type Snapshot = { data: Portfolio; body: string; expires: number };
+const FIRST_LOAD_MS = 8000;
+let snapshot: Snapshot | undefined;
+let loading: Promise<Snapshot> | undefined;
+const built = (data: Portfolio, expires: number): Snapshot => ({
+  data,
+  body: JSON.stringify(data),
+  expires,
+});
 async function getSnapshot(env: Env) {
   const username = env.GITHUB_USERNAME || "billioncodes001";
   const key =
@@ -66,22 +72,36 @@ async function getSnapshot(env: Env) {
     });
   }
   if (snapshot && snapshot.expires > Date.now()) return snapshot;
-  // Warm public polls only construct a Response over already serialized, public-only content.
+  // One GitHub refresh at a time. Its result is cached, and a failure keeps
+  // the last good snapshot.
   if (!loading)
     loading = feed
       .getPortfolio(portfolio)
       .then((data) => {
-        snapshot = {
-          data,
-          body: JSON.stringify(data),
-          expires: Date.now() + 60_000,
-        };
+        snapshot = built(data, Date.now() + 60_000);
         return snapshot;
       })
       .finally(() => {
         loading = undefined;
       });
-  return loading;
+  // With something cached, answer at once and let the refresh finish behind
+  // it. GitHub can take a long time, and visitors should never wait on it.
+  if (snapshot) {
+    loading.catch(() => undefined);
+    return snapshot;
+  }
+  // First request after a cold start: wait briefly for live data, otherwise
+  // serve the built-in portfolio so the page still renders.
+  const fallback = new Promise<Snapshot>((resolve) =>
+    setTimeout(
+      () => resolve(built(portfolio, Date.now() + 15_000)),
+      FIRST_LOAD_MS,
+    ),
+  );
+  return Promise.race([
+    loading.catch(() => built(portfolio, Date.now() + 15_000)),
+    fallback,
+  ]);
 }
 
 async function contact(request: Request, env: Env) {
