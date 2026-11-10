@@ -881,11 +881,12 @@ export default function OS({
   // the back button all keep working inside the desktop.
   useEffect(() => {
     if (phase !== "desktop") return;
-    const state = location.state as { desktop?: boolean; open?: string } | null;
+    const state = location.state as { open?: string } | null;
     const asked = state?.open === "welcome";
-    if (location.pathname === "/" && !asked && (state?.desktop || narrow)) {
-      // Plain "/" is the home screen. On phones that means nothing is in front
-      // (unlocking lands here); the desktop keeps its windows as they are.
+    if (location.pathname === "/" && !asked) {
+      // Plain "/" is the home screen with nothing open: unlocking and reloading
+      // land here. Phones also put away a window still in front; the desktop
+      // keeps its windows as they are.
       if (narrow)
         setWins((list) =>
           list.some((w) => !w.min)
@@ -926,7 +927,7 @@ export default function OS({
       .filter((w) => w.key !== gone && w.path)
       .sort((a, b) => b.z - a.z);
     if (rest[0]?.path) navigate(rest[0].path, { replace: true });
-    else navigate("/", { replace: true, state: { desktop: true } });
+    else navigate("/", { replace: true });
   };
   const close = (win: Win) => {
     setWins((list) =>
@@ -966,7 +967,7 @@ export default function OS({
   // the next window and reopen it.
   const goHome = () => {
     setWins((list) => list.map((w) => ({ ...w, min: true })));
-    navigate("/", { replace: true, state: { desktop: true } });
+    navigate("/", { replace: true });
   };
 
   // The Konami code, typed anywhere.
@@ -1068,7 +1069,7 @@ export default function OS({
           setPhase("desktop");
           if (path) navigate(path);
           else if (app) {
-            navigate("/", { replace: true, state: { desktop: true } });
+            navigate("/", { replace: true });
             ensure(app);
           }
         }}

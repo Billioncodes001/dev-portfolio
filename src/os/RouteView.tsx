@@ -1,5 +1,6 @@
 import { lazy, memo, Suspense, useEffect } from "react";
 import { unlock } from "./secrets";
+import { useNarrow } from "./util";
 import { Link, Route, Routes } from "react-router-dom";
 import Home from "../components/Home";
 
@@ -18,12 +19,18 @@ const Press = lazy(() => import("../components/Press"));
 
 function NotFound() {
   useEffect(() => unlock("lost"), []);
+  // Same as the footer: on the desktop, "/" alone is the empty home screen.
+  const narrow = useNarrow();
   return (
     <section className="load-state">
       <p className="eyebrow">404 / Uncharted territory</p>
       <h1>This page took a wrong turn.</h1>
       <p>You found a secret, though. Let's get you back to something good.</p>
-      <Link className="button primary" to="/">
+      <Link
+        className="button primary"
+        to="/"
+        state={narrow ? undefined : { open: "welcome" }}
+      >
         Back to home
       </Link>
     </section>

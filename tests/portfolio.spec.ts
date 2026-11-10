@@ -184,13 +184,8 @@ test("navigation works at each viewport and theme choice persists", async ({
   page,
 }, info) => {
   await page.goto("/");
-  if (info.project.name === "mobile") {
-    // Phones start on the home screen; tap an app from there.
-    await expect(page.getByRole("list", { name: "Apps" })).toBeVisible();
-  } else
-    await expect(
-      page.getByRole("heading", { name: /Thoughtful code/ }),
-    ).toBeVisible();
+  // Both devices start with nothing open; tap About from the app list.
+  await expect(page.getByRole("list", { name: "Apps" })).toBeVisible();
   await page
     .getByRole("list", { name: "Apps" })
     .getByRole("button", { name: "About", exact: true })

@@ -23,15 +23,15 @@ export const front = (page: Page) => page.locator(".os-window.is-active");
 export { expect };
 
 /**
- * Phones open on the home screen, not on Welcome. This opens the Welcome page
- * from there, and does nothing on the desktop, where Welcome opens by itself.
+ * Both devices open on an empty home screen. This opens the Welcome page from
+ * it: the phone's app list, or the desktop dock.
  */
 export async function openWelcome(page: Page, project: string) {
-  if (project !== "mobile") return;
-  await page
-    .getByRole("list", { name: "Apps" })
-    .getByRole("button", { name: "Welcome", exact: true })
-    .click();
+  const launcher =
+    project === "mobile"
+      ? page.getByRole("list", { name: "Apps" })
+      : page.getByRole("navigation", { name: "Dock" });
+  await launcher.getByRole("button", { name: /^Welcome/ }).click();
 }
 
 /** Whatever a page opens on: its heading, or the phone home screen. */

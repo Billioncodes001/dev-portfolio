@@ -11,6 +11,7 @@ import {
 import ReactMarkdown from "react-markdown";
 import type { Project } from "../../shared/schema";
 import { usePortfolio } from "../hooks/usePortfolio";
+import { useNarrow } from "../os/util";
 import { projectSlug } from "../../shared/paths";
 import { releaseLabels } from "../../shared/releases";
 
@@ -215,10 +216,18 @@ export function SocialLinks() {
 }
 
 export function Footer() {
+  // A plain "/" is the empty home screen, so on the desktop this asks for
+  // Welcome by name. Phones keep going to their home screen.
+  const narrow = useNarrow();
   return (
     <footer className="site-footer container">
       <div className="footer-top">
-        <Link className="brand-mark" to="/" aria-label="Back to home">
+        <Link
+          className="brand-mark"
+          to="/"
+          state={narrow ? undefined : { open: "welcome" }}
+          aria-label="Back to home"
+        >
           ja<span>.</span>
         </Link>
         <p>

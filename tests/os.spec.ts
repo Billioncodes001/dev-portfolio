@@ -2,15 +2,13 @@ import { test, expect, type Page } from "@playwright/test";
 import { front } from "./fixtures";
 import { FRAME_SOURCES } from "../shared/embeds";
 
-/** Phones land on the home screen with nothing open; desktops open Welcome. */
+/** Both devices land on their home screen with nothing open. */
 async function expectLanded(page: Page, project: string) {
-  if (project === "mobile") {
+  await expect(page.locator(".os-window")).toHaveCount(0);
+  if (project === "mobile")
     await expect(page.getByRole("list", { name: "Apps" })).toBeVisible();
-    await expect(page.locator(".os-window")).toHaveCount(0);
-  } else
-    await expect(
-      page.getByRole("heading", { name: /Thoughtful code/ }),
-    ).toBeVisible();
+  else
+    await expect(page.getByRole("navigation", { name: "Dock" })).toBeVisible();
 }
 
 test("first visit boots, locks, and unlocks into the desktop", async ({
